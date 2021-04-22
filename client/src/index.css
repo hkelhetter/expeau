@@ -5,19 +5,38 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-align: center;
 
 }
 #menu{
-width: 400px;
 background-color: beige;
 border-style: solid;
 border-color: black;
 border-width: 0.5;
 }
-.App{
-    display: flex;
-    flex-direction: row;
+@media (orientation: landscape) {
+    .App{
+        display: flex;
+        flex-direction: row;
+    }
+    #menu{
+        width: 50%;
+    }
 }
+
+@media (orientation: portrait) {
+    .App{
+        display: flex;
+        flex-direction: column-reverse;
+    }    
+    #menu{
+        width: 100%;
+    }
+    svg {
+        align-self: center;
+    }
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -63,6 +82,7 @@ body {
     fill-opacity: 0.4;
     transition: fill-opacity .2s;
     pointer-events: none;
+    user-select: none;
 
   }
   svg path {
@@ -88,8 +108,8 @@ svg g.foret polygon{
 svg g.true polygon{
     fill-opacity: 1;
 }
-svg g.otherPlayer polygon{
-    fill-opacity: 0.1;
+svg g.notInBassin polygon{
+    fill-opacity: 0.5;
     stroke:#000000;
     stroke-opacity: 1;
 }

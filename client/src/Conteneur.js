@@ -3,6 +3,7 @@ import { generateHexes, generateRivers } from "./MapUtil.js"
 import Bassin from "./Bassin.js"
 import ActivitySwapper from "./ActivitySwapper.js"
 import InfoTile from "./InfoTile.js"
+import ValidationTour from "./ValidationTour.js"
 class Conteneur extends React.Component {
     constructor(props) {
         super(props)
@@ -15,7 +16,7 @@ class Conteneur extends React.Component {
         const moreHexas = generateHexes();
         const moreRivers = generateRivers(moreHexas);
         this.state = { hexagonSize, moreHexas, moreRivers, selectedTile: null }
-
+        console.log(this.state)
     }
     /* 
         fonction déclenchée lorsqu'on clique sur une tuile
@@ -59,10 +60,11 @@ class Conteneur extends React.Component {
         this.setState({ selectedTile: null })
     }
     render() {
-        return (<>
+        return (<div className="App">
             <div id="menu">
                 <p>MENU</p>
-                {/* n'affiche les objets que si une tuile est sélectionnée */}
+                <ValidationTour key="validation" />
+                {/* n'affiche les composants du tableau seulement si une tuile est sélectionnée */}
                 {this.state.selectedTile === null ? "" :
                     [
                         <InfoTile key="info" />,
@@ -72,7 +74,7 @@ class Conteneur extends React.Component {
                 }
             </div>
             <Bassin handleClick={this.handleClickTile} map={this.state} />
-        </>
+        </div>
         )
     }
 }

@@ -1,5 +1,4 @@
-import { HexUtils, Path, } from 'react-hexgrid';
-
+import { HexUtils } from 'react-hexgrid'
 export const layout = {
     spacing: 1,
     orientation: {
@@ -38,13 +37,17 @@ export function generateRivers(moreHexas) {
 
     for (let i = 0; i < data.length; i++) {
 
-        path = <Path start={moreHexas[i]} end={moreHexas[data[i].downstreamCell - 1]} />
+        //path = <Path start={moreHexas[i]} end={moreHexas[data[i].downstreamCell - 1]} />
+        path = {
+            start: moreHexas[i],
+            end: moreHexas[data[i].downstreamCell - 1]
+        }
         rivers.push(path);
     }
     return rivers;
 }
 
-export const data = [
+const data = [
     {
         "Id": 1,
         "areakm": 0.601875,
