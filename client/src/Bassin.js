@@ -36,7 +36,7 @@ function setMapSize() {
 export default class Bassin extends Component {
     constructor(props) {
         super(props)
-        this.state = { ...props.map }
+        //this.props.map ...props.map }
         console.log(this.props.map.role == "agriculteur", props)
     }
 
@@ -76,16 +76,16 @@ export default class Bassin extends Component {
     render() {
         return (<>
             <HexGrid width={setMapSize()} height={setMapSize()} viewBox="-50 -50 100 100" >
-                <Layout size={this.state.hexagonSize} flat={false} spacing={1} origin={{ x: 0, y: 0 }} >
+                <Layout size={this.props.map.hexagonSize} flat={false} spacing={1} origin={{ x: 0, y: 0 }} >
                     {/* boucle créant les hexagones */}
-                    {Object.values(this.state.moreHexas).map((hex, i) =>
+                    {Object.values(this.props.map.moreHexas).map((hex, i) =>
                         //
                         this.props.map.role == "agriculteur" ? this.createHexeFarmer(hex, i) : this.createHexeElected(hex, i)
 
                     )}
 
                     {/* boucle créant les cours d'eau */}
-                    {this.state.moreRivers.map((river, i) => <Path
+                    {this.props.map.moreRivers.map((river, i) => <Path
                         key={i} start={river.start} end={river.end}
                     />)}
                 </Layout>
