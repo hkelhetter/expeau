@@ -5,7 +5,7 @@ class ValidationTour extends React.Component {
         return (
             <>
                 <button>Valider</button>
-                <p>Nombre de joueurs prêts</p>
+                <p>Nombre de joueurs prêts : nb joueurs prêts/ nb joueurs totaux</p>
             </>
         )
     }

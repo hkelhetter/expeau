@@ -16,17 +16,21 @@ export const layout = {
 
 /* génère la carte des hexagones en lisant les propriétés x0 et y0 du tableau data */
 export function generateHexes() {
-    let hexas = [];
+    let hexas = {};
     let hex;
     for (let i = 0; i < data.length; i++) {
-        hex = HexUtils.pixelToHex({ x: data[i].x0 * 4.75, y: 5 - data[i].y0 * 4.75 }, layout)
-        //map ardiere
-        //hex = HexUtils.pixelToHex({ x: (data[i].x0 + 164.6719013516826) * 4, y: (328 + data[i].y0) * -4 }, layout)
+        if (data[i].subBasin == 1) {
+            hex = HexUtils.pixelToHex({ x: data[i].x0 * 4.75, y: 5 - data[i].y0 * 4.75 }, layout)
+            //map ardiere
+            //hex = HexUtils.pixelToHex({ x: (data[i].x0 + 164.6719013516826) * 4, y: (328 + data[i].y0) * -4 }, layout)
 
-        hex.activity = data[i].mainCLC1
-        hex.modified = false;
-        hex.bassin = data[i].subBasin
-        hexas.push(hex);
+            hex.activity = data[i].mainCLC1
+            hex.modified = false;
+            hex.bassin = data[i].subBasin
+            hex.id = i
+            hexas[i] = hex
+        }
+
     }
     return hexas;
 }
@@ -34,7 +38,6 @@ export function generateHexes() {
 export function generateRivers(moreHexas) {
     let rivers = [];
     let path;
-
     for (let i = 0; i < data.length; i++) {
 
         //path = <Path start={moreHexas[i]} end={moreHexas[data[i].downstreamCell - 1]} />
