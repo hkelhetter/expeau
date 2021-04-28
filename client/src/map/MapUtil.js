@@ -14,13 +14,16 @@ export const layout = {
     },
 };
 
+
 /* génère la carte des hexagones en lisant les propriétés x0 et y0 du tableau data */
 export function generateHexes() {
     let hexas = {};
     let hex;
     for (let i = 0; i < data.length; i++) {
+
+        //        hex = HexUtils.pixelToHex({ x: data[i].x0 * 4.75, y: 5 - data[i].y0 * 4.75 }, layout)
         if (data[i].subBasin == 1) {
-            hex = HexUtils.pixelToHex({ x: data[i].x0 * 4.75, y: 5 - data[i].y0 * 4.75 }, layout)
+            hex = HexUtils.pixelToHex({ x: (data[i].x0 - -3.52527674202643) * 4.75, y: -(data[i].y0 - 2.49127813404054) * 4.75 }, layout)
             //map ardiere
             //hex = HexUtils.pixelToHex({ x: (data[i].x0 + 164.6719013516826) * 4, y: (328 + data[i].y0) * -4 }, layout)
 

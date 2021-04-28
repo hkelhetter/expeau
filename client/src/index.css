@@ -72,11 +72,7 @@ body {
     fill-opacity: 1;
   }
 */
-  svg g polygon {
-    stroke-width: 0.2;
-    stroke-opacity: 0.5;
-    stroke:black;
-  }
+
   svg g text {
     
     font-size: 0.1em;
@@ -95,13 +91,15 @@ body {
   }
 svg g.ville polygon{
     fill:rgb(189, 19, 19);
-    
+    stroke: rgb(189, 19, 19);
 }
 svg g.agriculture polygon{
     fill:rgb(211, 139, 57);
+    stroke:rgb(211, 139, 57);
 }
 svg g.foret polygon{
     fill:rgb(32, 138, 6);
+    stroke: rgb(32, 138, 6);
 }
 svg g.true polygon{
     fill-opacity: 1;

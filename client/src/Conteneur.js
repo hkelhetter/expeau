@@ -1,11 +1,11 @@
 import React from 'react'
-import { generateHexes, generateRivers } from "./MapUtil.js"
-import Bassin from "./Bassin.js"
-import ActivitySwapper from "./ActivitySwapper.js"
-import InfoTile from "./InfoTile.js"
-import ValidationTour from "./ValidationTour.js"
-import AdminControls from './AdminControls.js'
-import handleClickTile from './handleClickTileFarmer.js'
+import { generateHexes, generateRivers } from "./map/MapUtil.js"
+import Bassin from "./map/Bassin.js"
+import ActivitySwapper from "./controls/ActivitySwapper.js"
+import InfoTile from "./controls/InfoTile.js"
+import ValidationTour from "./controls/ValidationTour.js"
+import AdminControls from './controls/AdminControls.js'
+import handleClickTile from './controls/handleClickTileFarmer.js'
 
 class Conteneur extends React.Component {
     constructor(props) {
@@ -15,7 +15,7 @@ class Conteneur extends React.Component {
         this.handleClickTile = handleClickTile.bind(this)
 
         // initialise la carte et la stock dans le state de Conteneur
-        const hexagonSize = { x: 3, y: 3 };
+        const hexagonSize = { x: 5, y: 5 };
         const moreHexas = generateHexes();
         const moreRivers = generateRivers(moreHexas);
         this.state = { hexagonSize, moreHexas, moreRivers, selectedTile: null, role: "agriculteur" }
@@ -50,6 +50,10 @@ class Conteneur extends React.Component {
         return (<div className="App">
             <div id="menu">
                 <p>MENU</p>
+                <div>
+                    UB : 10
+                    UT : 10
+                </div>
                 <ValidationTour arrayToSend={this.state.moreHexas} key="validation" />
                 {/* n'affiche les composants du tableau que si une tuile est sélectionnée */}
                 {this.state.selectedTile === null ? "" :
@@ -59,7 +63,6 @@ class Conteneur extends React.Component {
                             selectedTile={this.state.selectedTile} />
                     ]
                 }
-                <AdminControls />
             </div>
             <Bassin handleClick={this.handleClickTile} map={this.state} />
         </div>
