@@ -62,6 +62,8 @@ body {
   
   svg g polygon{
     stroke-width: 0.2;
+    stroke:black;
+
     fill-opacity: 0.5;
 /*     scale: 2; */
   }
@@ -89,32 +91,69 @@ body {
 
     stroke-width: 0.3;
   }
+  svg g.small path{
+      stroke:rgb(94, 235, 223)
+  }
 svg g.ville polygon{
     fill:rgb(189, 19, 19);
-    stroke: rgb(189, 19, 19);
 }
 svg g.agriculture polygon{
     fill:rgb(211, 139, 57);
-    stroke:rgb(211, 139, 57);
 }
 svg g.foret polygon{
     fill:rgb(32, 138, 6);
-    stroke: rgb(32, 138, 6);
 }
 svg g.true polygon{
     fill-opacity: 1;
 }
-svg g.notInBassin polygon{
-    fill-opacity: 0.5;
-    fill: #000000;
-}
-Text.a{
-fill: rgb(32, 138, 6);
-}
-Text.b{
-    fill: rgb(189, 19, 19)
-}
-Text.c{
-    fill:rgb(51, 51, 180)
+svg g.notInBassin polygon   {
+    fill-opacity: 0;
+    stroke-width: 0;
 }
 
+svg g.premier text{
+    fill: rgb(32, 138, 6);
+
+}
+svg g.deuxieme text{
+    fill:rgb(51, 51, 180)
+
+}
+svg g.troisieme text{
+    fill: rgb(189, 19, 19)
+
+}
+.chat{
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    max-height: 500px;
+}
+div.convo{
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+ .message{
+    align-self: flex-end;
+    max-width: 80%;
+
+}
+.msg{
+
+    background-color: blue;
+    color: #f0f0f0;
+    padding: 0 0.5em;
+    border-radius: 1em;
+
+}
+p{    word-break: break-word;}
+.authore{
+    font-size:0.8em;
+} 
+.message.received{
+    align-self: flex-start;
+}
+.submit{
+    align-self: flex-end;
+}

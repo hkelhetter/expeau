@@ -6,7 +6,7 @@ import InfoTile from "./controls/InfoTile.js"
 import ValidationTour from "./controls/ValidationTour.js"
 import AdminControls from './controls/AdminControls.js'
 import handleClickTile from './controls/handleClickTileFarmer.js'
-
+import Chat from "./Chat.js"
 class Conteneur extends React.Component {
     constructor(props) {
         super(props)
@@ -64,6 +64,7 @@ class Conteneur extends React.Component {
                     ]
                 }
             </div>
+            <Chat />
             <Bassin handleClick={this.handleClickTile} map={this.state} />
         </div>
         )

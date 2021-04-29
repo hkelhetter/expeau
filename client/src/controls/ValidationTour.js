@@ -9,8 +9,8 @@ class ValidationTour extends React.Component {
     handleSubmit() {
         this.setState({ validated: true })
     }
+
     render() {
-        console.log(this.state.validated)
 
         return (
             <>
