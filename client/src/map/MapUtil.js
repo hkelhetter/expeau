@@ -49,8 +49,6 @@ export function generateRivers(moreHexas) {
         path = {
             start: moreHexas[i],
             end: moreHexas[data[i].downstreamCell - 1],
-            d: "e"
-
         }
         rivers.push(path);
     }

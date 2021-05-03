@@ -35,8 +35,13 @@ border-width: 0.5;
     svg {
         align-self: center;
     }
+    .chat{
+        height: 50%!important;
+    }
 }
-
+#menu{
+    height: inherit;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -124,15 +129,19 @@ svg g.troisieme text{
 
 }
 .chat{
+    position: absolute;
+    top: 0;
+    left: 5%;
     display: flex;
     flex-direction: column;
     width: 20%;
-    max-height: 500px;
+    height: 90%;
 }
 div.convo{
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
+    height: 100%;
 }
  .message{
     align-self: flex-end;

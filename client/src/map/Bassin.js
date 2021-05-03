@@ -1,3 +1,93 @@
+/* 
+    Function : setPlayerClass
+
+    Syntax
+        playerClass=setPlayerClass(PlayerId)
+    
+    Input
+        PlayerId    :player's id
+
+    Outputs
+        playerClass :player's id on subBasin
+
+    Description
+        Compute player's id on their subBasin based on their global id
+*/
+
+/* 
+    Function : activityToString
+
+    Syntax
+        tileActivity=activityToString(activity)
+    
+    Input
+        activity    :tile's activity
+
+    Outputs
+        tileactivity:string corresponding to the activity
+
+    Description
+        returns a string based on the input
+        this is meant to set className to components and apply css style
+*/
+
+/* 
+    Function : setMapSize
+
+    Syntax
+        
+    
+    Input
+        
+
+    Outputs
+
+    Description
+        
+*/
+
+/* 
+    Function : createHexeFarmer
+
+    Syntax
+        <Hexagon/>=createHexeFarmer(hex,i)        
+    
+    Input
+        hex :object containing the data to create the hexagon
+        i   :hex's id
+
+    Outputs
+        polygon :polygon of type svg with hexagon shape
+        text    :text inside the polygon countaining hex's id + 1
+
+    Description
+        returns the following architecture:
+            <g class='hexagon-group' plus some others such as the output of activityToString>
+                <g>
+                    <polygon/>
+                    <text/>
+                </g>
+            </g>
+    
+    see /src/map/MapUtil.js for more information about hex'properties
+
+        
+*/
+
+/* 
+    Function : 
+
+    Syntax
+        
+    
+    Input
+        
+
+    Outputs
+
+    Description
+        
+*/
 import React, { Component } from 'react'
 import { HexGrid, Layout, Path, Hexagon, Text } from 'react-hexgrid'
 import layoutProps from './layoutProps.js'
@@ -27,7 +117,11 @@ function activityToString(activity) {
         default: return "notInBassin";
     }
 }
-
+function getSubBassin(id) {
+    if (id < 4) return 1
+    if (id < 7) return 2
+    return 3
+}
 /*  
     format pour les appareils mobiles 
     renvoie 50% si la fenêtre est en format paysage, 100% en format portrait 
@@ -39,19 +133,19 @@ function setMapSize() {
 export default class Bassin extends Component {
 
 
-    createHexeFarmer(hex, i) {
+    createHexeFarmer(hex, i, player) {
+
+        const bassin = getSubBassin(player)
         return <Hexagon
             activity={hex.activity.toString()}
             key={i} id={i} q={hex.q} r={hex.r} s={hex.s}
             /* appel la fonction parent handleClick avec en paramètre l'hexagone */
-            onClick={(e, h) => hex.bassin === 1 ? this.props.handleClick(h) : undefined}
+            onClick={(e, h) => hex.player === player ? this.props.handleClick(h) : ""}
             /* définie la classe de l'hexagone en fonction de son activité */
-            className={hex.bassin === 1 ? `${hex.modified} ${activityToString(hex.activity)} ${setPlayerClass(hex.player)} ${hex.player % 3}` : "notInBassin"} >
-            {/*             <text x="0" y="0">
-                <tspan x="-0.5em" dy="-0.9em">{i + 1}</tspan>
-                <tspan x="-1.5em" dy="1.7em">10&nbsp;&nbsp;10</tspan>
-            </text> */}
-            {hex.bassin === 1 ?
+            className={hex.bassin === bassin ? `${hex.modified} ${activityToString(hex.activity)} 
+                ${setPlayerClass(hex.player)} ${hex.player % 3}` : "notInBassin"} >
+
+            {hex.bassin === bassin ?
                 <Text y={-2}>{(i + 1).toString()}</Text> : ""}
 
         </Hexagon>
@@ -76,18 +170,20 @@ export default class Bassin extends Component {
 
         </Hexagon>
     }
-    shouldComponentUpdate(nextProps) {
+    shouldComponentUpdate(nextProps, nextState) {
         return this.props !== nextProps
     }
     render() {
         return (<>
             <HexGrid width={setMapSize()} height={setMapSize()} viewBox="-50 -50 100 100" >
-                <Layout size={layoutProps.size} flat={layoutProps.flat} spacing={layoutProps.spacing} origin={{ x: layoutProps.x, y: layoutProps.y }} >
+                <Layout size={layoutProps.size} flat={layoutProps.flat}
+                    spacing={layoutProps.spacing} origin={{ x: layoutProps.x, y: layoutProps.y }} >
                     {/* boucle créant les hexagones */}
                     {Object.values(this.props.map.moreHexas).map((hex, i) =>
                         //
-                        this.props.map.role === "agriculteur" ? this.createHexeFarmer(hex, i) :
-                            this.props.map.role === "elu" ? this.createHexeElected(hex, i) : this.createHexeManager(hex, i)
+                        this.props.map.player < 10 ? this.createHexeFarmer(hex, i, this.props.map.player) :
+                            this.props.map.role === "elu" ? this.createHexeElected(hex, i) :
+                                this.createHexeManager(hex, i)
 
                     )}
 

@@ -7,7 +7,22 @@ class ValidationTour extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
     }
     handleSubmit() {
+        const origin = this.props.origin
+        const updated = this.props.updated
+        console.log(origin[0], updated[0])
+
         this.setState({ validated: true })
+        let log = {}
+        for (const index in origin) {
+            let subLog = {}
+            for (const entry in origin[index]) {
+                //origin[index].activity === updated[index].activity ? subLog.activity = updated[index].activity : subLog.activity = ""
+                if (origin[index][entry] !== updated[index][entry]) subLog.activity = updated[index][entry]
+
+            }
+            if (Object.entries(subLog).length !== 0) log[index] = subLog
+
+        }
     }
 
     render() {

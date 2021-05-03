@@ -22,7 +22,6 @@ class ActivitySwapper extends React.Component {
         appel de la fonction changeTileActivity du parent avec en paramètre la nouvelle valeur de l'activité
     */
     handleSubmit(event) {
-        console.log(this.state)
         event.preventDefault();
         if (this.state.selectActivity != null) {
             this.props.changeTileActivity(this.state.selectActivity, this.state.checkbox)
