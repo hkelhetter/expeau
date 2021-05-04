@@ -1,20 +1,25 @@
 /* 
     Function : createTampon
 
-    Syntax
-        {}=createTampon(moreHexas)
+    Syntax  : HexasTampon=createTampon(moreHexas)
     
-    Input
-        moreHexas   :object containing all the data needed to create the hexagons
+    Input   : moreHexas : object containing data to create hexagons
+        
+    Outputs : HexasTampon : a copy of moreHexas containing a subset of entries
 
-    Outputs
-        {}  :object containing a subset of moreHexas 
+    Description : 
+        create a copy of moreHexas containing a subset of entries of moreHexas.
+        the remaining entries are those the players can change directly.
+*/
+/* 
+    Function : updateMap
 
-    Description
-        create an object containing from moreHexas that the player can change during the turn
-        this is meant to keep a track on what was change by the player at the end of their round 
-    
-    see /src/map/MapUtil.js for more information about moreHexas
+    Syntax  : updateMap(newData)
+            
+    Input   : object containing the data to update the state
+        
+    Description : update the state of the map with new data received from the server. call createTampon automatically
+        
 */
 /* 
     Function : changeTileActivity
@@ -33,17 +38,11 @@
             set the state value of selectedTile to null        
 */
 /* 
-    Function : 
+    Function : render
 
-    Syntax
-        
-    
-    Input
-        
+    Syntax  : render()
 
-    Outputs
-
-    Description
+    Description : display the different components of the app
         
 */
 import React from 'react'
@@ -68,7 +67,7 @@ class Conteneur extends React.Component {
 
         //const HexasTampon = Object.values(moreHexas).map((x) => x.activity)
         this.state = {
-            map: { moreHexas, moreRivers, player: 5 },
+            map: { moreHexas, moreRivers, player: 6 },
             selectedTile: null, HexasTampon: this.createTampon(moreHexas)
         }
     }
@@ -83,9 +82,6 @@ class Conteneur extends React.Component {
             let hex = {};
             hex.activity = moreHexas[key].activity
             hex.player = moreHexas[key].player
-            /*             for (const val in moreHexas[key]) {
-                            a[val] = moreHexas[key][val]
-                        } */
             HexasTampon[key] = hex
         }
         return HexasTampon
@@ -132,26 +128,27 @@ class Conteneur extends React.Component {
         this.setState({ selectedTile: null })
     }
     render() {
-        return (<div className="App">
-            <div id="menu">
-                <p>MENU</p>
-                <div>
-                    UB : 10
-                    UT : 10
+        return (
+            <div className="App">
+                <div id="menu">
+                    <p>MENU</p>
+                    <div>
+                        UB : 10
+                        UT : 10
                 </div>
-                <ValidationTour updated={this.state.map.moreHexas} origin={this.state.HexasTampon} key="validation" />
-                {/* n'affiche les composants du tableau que si une tuile est sélectionnée */}
-                {this.state.selectedTile === null ? "" :
-                    [
-                        <InfoTile key="info" />,
-                        <ActivitySwapper key="changeActivity" changeTileActivity={this.changeTileActivity}
-                            selectedTile={this.state.selectedTile} />
-                    ]
-                }
+                    <ValidationTour updated={this.state.map.moreHexas} origin={this.state.HexasTampon} key="validation" />
+                    {/* only display the components if a tile is selected */}
+                    {this.state.selectedTile === null ? "" :
+                        [
+                            <InfoTile key="info" />,
+                            <ActivitySwapper key="changeActivity" changeTileActivity={this.changeTileActivity}
+                                selectedTile={this.state.selectedTile} />
+                        ]
+                    }
+                </div>
+                <Bassin handleClick={this.handleClickTile} map={this.state.map} />
+                <Chat />
             </div>
-            <Chat />
-            <Bassin handleClick={this.handleClickTile} map={this.state.map} />
-        </div>
         )
     }
 }

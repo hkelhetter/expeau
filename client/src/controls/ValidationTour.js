@@ -1,3 +1,26 @@
+/* 
+    Function : handleSubmit
+
+    Syntax  : handleSubmit()
+
+    Description : compare the objects origin and updated from the props and 
+                    create a new object containing all the differences
+        
+*/
+/* 
+    Function : 
+    
+    Syntax
+        
+    
+    Input
+        
+
+    Outputs
+
+    Description
+        
+*/
 import React from 'react'
 
 class ValidationTour extends React.Component {
@@ -9,20 +32,18 @@ class ValidationTour extends React.Component {
     handleSubmit() {
         const origin = this.props.origin
         const updated = this.props.updated
-        console.log(origin[0], updated[0])
 
         this.setState({ validated: true })
         let log = {}
         for (const index in origin) {
             let subLog = {}
             for (const entry in origin[index]) {
-                //origin[index].activity === updated[index].activity ? subLog.activity = updated[index].activity : subLog.activity = ""
                 if (origin[index][entry] !== updated[index][entry]) subLog.activity = updated[index][entry]
-
             }
             if (Object.entries(subLog).length !== 0) log[index] = subLog
 
         }
+        console.log(log)
     }
 
     render() {

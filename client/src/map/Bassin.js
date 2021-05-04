@@ -74,29 +74,11 @@
         
 */
 
-/* 
-    Function : 
 
-    Syntax
-        
-    
-    Input
-        
-
-    Outputs
-
-    Description
-        
-*/
 import React, { Component } from 'react'
 import { HexGrid, Layout, Path, Hexagon, Text } from 'react-hexgrid'
 import layoutProps from './layoutProps.js'
 
-/* 
-    Renvoie la classe d'un hexagone en fonction de l'identifiant du joueur
-    Il y a 3 joueurs par plateau, le joueur 4 est alors le premier du sous-bassin 2
-        et partage donc la même classe que le joueur 1
-*/
 function setPlayerClass(player) {
     if (player === 0) return "" //attributé à aucun joueur
     switch (player % 3) {
@@ -106,9 +88,6 @@ function setPlayerClass(player) {
     }
 }
 
-/*
-    renvoie une chaîne de caractère correspondant à l'activité mise en paramètre
- */
 function activityToString(activity) {
     switch (activity) {
         case 1: return "ville";
@@ -122,10 +101,6 @@ function getSubBassin(id) {
     if (id < 7) return 2
     return 3
 }
-/*  
-    format pour les appareils mobiles 
-    renvoie 50% si la fenêtre est en format paysage, 100% en format portrait 
-*/
 function setMapSize() {
     return window.matchMedia('(orientation:landscape)').matches ? '50%' : '100%'
 }
@@ -134,7 +109,6 @@ export default class Bassin extends Component {
 
 
     createHexeFarmer(hex, i, player) {
-
         const bassin = getSubBassin(player)
         return <Hexagon
             activity={hex.activity.toString()}
@@ -142,11 +116,12 @@ export default class Bassin extends Component {
             /* appel la fonction parent handleClick avec en paramètre l'hexagone */
             onClick={(e, h) => hex.player === player ? this.props.handleClick(h) : ""}
             /* définie la classe de l'hexagone en fonction de son activité */
-            className={hex.bassin === bassin ? `${hex.modified} ${activityToString(hex.activity)} 
+            className={hex.subBasin === bassin ? `${hex.modified} ${activityToString(hex.activity)} 
                 ${setPlayerClass(hex.player)} ${hex.player % 3}` : "notInBassin"} >
 
-            {hex.bassin === bassin ?
-                <Text y={-2}>{(i + 1).toString()}</Text> : ""}
+            {hex.subBasin === bassin ? [
+                <Text key="tileId" y={-2}>{(i + 1).toString()}</Text>,
+                <Text key="playerId" y={2}>{hex.player.toString()}</Text>] : ""}
 
         </Hexagon>
     }

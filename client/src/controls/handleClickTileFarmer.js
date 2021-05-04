@@ -1,7 +1,14 @@
 /* 
-    fonction déclenchée lorsqu'on clique sur une tuile
-    modifie le state pour que selectedTile corresponde à l'id de la tuile et selectedTileActivity à son activité
-    si la tuile cliquée était déjà celle sélectionnée, selectedTile vaut null
+    Function : handleClickTile
+
+    Syntax  : handleClickTile(h)
+        
+    Input   : h : data of the selectedTile
+        
+    Description : 
+        change the state of selectedTile based on which tile is clicked and the current state
+        if the current state's id is equal to h's id, the state is set to null
+        else it is updated to h's data        
 */
 function handleClickTile(h) {
 

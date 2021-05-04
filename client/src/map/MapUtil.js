@@ -1,3 +1,26 @@
+/* 
+    Function : generateHexes
+
+    Syntax  : hexas=generateHexes()
+    
+    Outputs : hexas : object containing all data to create the hexagones (position)
+                        and the data for the game's interaction ( activity,subBasin...)
+
+    Description : return an object containing all the data needed to generate the map in class Bassin
+        
+*/
+/* 
+    Function : generateRivers 
+
+    Syntax  : rivers=generateRivers()
+
+    Outputs : array of object containing the start and end of each rivers
+
+    Description : cycle through the hexagones to create and array of object path
+                    containing the hexagon where the river starts and and where it ends
+                    by reading the downStreamCell property
+        
+*/
 import { HexUtils } from 'react-hexgrid'
 export const layout = {
     spacing: 1,
@@ -15,37 +38,38 @@ export const layout = {
 };
 
 
-/* génère la carte des hexagones en lisant les propriétés x0 et y0 du tableau data */
 export function generateHexes() {
     let hexas = {};
     let hex;
     for (let i = 0; i < data.length; i++) {
 
-        //        hex = HexUtils.pixelToHex({ x: data[i].x0 * 4.75, y: 5 - data[i].y0 * 4.75 }, layout)
-        //if (data[i].subBasin == 1) {
         hex = HexUtils.pixelToHex({ x: (data[i].x0 - -0.862395860412026) * 4.75, y: -(data[i].y0 - -0.671732763469417) * 4.75 }, layout)
         //map ardiere
         //hex = HexUtils.pixelToHex({ x: (data[i].x0 + 164.6719013516826) * 4, y: (328 + data[i].y0) * -4 }, layout)
 
-        hex.z = data[i].zOutlet
-        hex.activity = data[i].mainCLC1
-        hex.modified = false;
-        hex.bassin = data[i].subBasin
-        hex.id = i
-        hex.outletFlowAcc = data[i].outletFlowAcc
-        hex.player = data[i].player
-
-        hexas[i] = hex
+        // merge hex and data[i] into hexas[i]
+        hexas[i] = Object.assign(hex, data[i])
+        renameProperty(hexas[i], "mainCLC1", "activity")
     }
     return hexas;
 }
-/* génère les cours d'eau en liant chaque hexagone à celui par le quel il est lié par la propriété downstreamCell */
+function renameProperty(obj, oldName, newName) {
+    // Do nothing if the names are the same
+    if (oldName === newName) {
+        return this;
+    }
+    // Check for the old property name to avoid a ReferenceError in strict mode.
+    if (obj.hasOwnProperty(oldName)) {
+        obj[newName] = obj[oldName];
+        delete obj[oldName];
+    }
+    return obj;
+};
 export function generateRivers(moreHexas) {
     let rivers = [];
     let path;
     for (let i = 0; i < data.length; i++) {
 
-        //path = <Path start={moreHexas[i]} end={moreHexas[data[i].downstreamCell - 1]} />
         path = {
             start: moreHexas[i],
             end: moreHexas[data[i].downstreamCell - 1],
