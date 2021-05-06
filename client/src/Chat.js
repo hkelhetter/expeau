@@ -67,6 +67,7 @@
         
 */
 import React from 'react'
+import { socket } from './context/socket'
 
 export default class Chat extends React.Component {
     constructor(props) {
@@ -82,19 +83,27 @@ export default class Chat extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
         if (!this.state.textValue) return
+        const newMessage = { msg: this.state.textValue, authore: this.props.authore }
         this.setState({
-            message: [...this.state.message, { msg: this.state.textValue, authore: this.props.authore }],
+            message: this.addMessage(newMessage),
             textValue: ""
         })
+
+
+    }
+    addMessage(newMessage) {
+        return [...this.state.message, newMessage]
     }
     updateText(e) {
         this.setState({ textValue: e })
     }
     componentDidMount() {
         this.scrollToBottom()
+        socket.on("receiveMessage", (data) => {
+            this.setState({ message: [...this.state.message, { msg: this.state.textValue, authore: this.props.authore }] })
+        })
     }
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log(snapshot)
+    componentDidUpdate(prevProps, prevState) {
         if (prevState.message.length != this.state.message.length ||
             prevState.show != this.state.show) this.scrollToBottom()
 
@@ -108,16 +117,14 @@ export default class Chat extends React.Component {
     render() {
         return (
             <div className="chat">
-                <button onClick={this.handleClick} >{this.state.show ? 'afficher chat' : 'cacher chat'}</button>
-                {this.state.show ? <>
+                <>
                     <div className="convo">
                         {this.state.message.map((msg, i) =>
-                            <>
-                                <div key={i} className={`message ${msg.authore !== this.props.authore ? "" : "received"}`}>
-                                    <p className="msg"> {msg.msg}</p>
-                                    <p className="authore">{msg.authore === this.props.authore ? "Vous" : this.state.authore?.name}</p>
-                                </div>
-                            </>
+                            <div key={i} className={`message ${msg.authore !== this.props.authore ? "" : "received"}`}>
+                                <p className="msg"> {msg.msg}</p>
+                                <p className="authore">{msg.authore === this.props.authore ? "Vous" : this.state.authore?.name}</p>
+                            </div>
+
                         )}
                         {/* empty div to focus on with scrollToBottom */}
                         <div className="dummy" ref={this.lastMessage}></div>
@@ -125,11 +132,12 @@ export default class Chat extends React.Component {
                     <div className="submit">
                         <form onSubmit={this.handleSubmit} >
                             <fieldset disabled={this.state.inConvo}>
-                                <input value={this.state.textValue} onChange={e => this.updateText(e.target.value)} />
+                                <input id="inputChat" value={this.state.textValue} onChange={e => this.updateText(e.target.value)} />
                                 <input type="submit"></input>
                             </fieldset>
                         </form>
-                    </div></> : ""}
+                    </div>
+                </>
 
 
             </div>

@@ -26,7 +26,7 @@ import React from 'react'
 class ValidationTour extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { validated: false, props }
+        this.state = { validated: false }
         this.handleSubmit = this.handleSubmit.bind(this)
     }
     handleSubmit() {
@@ -43,8 +43,13 @@ class ValidationTour extends React.Component {
             if (Object.entries(subLog).length !== 0) log[index] = subLog
 
         }
+        /*         let a = [{ hexID: 13, action: "swapActivity", typeAction: 0 }]
+                        socket.emit("addActions", a, 1) */
         console.log(log)
     }
+    componentDidUpdate(prevProps, prevState) {
+    }
+
 
     render() {
 

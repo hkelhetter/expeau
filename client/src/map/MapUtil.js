@@ -38,7 +38,7 @@ export const layout = {
 };
 
 
-export function generateHexes() {
+export function generateHexes(data) {
     let hexas = {};
     let hex;
     for (let i = 0; i < data.length; i++) {

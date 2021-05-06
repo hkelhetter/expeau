@@ -1,4 +1,5 @@
 body {
+
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -8,12 +9,18 @@ body {
   text-align: center;
 
 }
+.App{
+    max-height: 95vh;
+
+}
 #menu{
 background-color: beige;
 border-style: solid;
 border-color: black;
 border-width: 0.5;
+height: 95vh;
 }
+
 @media (orientation: landscape) {
     .App{
         display: flex;
@@ -39,8 +46,8 @@ border-width: 0.5;
         height: 50%!important;
     }
 }
-#menu{
-    height: inherit;
+#inputChat{
+    width:100%
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
@@ -129,15 +136,15 @@ svg g.troisieme text{
 
 }
 .chat{
-    position: absolute;
+/*     position: absolute;
     top: 0;
-    left: 5%;
+    left: 5%; */
     display: flex;
     flex-direction: column;
     width: 20%;
-    height: 90%;
 }
 div.convo{
+    
     display: flex;
     flex-direction: column;
     overflow-y: scroll;

@@ -54,21 +54,24 @@ import ValidationTour from "./controls/ValidationTour.js"
 import AdminControls from './controls/AdminControls.js'
 import handleClickTile from './controls/handleClickTileFarmer.js'
 import Chat from "./Chat.js"
+import { socket } from "./context/socket.js"
+import Ressources from "./Ressources.js"
+
 class Conteneur extends React.Component {
     constructor(props) {
         super(props)
         // lie les fonctions pour récupérer les states lorsqu'elles sont lancées dans <ActivitySwapper/>
         this.changeTileActivity = this.changeTileActivity.bind(this)
         this.handleClickTile = handleClickTile.bind(this)
-
         // initialise la carte et la stock dans le state de Conteneur
-        const moreHexas = generateHexes();
-        const moreRivers = generateRivers(moreHexas);
+        const moreHexas = null;
+        const moreRivers = null;
 
         //const HexasTampon = Object.values(moreHexas).map((x) => x.activity)
         this.state = {
             map: { moreHexas, moreRivers, player: 6 },
-            selectedTile: null, HexasTampon: this.createTampon(moreHexas)
+            selectedTile: null, HexasTampon: null,
+            ressources: { ut: null, ub: null }
         }
     }
     /* 
@@ -76,16 +79,20 @@ class Conteneur extends React.Component {
         cela permet de garder une trâce de l'état du bassin au début du tour et donc faire 
             les logs et modifications à la validation du tour
     */
-    createTampon(moreHexas) {
+    createTampon(moreHexas, player) {
         let HexasTampon = {}
         for (const key in moreHexas) {
-            let hex = {};
-            hex.activity = moreHexas[key].activity
-            hex.player = moreHexas[key].player
-            HexasTampon[key] = hex
+            console.log(moreHexas[key].player)
+            if (moreHexas[key].player == player) {
+                let hex = {};
+                hex.activity = moreHexas[key].activity
+                hex.player = moreHexas[key].player
+                HexasTampon[key] = hex
+            }
         }
         return HexasTampon
     }
+
     /* 
         met à jour le state de moreHexas avec de nouvelles données et créé une copie en appelant createTampon
     */
@@ -99,7 +106,7 @@ class Conteneur extends React.Component {
             newHexas[index] = newValues
         }
         this.setState({ moreHexas: newHexas })
-        this.createTampon(this.state.map.moreHexas)
+        this.createTampon(this.state.map.moreHexas, this.state.map.player)
     }
     /*
         fonction déclenchée lorsque le formulaire dans <ActivitySwapper/> est envoyé
@@ -127,16 +134,31 @@ class Conteneur extends React.Component {
         this.setState({ moreHexas: hexagons })
         this.setState({ selectedTile: null })
     }
+    componentDidMount() {
+        socket.emit("createRoom", "player1", 0, (responseCreateRoom) => {
+            this.setState({ room: responseCreateRoom })
+            socket.emit("startGame")
+            socket.emit("updateStats", (response) => {
+                this.setState({ ressources: response[0] })
+            })
+            socket.emit("getCurrentGrid", (response) => {
+                const newHexas = generateHexes(response)
+                const newRivers = generateRivers(newHexas)
+                const tampon = this.createTampon(newHexas, this.state.map.player)
+                this.setState({ map: { ...this.state.map, moreHexas: newHexas, moreRivers: newRivers, HexasTampon: tampon } })
+            })
+        })
+    }
+
     render() {
+        console.log(this.state.map.HexasTampon)
         return (
             <div className="App">
+
                 <div id="menu">
                     <p>MENU</p>
-                    <div>
-                        UB : 10
-                        UT : 10
-                </div>
-                    <ValidationTour updated={this.state.map.moreHexas} origin={this.state.HexasTampon} key="validation" />
+                    <Ressources ressources={this.state.ressources} />
+                    <ValidationTour key="validation" updated={this.state.map.moreHexas} origin={this.state.HexasTampon} />
                     {/* only display the components if a tile is selected */}
                     {this.state.selectedTile === null ? "" :
                         [
@@ -146,8 +168,8 @@ class Conteneur extends React.Component {
                         ]
                     }
                 </div>
-                <Bassin handleClick={this.handleClickTile} map={this.state.map} />
                 <Chat />
+                {this.state.map.moreHexas != null ? <Bassin handleClick={this.handleClickTile} map={this.state.map} /> : ""}
             </div>
         )
     }

@@ -79,6 +79,7 @@ import React, { Component } from 'react'
 import { HexGrid, Layout, Path, Hexagon, Text } from 'react-hexgrid'
 import layoutProps from './layoutProps.js'
 
+
 function setPlayerClass(player) {
     if (player === 0) return "" //attributé à aucun joueur
     switch (player % 3) {
@@ -114,7 +115,7 @@ export default class Bassin extends Component {
             activity={hex.activity.toString()}
             key={i} id={i} q={hex.q} r={hex.r} s={hex.s}
             /* appel la fonction parent handleClick avec en paramètre l'hexagone */
-            onClick={(e, h) => hex.player === player ? this.props.handleClick(h) : ""}
+            onClick={(e, h) => hex.player === 0/* player  */ ? this.props.handleClick(h) : ""}
             /* définie la classe de l'hexagone en fonction de son activité */
             className={hex.subBasin === bassin ? `${hex.modified} ${activityToString(hex.activity)} 
                 ${setPlayerClass(hex.player)} ${hex.player % 3}` : "notInBassin"} >
@@ -156,9 +157,10 @@ export default class Bassin extends Component {
                     {/* boucle créant les hexagones */}
                     {Object.values(this.props.map.moreHexas).map((hex, i) =>
                         //
-                        this.props.map.player < 10 ? this.createHexeFarmer(hex, i, this.props.map.player) :
+                        /* this.props.map.player < 10 ? this.createHexeFarmer(hex, i, this.props.map.player) :
                             this.props.map.role === "elu" ? this.createHexeElected(hex, i) :
-                                this.createHexeManager(hex, i)
+                                this.createHexeManager(hex, i) */
+                        this.createHexeFarmer(hex, i, this.props.map.player)
 
                     )}
 
