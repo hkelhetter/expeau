@@ -54,8 +54,8 @@ import ValidationTour from "./controls/ValidationTour.js"
 import AdminControls from './controls/AdminControls.js'
 import handleClickTile from './controls/handleClickTileFarmer.js'
 import Chat from "./Chat.js"
-import { socket } from "./context/socket.js"
-import Ressources from "./Ressources.js"
+import socket from "./context/socket.js"
+import Ressources from "./controls/Ressources.js"
 
 class Conteneur extends React.Component {
     constructor(props) {
@@ -63,6 +63,7 @@ class Conteneur extends React.Component {
         // lie les fonctions pour récupérer les states lorsqu'elles sont lancées dans <ActivitySwapper/>
         this.changeTileActivity = this.changeTileActivity.bind(this)
         this.handleClickTile = handleClickTile.bind(this)
+        this.a = this.a.bind(this)
         // initialise la carte et la stock dans le state de Conteneur
         const moreHexas = null;
         const moreRivers = null;
@@ -71,7 +72,8 @@ class Conteneur extends React.Component {
         this.state = {
             map: { moreHexas, moreRivers, player: 6 },
             selectedTile: null, HexasTampon: null,
-            ressources: { ut: null, ub: null }
+            ressources: { ut: null, ub: null },
+            tour: 0
         }
     }
     /* 
@@ -82,7 +84,6 @@ class Conteneur extends React.Component {
     createTampon(moreHexas, player) {
         let HexasTampon = {}
         for (const key in moreHexas) {
-            console.log(moreHexas[key].player)
             if (moreHexas[key].player == player) {
                 let hex = {};
                 hex.activity = moreHexas[key].activity
@@ -149,16 +150,20 @@ class Conteneur extends React.Component {
             })
         })
     }
-
+    a() {
+        console.log("a")
+        this.setState({ tour: this.state.tour + 1 })
+    }
     render() {
-        console.log(this.state.map.HexasTampon)
+        console.log(this.state)
         return (
             <div className="App">
 
                 <div id="menu">
                     <p>MENU</p>
+                    <button onClick={this.a}>{this.state.tour}</button>
                     <Ressources ressources={this.state.ressources} />
-                    <ValidationTour key="validation" updated={this.state.map.moreHexas} origin={this.state.HexasTampon} />
+                    <ValidationTour key="validation" updated={this.state.map.moreHexas} origin={this.state.HexasTampon} tour={this.state.tour} />
                     {/* only display the components if a tile is selected */}
                     {this.state.selectedTile === null ? "" :
                         [

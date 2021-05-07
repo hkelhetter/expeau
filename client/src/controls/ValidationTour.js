@@ -48,9 +48,8 @@ class ValidationTour extends React.Component {
         console.log(log)
     }
     componentDidUpdate(prevProps, prevState) {
+        if (prevProps.tour != this.props.tour) this.setState({ validated: false })
     }
-
-
     render() {
 
         return (
