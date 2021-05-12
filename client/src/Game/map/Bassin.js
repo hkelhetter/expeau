@@ -1,52 +1,4 @@
 /* 
-    Function : setPlayerClass
-
-    Syntax
-        playerClass=setPlayerClass(PlayerId)
-    
-    Input
-        PlayerId    :player's id
-
-    Outputs
-        playerClass :player's id on subBasin
-
-    Description
-        Compute player's id on their subBasin based on their global id
-*/
-
-/* 
-    Function : activityToString
-
-    Syntax
-        tileActivity=activityToString(activity)
-    
-    Input
-        activity    :tile's activity
-
-    Outputs
-        tileactivity:string corresponding to the activity
-
-    Description
-        returns a string based on the input
-        this is meant to set className to components and apply css style
-*/
-
-/* 
-    Function : setMapSize
-
-    Syntax
-        
-    
-    Input
-        
-
-    Outputs
-
-    Description
-        
-*/
-
-/* 
     Function : createHexeFarmer
 
     Syntax
@@ -78,50 +30,30 @@
 import React, { Component } from 'react'
 import { HexGrid, Layout, Path, Hexagon, Text } from 'react-hexgrid'
 import layoutProps from './layoutProps.js'
-
-
-function setPlayerClass(player) {
-    if (player === 0) return "" //attributé à aucun joueur
-    switch (player % 3) {
-        case 0: return "troisieme" //attribué au joueur 3, 6 ou 9
-        case 1: return "premier" //attribué au joueur 1, 4 ou en 7
-        case 2: return "deuxieme" //attribué au joueur 2, 5 ou 8
-    }
-}
-
-function activityToString(activity) {
-    switch (activity) {
-        case 1: return "ville";
-        case 2: return "agriculture";
-        case 3: return "foret";
-        default: return "notInBassin";
-    }
-}
-function getSubBassin(id) {
-    if (id < 4) return 1
-    if (id < 7) return 2
-    return 3
-}
-function setMapSize() {
-    return window.matchMedia('(orientation:landscape)').matches ? '50%' : '100%'
-}
+import { setPlayerClass, activityToString, getSubBassin, setMapSize } from './MapUtil.js'
 
 export default class Bassin extends Component {
 
+    componentDidMount() {
+        /* 
+            re-render when window is resized
+            allows to update dimensions of Hexgrid
+        */
+        window.addEventListener('resize', () => {
+            this.forceUpdate()
+        })
 
+    }
     createHexeFarmer(hex, i, player) {
         const bassin = getSubBassin(player)
         return <Hexagon
             activity={hex.activity.toString()}
             key={i} id={i} q={hex.q} r={hex.r} s={hex.s}
-            /* appel la fonction parent handleClick avec en paramètre l'hexagone */
-            onClick={(e, h) => hex.player === 0/* player  */ ? this.props.handleClick(h) : ""}
-            /* définie la classe de l'hexagone en fonction de son activité */
+            onClick={(e, h) => hex.player === /* player */0 ? this.props.handleClick(h) : ""}
             className={hex.subBasin === bassin ? `${hex.modified} ${activityToString(hex.activity)} 
                 ${setPlayerClass(hex.player)} ${hex.player % 3}` : "notInBassin"} >
-
             {hex.subBasin === bassin ? [
-                <Text key="tileId" y={-2}>{(i + 1).toString()}</Text>,
+                this.displayTileId(i + 1),
                 <Text key="playerId" y={2}>{hex.player.toString()}</Text>] : ""}
 
         </Hexagon>
@@ -132,7 +64,7 @@ export default class Bassin extends Component {
             activity={hex.activity.toString()}
             key={i} id={i} q={hex.q} r={hex.r} s={hex.s}
             className={activityToString(hex.activity)} >
-            <Text>{i + 1}</Text>
+            {this.displayTileId(i + 1)}
 
         </Hexagon >
     }
@@ -140,11 +72,12 @@ export default class Bassin extends Component {
         return <Hexagon
             activity={hex.activity.toString()}
             key={i} id={i} q={hex.q} r={hex.r} s={hex.s}
-            /* définie la classe de l'hexagone en fonction de son activité */
-            className="manager" >
-            <Text>{i + 1}</Text>
-
+            className={`manager ${activityToString(hex.activity)}`} >
+            {this.displayTileId(i + 1)}
         </Hexagon>
+    }
+    displayTileId(id) {
+        return <Text key="tileId" y={-2}>{(id).toString()}</Text>
     }
     shouldComponentUpdate(nextProps, nextState) {
         return this.props !== nextProps
@@ -156,12 +89,10 @@ export default class Bassin extends Component {
                     spacing={layoutProps.spacing} origin={{ x: layoutProps.x, y: layoutProps.y }} >
                     {/* boucle créant les hexagones */}
                     {Object.values(this.props.map.moreHexas).map((hex, i) =>
-                        //
                         /* this.props.map.player < 10 ? this.createHexeFarmer(hex, i, this.props.map.player) :
                             this.props.map.role === "elu" ? this.createHexeElected(hex, i) :
                                 this.createHexeManager(hex, i) */
                         this.createHexeFarmer(hex, i, this.props.map.player)
-
                     )}
 
                     {/* boucle créant les cours d'eau */}

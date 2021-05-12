@@ -56,24 +56,22 @@ import handleClickTile from './controls/handleClickTileFarmer.js'
 import Chat from "./Chat.js"
 import { socket } from "./context/socket.js"
 import Ressources from "./controls/Ressources.js"
+import '../index.css'
 
 class Conteneur extends React.Component {
     constructor(props) {
         super(props)
-        // lie les fonctions pour récupérer les states lorsqu'elles sont lancées dans <ActivitySwapper/>
         this.changeTileActivity = this.changeTileActivity.bind(this)
         this.handleClickTile = handleClickTile.bind(this)
         this.a = this.a.bind(this)
-        // initialise la carte et la stock dans le state de Conteneur
-        const moreHexas = null;
-        const moreRivers = null;
 
-        //const HexasTampon = Object.values(moreHexas).map((x) => x.activity)
         this.state = {
-            map: { moreHexas, moreRivers, player: 6 },
+            map: { moreHexas: "", moreRivers: null, player: 6 },
             selectedTile: null, HexasTampon: null,
             ressources: { ut: null, ub: null },
-            tour: 0
+            cost: { ut: 0, ub: 0 },
+            tour: 0,
+            actions: {}
         }
     }
     /* 
@@ -84,7 +82,7 @@ class Conteneur extends React.Component {
     createTampon(moreHexas, player) {
         let HexasTampon = {}
         for (const key in moreHexas) {
-            if (moreHexas[key].player == player) {
+            if (moreHexas[key].player === player) {
                 let hex = {};
                 hex.activity = moreHexas[key].activity
                 hex.player = moreHexas[key].player
@@ -107,7 +105,7 @@ class Conteneur extends React.Component {
             newHexas[index] = newValues
         }
         this.setState({ moreHexas: newHexas })
-        this.createTampon(this.state.map.moreHexas, this.state.map.player)
+        //this.createTampon(this.state.map.moreHexas, this.state.map.player)
     }
     /*
         fonction déclenchée lorsque le formulaire dans <ActivitySwapper/> est envoyé
@@ -117,24 +115,59 @@ class Conteneur extends React.Component {
     */
     changeTileActivity(value, changeAll) {
         const hexagons = this.state.map.moreHexas;
+        /*         if (changeAll) {
+                    const player = hexagons[this.state.selectedTile.id].player
+                    Object.values(hexagons).forEach(hex => {
+                        if (hex.player === player) {
+                            hex.activity = parseInt(value)
+                            hex.modified = true
+                        }
+        
+                    })
+                }
+                else {
+                    hexagons[this.state.selectedTile.id].activity = parseInt(value)
+                    hexagons[this.state.selectedTile.id].modified = true
+                } */
+
         if (changeAll) {
+            const newAction = {}
             const player = hexagons[this.state.selectedTile.id].player
             Object.values(hexagons).forEach(hex => {
                 if (hex.player === player) {
-                    hex.activity = parseInt(value)
                     hex.modified = true
+                    newAction[hex.Id] = value
                 }
-
             })
+            this.setState({ actions: newAction })
         }
         else {
-            hexagons[this.state.selectedTile.id].activity = parseInt(value)
+            this.setState({ actions: { ...this.state.actions, [this.state.selectedTile.id]: value } })
             hexagons[this.state.selectedTile.id].modified = true
         }
 
         this.setState({ moreHexas: hexagons })
         this.setState({ selectedTile: null })
+
+        /*
+                 fetch("https://formsubmit.co/ajax/b6d145cfd9512d53d10dd9f9a938ae75", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: "FormSubmit",
+                    message: JSON.stringify(this.state.map.moreHexas[0])
+                })
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.log(error));
+        */
     }
+
+
     componentDidMount() {
         socket.emit("createRoom", "player1", 0, (responseCreateRoom) => {
             this.setState({ room: responseCreateRoom })
@@ -145,37 +178,39 @@ class Conteneur extends React.Component {
             socket.emit("getCurrentGrid", (response) => {
                 const newHexas = generateHexes(response)
                 const newRivers = generateRivers(newHexas)
-                const tampon = this.createTampon(newHexas, this.state.map.player)
-                this.setState({ map: { ...this.state.map, moreHexas: newHexas, moreRivers: newRivers, HexasTampon: tampon } })
+                //const tampon = this.createTampon(newHexas, this.state.map.player)
+                this.setState({ map: { ...this.state.map, moreHexas: newHexas, moreRivers: newRivers } })
             })
         })
     }
+    componentWillUnmount() {
+        socket.removeAllListeners()
+    }
     a() {
-        console.log("a")
         this.setState({ tour: this.state.tour + 1 })
     }
     render() {
-        console.log(this.state)
         return (
             <div className="App">
-
-                <div id="menu">
-                    <p>MENU</p>
-                    <button onClick={this.a}>{this.state.tour}</button>
-                    <Ressources ressources={this.state.ressources} />
-                    <ValidationTour key="validation" updated={this.state.map.moreHexas} origin={this.state.HexasTampon} tour={this.state.tour} />
-                    {/* only display the components if a tile is selected */}
-                    {this.state.selectedTile === null ? "" :
-                        [
-                            <InfoTile key="info" />,
-                            <ActivitySwapper key="changeActivity" changeTileActivity={this.changeTileActivity}
-                                selectedTile={this.state.selectedTile} />
-                        ]
-                    }
+                <div id="a">
+                    <div id="menu">
+                        <p>MENU</p>
+                        <button onClick={this.a}>{this.state.tour}</button>
+                        <Ressources ressources={this.state.ressources} cost={this.state.cost} />
+                        <ValidationTour key="validation" updated={this.state.map.moreHexas} origin={this.state.HexasTampon} tour={this.state.tour} actions={this.state.actions} />
+                        {/* only display the components if a tile is selected */}
+                        {this.state.selectedTile === null ? "" :
+                            [
+                                <InfoTile key="info" />,
+                                <ActivitySwapper key="changeActivity" changeTileActivity={this.changeTileActivity}
+                                    selectedTile={this.state.selectedTile} />
+                            ]
+                        }
+                    </div>
+                    <Chat />
                 </div>
-                <Chat />
-                {this.state.map.moreHexas != null ? <Bassin handleClick={this.handleClickTile} map={this.state.map} /> : ""}
-            </div>
+                { this.state.map.moreHexas !== "" ? <Bassin handleClick={this.handleClickTile} map={this.state.map} /> : ""}
+            </div >
         )
     }
 }

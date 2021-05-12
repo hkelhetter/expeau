@@ -1,15 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
-import Conteneur from './Conteneur'
-//import { SocketContext, socket } from './context/socket.js';
-require('./index.css')
+import Tutoriel from './tutoriel.js'
+import Game from './Game/Game.js'
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 ReactDOM.render(
     <React.StrictMode>
-        {/*         <SocketContext.Provider value={socket}>
-        </SocketContext.Provider>
- */}        <Conteneur />
+        <Router>
+            <Route exact path="/">
+                <Game />
+            </Route>
+            <Route exact path="/tutoriel">
+                <Tutoriel />
+            </Route>
+        </Router>
 
     </React.StrictMode>,
     document.getElementById('root')

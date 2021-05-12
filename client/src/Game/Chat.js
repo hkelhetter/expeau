@@ -72,10 +72,9 @@ import { socket } from './context/socket'
 export default class Chat extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { textValue: "", message: [], inConvo: false, show: true }
+        this.state = { textValue: "", message: [], inConvo: false }
         this.handleSubmit = this.handleSubmit.bind(this)
         this.lastMessage = React.createRef()
-        this.handleClick = this.handleClick.bind(this)
     }
     shouldComponentUpdate(nextProps, nextState) {
         return this.state !== nextState
@@ -88,7 +87,7 @@ export default class Chat extends React.Component {
             message: this.addMessage(newMessage),
             textValue: ""
         })
-
+        socket.emit("sendMessage", newMessage)
 
     }
     addMessage(newMessage) {
@@ -100,20 +99,20 @@ export default class Chat extends React.Component {
     componentDidMount() {
         this.scrollToBottom()
         socket.on("receiveMessage", (data) => {
-            this.setState({ message: [...this.state.message, { msg: this.state.textValue, authore: this.props.authore }] })
+            this.setState({ message: this.addMessage(data) })
         })
     }
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.message.length != this.state.message.length ||
-            prevState.show != this.state.show) this.scrollToBottom()
+        if (prevState.message.length !== this.state.message.length) this.scrollToBottom()
 
+    }
+    componentWillUnmount() {
+        socket.removeAllListeners()
     }
     scrollToBottom() {
         this.lastMessage?.current?.scrollIntoView({ behavior: 'smooth' })
     }
-    handleClick() {
-        this.setState({ show: !this.state.show })
-    }
+
     render() {
         return (
             <div className="chat">
