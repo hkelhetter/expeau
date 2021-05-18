@@ -46,7 +46,7 @@
         
 */
 import React from 'react'
-import { generateHexes, generateRivers } from "./map/MapUtil.js"
+import { generateHexes, generateMap, generateRivers } from "./map/MapUtil.js"
 import Bassin from "./map/Bassin.js"
 import ActivitySwapper from "./controls/ActivitySwapper.js"
 import InfoTile from "./controls/InfoTile.js"
@@ -57,6 +57,7 @@ import Chat from "./Chat.js"
 import { socket } from "./context/socket.js"
 import Ressources from "./controls/Ressources.js"
 import '../index.css'
+import CreateConversation from './CreateConversation.js'
 
 class Conteneur extends React.Component {
     constructor(props) {
@@ -64,12 +65,16 @@ class Conteneur extends React.Component {
         this.changeTileActivity = this.changeTileActivity.bind(this)
         this.handleClickTile = handleClickTile.bind(this)
         this.a = this.a.bind(this)
+        this.addConvo = this.addConvo.bind(this)
 
+        //=> '46.5.21.123'
+
+        //=> 'fe80::200:f8ff:fe21:67cf'
         this.state = {
             map: { moreHexas: "", moreRivers: null, player: 6 },
             selectedTile: null, HexasTampon: null,
             ressources: { ut: null, ub: null },
-            cost: { ut: 0, ub: 0 },
+            cost: {},
             tour: 0,
             actions: {}
         }
@@ -104,7 +109,7 @@ class Conteneur extends React.Component {
             }
             newHexas[index] = newValues
         }
-        this.setState({ moreHexas: newHexas })
+        this.setState({ moreHexas: newHexas, cost: {} })
         //this.createTampon(this.state.map.moreHexas, this.state.map.player)
     }
     /*
@@ -132,22 +137,26 @@ class Conteneur extends React.Component {
 
         if (changeAll) {
             const newAction = {}
+            const newCost = {}
             const player = hexagons[this.state.selectedTile.id].player
             Object.values(hexagons).forEach(hex => {
                 if (hex.player === player) {
                     hex.modified = true
-                    newAction[hex.Id] = value
+                    newAction[hex.Id] = value.Id
+                    newCost[hex.Id] = { ub: value.Intrants, ut: value.Travail }
                 }
             })
-            this.setState({ actions: newAction })
+            this.setState({ actions: newAction, cost: newCost })
         }
         else {
-            this.setState({ actions: { ...this.state.actions, [this.state.selectedTile.id]: value } })
+            let cost = this.state.cost
+            cost[this.state.selectedTile.id] = { ub: value.Intrants, ut: value.Travail }
+            this.setState({ actions: { ...this.state.actions, [this.state.selectedTile.id]: value.Id, cost } })
             hexagons[this.state.selectedTile.id].modified = true
         }
 
-        this.setState({ moreHexas: hexagons })
-        this.setState({ selectedTile: null })
+        this.setState({ moreHexas: hexagons, selectedTile: null })
+
 
         /*
                  fetch("https://formsubmit.co/ajax/b6d145cfd9512d53d10dd9f9a938ae75", {
@@ -166,7 +175,26 @@ class Conteneur extends React.Component {
                 .catch(error => console.log(error));
         */
     }
+    addConvo(data) {
 
+        if (data.convoName.length == 0) return
+        for (const entry in this.state.lstConvo) {
+            if (entry == data.convoName) {
+                alert("nom déjà pris")
+                return
+            }
+        }
+        let newConvo = []
+        const name = data.convoName
+        for (const entry in data) {
+            if (!(entry == "convoName" || entry == "lstConvo")) {
+                if (data[entry]) newConvo.push(entry)
+            }
+        }
+        if (newConvo.length > 0) {
+            this.setState({ lstConvo: { ...this.state.lstConvo, [name]: newConvo } })
+        }
+    }
 
     componentDidMount() {
         socket.emit("createRoom", "player1", 0, (responseCreateRoom) => {
@@ -181,21 +209,30 @@ class Conteneur extends React.Component {
                 //const tampon = this.createTampon(newHexas, this.state.map.player)
                 this.setState({ map: { ...this.state.map, moreHexas: newHexas, moreRivers: newRivers } })
             })
+            socket.emit("getAllActions", (response) => {
+                this.setState({ lstActions: response })
+            })
+            socket.emit("playersInRoom", (response) => {
+                this.setState({ lstPlayer: response })
+            })
         })
     }
     componentWillUnmount() {
         socket.removeAllListeners()
     }
-    a() {
+    async a() {
         this.setState({ tour: this.state.tour + 1 })
+
     }
     render() {
         return (
             <div className="App">
+
                 <div id="a">
                     <div id="menu">
                         <p>MENU</p>
                         <button onClick={this.a}>{this.state.tour}</button>
+                        {this.state.lstPlayer != undefined ? <CreateConversation lstPlayer={this.state.lstPlayer} addConvo={this.addConvo} /> : ""}
                         <Ressources ressources={this.state.ressources} cost={this.state.cost} />
                         <ValidationTour key="validation" updated={this.state.map.moreHexas} origin={this.state.HexasTampon} tour={this.state.tour} actions={this.state.actions} />
                         {/* only display the components if a tile is selected */}
@@ -203,7 +240,7 @@ class Conteneur extends React.Component {
                             [
                                 <InfoTile key="info" />,
                                 <ActivitySwapper key="changeActivity" changeTileActivity={this.changeTileActivity}
-                                    selectedTile={this.state.selectedTile} />
+                                    selectedTile={this.state.selectedTile} actions={this.state.lstActions} />
                             ]
                         }
                     </div>

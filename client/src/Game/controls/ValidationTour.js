@@ -28,7 +28,6 @@ class ValidationTour extends React.Component {
         super(props)
         this.state = { validated: false }
         this.handleSubmit = this.handleSubmit.bind(this)
-        console.log(this.props)
     }
     handleSubmit() {
         /*         const origin = this.props.origin
@@ -64,7 +63,6 @@ class ValidationTour extends React.Component {
         if (prevProps.tour !== this.props.tour) this.setState({ validated: false })
     }
     render() {
-        console.log(this.props)
 
         return (
             <>

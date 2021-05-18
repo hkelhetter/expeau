@@ -46,15 +46,16 @@ export default class Bassin extends Component {
     }
     createHexeFarmer(hex, i, player) {
         const bassin = getSubBassin(player)
+
         return <Hexagon
             activity={hex.activity.toString()}
+            subId={hex.cellPlayer}
             key={i} id={i} q={hex.q} r={hex.r} s={hex.s}
-            onClick={(e, h) => hex.player === /* player */0 ? this.props.handleClick(h) : ""}
-            className={hex.subBasin === bassin ? `${hex.modified} ${activityToString(hex.activity)} 
+            onClick={(e, h) => hex.player == player ? this.props.handleClick(h) : ""}
+            className={hex.basin === bassin ? `${hex.modified} ${activityToString(hex.activity)} 
                 ${setPlayerClass(hex.player)} ${hex.player % 3}` : "notInBassin"} >
-            {hex.subBasin === bassin ? [
-                this.displayTileId(i + 1),
-                <Text key="playerId" y={2}>{hex.player.toString()}</Text>] : ""}
+            {hex.basin === bassin ? [
+                hex.cellPlayer != null ? this.displayTileId(hex.cellPlayer) : ""] : ""}
 
         </Hexagon>
     }
@@ -64,8 +65,7 @@ export default class Bassin extends Component {
             activity={hex.activity.toString()}
             key={i} id={i} q={hex.q} r={hex.r} s={hex.s}
             className={activityToString(hex.activity)} >
-            {this.displayTileId(i + 1)}
-
+            {hex.cellPlayer != null ? this.displayTileId(hex.cellPlayer) : ""}
         </Hexagon >
     }
     createHexeManager(hex, i) {
@@ -73,11 +73,11 @@ export default class Bassin extends Component {
             activity={hex.activity.toString()}
             key={i} id={i} q={hex.q} r={hex.r} s={hex.s}
             className={`manager ${activityToString(hex.activity)}`} >
-            {this.displayTileId(i + 1)}
+            {hex.cellPlayer != null ? this.displayTileId(hex.cellPlayer) : ""}
         </Hexagon>
     }
-    displayTileId(id) {
-        return <Text key="tileId" y={-2}>{(id).toString()}</Text>
+    displayTileId(text) {
+        return <Text key="tileId" y={-2}>{text.toString()}</Text>
     }
     shouldComponentUpdate(nextProps, nextState) {
         return this.props !== nextProps
@@ -94,7 +94,6 @@ export default class Bassin extends Component {
                                 this.createHexeManager(hex, i) */
                         this.createHexeFarmer(hex, i, this.props.map.player)
                     )}
-
                     {/* boucle créant les cours d'eau */}
                     {this.props.map.moreRivers.map((river, i) =>
                         <g key={i} className={river.start.outletFlowAcc < 100 ? "small" : ""} >

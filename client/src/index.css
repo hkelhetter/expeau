@@ -18,7 +18,7 @@ body {
 background-color: beige;
 border-style: solid;
 border-color: black;
-border-width: 0.5;
+border-width: 1px;
 height: 95vh;
 overflow-y: scroll;
 }
@@ -91,7 +91,7 @@ body {
     stroke-width: 0.2;
     stroke:black;
 
-    fill-opacity: 0.5;
+    fill-opacity: 0.8;
 /*     scale: 2; */
   }
   svg g:hover {
@@ -119,8 +119,8 @@ body {
     stroke-width: 0.3;
   }
   svg g.small path{
-      stroke:rgb(94, 235, 223)
-  }
+    stroke-dasharray: 1px;
+}
 svg g.ville polygon{
     fill:rgb(189, 19, 19);
 }
@@ -129,6 +129,9 @@ svg g.agriculture polygon{
 }
 svg g.foret polygon{
     fill:rgb(32, 138, 6);
+}
+svg g.water polygon{
+    fill:rgb(57, 111, 211);
 }
 svg g.true polygon{
     fill-opacity: 1;

@@ -11,7 +11,6 @@
         else it is updated to h's data        
 */
 function handleClickTile(h) {
-
     /* 
         le point d'interrogation permet de vérifier que le champ "seledtedTile" existe 
         avant d'essayer de récupérer le champ id 
