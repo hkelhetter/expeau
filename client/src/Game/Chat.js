@@ -72,26 +72,40 @@ import { socket } from './context/socket'
 export default class Chat extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { textValue: "", message: [], inConvo: false }
+        let messages = {}
+        Object.keys(this.props.lstConvo).map((convo) =>
+            messages[convo] = []
+        )
+        this.state = { textValue: "", convo: Object.keys(this.props.lstConvo)[0], messages, inConvo: false }
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleConvoChange = this.handleConvoChange.bind(this)
+        this.receiveMessage = this.receiveMessage.bind(this)
         this.lastMessage = React.createRef()
     }
     shouldComponentUpdate(nextProps, nextState) {
-        return this.state !== nextState
+        return this.state !== nextState || this.props.lstConvo !== nextProps.lstConvo
     }
     handleSubmit(e) {
         e.preventDefault();
         if (!this.state.textValue) return
-        const newMessage = { msg: this.state.textValue, authore: this.props.authore }
+        const newMessage = { msg: this.state.textValue, authore: this.props.authore, convo: this.state.convo }
+        let convo = this.state.convo
         this.setState({
-            message: this.addMessage(newMessage),
+            messages: this.addMessage(newMessage),
             textValue: ""
         })
         socket.emit("sendMessage", newMessage)
 
     }
     addMessage(newMessage) {
-        return [...this.state.message, newMessage]
+        let messages = this.state.messages
+        messages[this.state.convo].push(newMessage)
+        return messages
+    }
+    receiveMessage(newMessage) {
+        let messages = this.state.messages
+        const message = { msg: [newMessage.msg], authore: [newMessage.authore] }
+        messages[newMessage.convo].push(message)
     }
     updateText(e) {
         this.setState({ textValue: e })
@@ -103,7 +117,7 @@ export default class Chat extends React.Component {
         })
     }
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.message.length !== this.state.message.length) this.scrollToBottom()
+        if (prevState.messages[this.state.convo].length !== this.state.messages[this.state.convo].length) this.scrollToBottom()
 
     }
     componentWillUnmount() {
@@ -112,13 +126,24 @@ export default class Chat extends React.Component {
     scrollToBottom() {
         this.lastMessage?.current?.scrollIntoView({ behavior: 'smooth' })
     }
-
+    handleConvoChange(event) {
+        this.setState({ convo: event.target.value })
+    }
     render() {
+        console.log(this.state)
         return (
             <div className="chat">
                 <>
+                    <div id="convoChoice">
+
+                        <select name="convoSelect" onChange={this.handleConvoChange}>
+                            {Object.keys(this.props.lstConvo).map((convo) =>
+                                <option key={convo} >{convo}</option>
+                            )}
+                        </select>
+                    </div>
                     <div className="convo">
-                        {this.state.message.map((msg, i) =>
+                        {this.state.messages[this.state.convo].map((msg, i) =>
                             <div key={i} className={`message ${msg.authore !== this.props.authore ? "" : "received"}`}>
                                 <p className="msg"> {msg.msg}</p>
                                 <p className="authore">{msg.authore === this.props.authore ? "Vous" : this.state.authore?.name}</p>

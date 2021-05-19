@@ -76,7 +76,8 @@ class Conteneur extends React.Component {
             ressources: { ut: null, ub: null },
             cost: {},
             tour: 0,
-            actions: {}
+            actions: {},
+            lstConvo: {}
         }
     }
     /* 
@@ -226,7 +227,7 @@ class Conteneur extends React.Component {
     }
     render() {
         return (
-            <div className="App">
+            < div className="App" >
 
                 <div id="a">
                     <div id="menu">
@@ -244,7 +245,7 @@ class Conteneur extends React.Component {
                             ]
                         }
                     </div>
-                    <Chat />
+                    {Object.keys(this.state.lstConvo).length > 0 ? <Chat lstConvo={this.state.lstConvo} /> : ""}
                 </div>
                 { this.state.map.moreHexas !== "" ? <Bassin handleClick={this.handleClickTile} map={this.state.map} /> : ""}
             </div >
