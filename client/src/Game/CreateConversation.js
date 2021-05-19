@@ -13,7 +13,10 @@ export default class CreateConversation extends React.Component {
     }
     handleSubmit(e) {
         e.preventDefault();
-        this.props.addConvo(this.state)
+        if (this.props.addConvo(this.state)) {
+            this.setState({ convoName: "" })
+        }
+
         /*  e.preventDefault()
          if (this.state.convoName.length == 0) return
          console.log(this.state.lstConvo)

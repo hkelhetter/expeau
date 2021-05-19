@@ -75,6 +75,9 @@ body {
     display: flex;
     flex-direction: row;
 }
+select{
+    width:100%
+}
   
 /*   [draggable] {
     -moz-user-select: none;

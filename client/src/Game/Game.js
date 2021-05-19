@@ -178,11 +178,11 @@ class Conteneur extends React.Component {
     }
     addConvo(data) {
 
-        if (data.convoName.length == 0) return
+        if (data.convoName.length == 0) return false
         for (const entry in this.state.lstConvo) {
             if (entry == data.convoName) {
                 alert("nom déjà pris")
-                return
+                return false
             }
         }
         let newConvo = []
@@ -194,7 +194,9 @@ class Conteneur extends React.Component {
         }
         if (newConvo.length > 0) {
             this.setState({ lstConvo: { ...this.state.lstConvo, [name]: newConvo } })
+            return true
         }
+        return false
     }
 
     componentDidMount() {

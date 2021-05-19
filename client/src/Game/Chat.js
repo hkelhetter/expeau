@@ -117,6 +117,9 @@ export default class Chat extends React.Component {
         })
     }
     componentDidUpdate(prevProps, prevState) {
+        Object.keys(this.props.lstConvo).map((convo) => {
+            if (this.state.messages[convo] == undefined) this.state.messages[convo] = []
+        })
         if (prevState.messages[this.state.convo].length !== this.state.messages[this.state.convo].length) this.scrollToBottom()
 
     }
@@ -130,7 +133,6 @@ export default class Chat extends React.Component {
         this.setState({ convo: event.target.value })
     }
     render() {
-        console.log(this.state)
         return (
             <div className="chat">
                 <>
@@ -143,7 +145,7 @@ export default class Chat extends React.Component {
                         </select>
                     </div>
                     <div className="convo">
-                        {this.state.messages[this.state.convo].map((msg, i) =>
+                        {Object.values(this.state.messages[this.state.convo]).map((msg, i) =>
                             <div key={i} className={`message ${msg.authore !== this.props.authore ? "" : "received"}`}>
                                 <p className="msg"> {msg.msg}</p>
                                 <p className="authore">{msg.authore === this.props.authore ? "Vous" : this.state.authore?.name}</p>
