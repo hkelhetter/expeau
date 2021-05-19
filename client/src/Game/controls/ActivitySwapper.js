@@ -1,36 +1,4 @@
-/* 
-    Function : constructor
 
-    Syntax  : constructor(props)
-        
-    Input   : props : function and data passed by parent when calling component
-
-    Description : create the component ActivitySwapper and initialize its props/state 
-        
-*/
-/* 
-    Function : handleChange
-
-    Syntax  : handleChange(event)
-        
-    Input   : event : the event calling the function
-        
-    Description : 
-        function called when interacting with the form's components
-        if the target is a checkBox, change its validation
-        update the state value for the corresponding event target
-*/
-/* 
-    Function : handleSubmit
-
-    Syntax  : handleSubmit(event)
-    
-    Input   : event :  the event calling the function
-
-    Description : 
-        call the function changeTileActivity from parent with in parameters the values of the field set 
-        
-*/
 /* 
     Function : 
 
@@ -45,40 +13,69 @@
     Description
         
 */
-/* 
-    Function : render
 
-    Syntax  : render()
-        
-    Description : display the form to change tile/subBasin's activityy
-        
-*/
 import React from 'react'
 import { socket } from "../context/socket.js"
 class ActivitySwapper extends React.Component {
+    /* 
+        Function : constructor
+    
+        Syntax  : constructor(props)
+            
+        Input   : props : function and data passed by parent when calling component
+    
+        Description : create the component ActivitySwapper and initialize its props/state 
+            
+    */
     constructor(props) {
         super(props);
-        /* 
-            initialise la valeur du formulaire de changement d'activité
-            si l'activité de la tuile vaut 1, la valeur vaut 2 sinon elle vaut 1
-        */
         this.state = { selectActivity: 0, checkbox: false };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
+    /* 
+        Function : handleChange
+    
+        Syntax  : handleChange(event)
+            
+        Input   : event : the event calling the function
+            
+        Description : 
+            function called when interacting with the form's components
+            if the target is a checkBox, change its validation
+            update the state value for the corresponding event target
+    */
     handleChange(event) {
         const target = event.target;
         console.log(target.value)
         const value = target.type === 'checkbox' ? target.checked : target.value;
         this.setState({ [target.name]: value });
     }
+    /* 
+        Function : handleSubmit
+    
+        Syntax  : handleSubmit(event)
+        
+        Input   : event :  the event calling the function
+    
+        Description : 
+            call the function changeTileActivity from parent with in parameters the values of the fieldset 
+            
+    */
     handleSubmit(event) {
         event.preventDefault();
         if (this.state.selectActivity != null) {
             this.props.changeTileActivity(this.props.actions[this.state.selectActivity], this.state.checkbox)
         }
     }
-
+    /* 
+        Function : render
+    
+        Syntax  : render()
+            
+        Description : display the form to change tile/subBasin's activityy
+            
+    */
     render() {
         console.log(this.props.selectedTile)
         return (
@@ -89,7 +86,7 @@ class ActivitySwapper extends React.Component {
                             : ` la case ${this.props.selectedTile.id}`}
                     </p>
                     <select name="selectActivity" onChange={this.handleChange}>
-                        {/* do not display the current tile's activity */}
+                        {/* display all possible action for selected tile */}
                         {this.props.actions.map((action, i) =>
                             <option key={i} value={i}>{action.Pratique}</option>,
                         )}

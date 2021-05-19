@@ -1,34 +1,23 @@
-/* 
-    Function : handleSubmit
 
-    Syntax  : handleSubmit()
 
-    Description : compare the objects origin and updated from the props and 
-                    create a new object containing all the differences
-        
-*/
-/* 
-    Function : 
-    
-    Syntax
-        
-    
-    Input
-        
-
-    Outputs
-
-    Description
-        
-*/
 import React from 'react'
 
 class ValidationTour extends React.Component {
+
     constructor(props) {
         super(props)
         this.state = { validated: false }
         this.handleSubmit = this.handleSubmit.bind(this)
     }
+    /* 
+        Function : handleSubmit
+     
+        Syntax  : handleSubmit()
+     
+        Description : compare the objects origin and updated from the props and 
+                        create a new object containing all the differences
+            
+    */
     handleSubmit() {
         /*         const origin = this.props.origin
                 const updated = this.props.updated
@@ -47,6 +36,18 @@ class ValidationTour extends React.Component {
                         socket.emit("addActions", a, 1) */
         const csv = this.generateCSV(this.props.actions)
     }
+    /* 
+        Function : generateCSV 
+        
+        Syntax  : csvData=generateCSV(data)
+        
+        Input   : data : an object to convert
+            
+        Outputs : csvData : input object with csv format
+    
+        Description : convert an object to csv format
+            
+    */
     generateCSV(data) {
         let str = ""
         console.log(Object.keys(data))
@@ -62,6 +63,7 @@ class ValidationTour extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.tour !== this.props.tour) this.setState({ validated: false })
     }
+
     render() {
 
         return (

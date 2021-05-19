@@ -1,5 +1,13 @@
 import React from 'react'
 class Ressources extends React.Component {
+    /* 
+        Function : render
+    
+        Syntax  : render()
+            
+        Description : display the available ressources and an estimated cost of the actions
+            
+    */
     render() {
         let ub = 0
         let ut = 0

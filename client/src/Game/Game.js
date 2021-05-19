@@ -1,50 +1,7 @@
-/* 
-    Function : createTampon
 
-    Syntax  : HexasTampon=createTampon(moreHexas)
-    
-    Input   : moreHexas : object containing data to create hexagons
-        
-    Outputs : HexasTampon : a copy of moreHexas containing a subset of entries
 
-    Description : 
-        create a copy of moreHexas containing a subset of entries of moreHexas.
-        the remaining entries are those the players can change directly.
-*/
-/* 
-    Function : updateMap
 
-    Syntax  : updateMap(newData)
-            
-    Input   : object containing the data to update the state
-        
-    Description : update the state of the map with new data received from the server. call createTampon automatically
-        
-*/
-/* 
-    Function : changeTileActivity
 
-    Syntax
-        changeTileActivity(value,changeAll)
-            
-    Input
-        value       :new value for the selectedTile's activity
-        changeAll   :false:only change the selectedTile's activity
-                    :true :change all tiles from the player
-
-    Description
-        updates the state in 2 ways:
-            changes the selectedTile or all tiles depending on the value of changeAll
-            set the state value of selectedTile to null        
-*/
-/* 
-    Function : render
-
-    Syntax  : render()
-
-    Description : display the different components of the app
-        
-*/
 import React from 'react'
 import { generateHexes, generateMap, generateRivers } from "./map/MapUtil.js"
 import Bassin from "./map/Bassin.js"
@@ -81,9 +38,20 @@ class Conteneur extends React.Component {
         }
     }
     /* 
-        créé une copies de moreHexas en ne récupérant que le champ modifiable par le joueur
-        cela permet de garder une trâce de l'état du bassin au début du tour et donc faire 
-            les logs et modifications à la validation du tour
+        Function : createTampon
+    
+        Syntax  : HexasTampon=createTampon(moreHexas)
+        
+        Input   : moreHexas : object containing data to create hexagons
+            
+        Outputs : HexasTampon : a copy of moreHexas containing a subset of entries
+    
+        Description : 
+            create a copy of moreHexas containing a subset of entries of moreHexas.
+            the remaining entries are those the players can change directly.
+    --------------------------------------------------------------------------------------------------------
+    not in current use
+    --------------------------------------------------------------------------------------------------------
     */
     createTampon(moreHexas, player) {
         let HexasTampon = {}
@@ -99,7 +67,14 @@ class Conteneur extends React.Component {
     }
 
     /* 
-        met à jour le state de moreHexas avec de nouvelles données et créé une copie en appelant createTampon
+        Function : updateMap
+    
+        Syntax  : updateMap(newData)
+                
+        Input   : object containing the data to update the state
+            
+        Description : update the state of the map with new data received from the server. call createTampon automatically
+            
     */
     updateMap(newData) {
         const newHexas = {}
@@ -113,11 +88,21 @@ class Conteneur extends React.Component {
         this.setState({ moreHexas: newHexas, cost: {} })
         //this.createTampon(this.state.map.moreHexas, this.state.map.player)
     }
-    /*
-        fonction déclenchée lorsque le formulaire dans <ActivitySwapper/> est envoyé
-        modifie l'activité de la case sélectionnée ou toutes celle du sous-bassin par celle mise en paramètre
-        met à jour le state de la carte des hexagons et modifie la couleur de la case en conséquence
-        selectedTile vaut null
+    /* 
+        Function : changeTileActivity
+    
+        Syntax
+            changeTileActivity(value,changeAll)
+                
+        Input
+            value       :new value for the selectedTile's activity
+            changeAll   :false:only change the selectedTile's activity
+                        :true :change all tiles from the player
+    
+        Description
+            updates the state in 2 ways:
+                changes the selectedTile or all tiles depending on the value of changeAll
+                set the state value of selectedTile to null        
     */
     changeTileActivity(value, changeAll) {
         const hexagons = this.state.map.moreHexas;
@@ -176,8 +161,28 @@ class Conteneur extends React.Component {
                 .catch(error => console.log(error));
         */
     }
-    addConvo(data) {
+    /* 
+    Function : addConvo
 
+    Syntax  : boolean=addConvo(data)
+
+    Input   : object following the next pattern
+                {
+                    convoName : "name of the conversation",
+                    player1 : boolean,
+                    player2 : boolean
+                    ...
+                }
+                playerN's represents the player's name and the value represents 
+                        whether or not it is part of the conversation
+
+    Output  : the success of the function
+
+    Description : display the different components of the app
+        
+*/
+    addConvo(data) {
+        console.log(data)
         if (data.convoName.length == 0) return false
         for (const entry in this.state.lstConvo) {
             if (entry == data.convoName) {
@@ -198,7 +203,12 @@ class Conteneur extends React.Component {
         }
         return false
     }
-
+    /* 
+        Function : componentDidMount
+    
+        Description : subscribe to the required function from server to keep up to date
+            
+    */
     componentDidMount() {
         socket.emit("createRoom", "player1", 0, (responseCreateRoom) => {
             this.setState({ room: responseCreateRoom })
@@ -227,6 +237,14 @@ class Conteneur extends React.Component {
         this.setState({ tour: this.state.tour + 1 })
 
     }
+    /* 
+        Function : render
+    
+        Syntax  : render()
+    
+        Description : display the different components of the app
+            
+    */
     render() {
         return (
             < div className="App" >

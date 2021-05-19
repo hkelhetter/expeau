@@ -1,30 +1,4 @@
-/* 
-    Function : createHexeFarmer
 
-    Syntax
-        <Hexagon/>=createHexeFarmer(hex,i)        
-    
-    Input
-        hex :object containing the data to create the hexagon
-        i   :hex's id
-
-    Outputs
-        polygon :polygon of type svg with hexagon shape
-        text    :text inside the polygon countaining hex's id + 1
-
-    Description
-        returns the following architecture:
-            <g class='hexagon-group' plus some others such as the output of activityToString>
-                <g>
-                    <polygon/>
-                    <text/>
-                </g>
-            </g>
-    
-    see /src/map/MapUtil.js for more information about hex'properties
-
-        
-*/
 
 
 import React, { Component } from 'react'
@@ -44,6 +18,33 @@ export default class Bassin extends Component {
         })
 
     }
+    /* 
+        Function : createHexeFarmer
+    
+        Syntax
+            <Hexagon/>=createHexeFarmer(hex,i)        
+        
+        Input
+            hex :object containing the data to create the hexagon
+            i   :hex's id
+    
+        Outputs
+            polygon :polygon of type svg with hexagon shape
+            text    :text inside the polygon countaining hex's id + 1
+    
+        Description
+            returns the following architecture:
+                <g class='hexagon-group' plus some others such as the output of activityToString>
+                    <g>
+                        <polygon/>
+                        <text/>
+                    </g>
+                </g>
+        
+        see /src/map/MapUtil.js for more information about hex'properties
+    
+            
+    */
     createHexeFarmer(hex, i, player) {
         const bassin = getSubBassin(player)
 
@@ -76,12 +77,31 @@ export default class Bassin extends Component {
             {hex.cellPlayer != null ? this.displayTileId(hex.cellPlayer) : ""}
         </Hexagon>
     }
+    /* 
+        Function : displayTileId 
+        
+        Syntax  :  displayTileId(text)
+        
+        Input   : text : text to display
+            
+        Description : return an object <Text> containing the input text
+            
+    */
     displayTileId(text) {
         return <Text key="tileId" y={-2}>{text.toString()}</Text>
     }
+    /* 
+        don't allow the component to update if the props don't change
+    */
     shouldComponentUpdate(nextProps, nextState) {
         return this.props !== nextProps
     }
+    /* 
+        Function : render 
+        
+        Description : display an hexagonal grid and rivers
+            
+    */
     render() {
         return (<>
             <HexGrid width={setMapSize()} height={setMapSize()} viewBox="-50 -50 100 100" >

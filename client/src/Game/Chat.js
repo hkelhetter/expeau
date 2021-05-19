@@ -1,75 +1,23 @@
-/* 
-    Function : constructor
 
-    Syntax  : constructor(props)
-        
-    Input   : props : function and data passed by parent when calling component
 
-    Description : create the component Chat and initialize its props/state 
-        
-*/
-/* 
-    Function : shouldComponentUpdate
 
-    Syntax  : shouldComponentUpdate(nextPros,nextState)
-        
-    Input   : nextPros : not used but mandatory
-            : nextState : the new value of state
-        
-    Outputs : boolean
 
-    Description : the component only updates if the state changes
-        
-*/
-/* 
-    Function : handleSubmit
 
-    Syntax  : handleSubmit(e)
-        
-    Input   : e : event calling the function
-    
-    Description : 
-        update this.state.message by adding a new value to the object containing a string and author's id
-        this.state.textValue is set to ""
-*/
-/* 
-    Function : updateText 
 
-    Syntax  : updateText(e)
-        
-    Input   : e : the value of the event calling the function
-        
-    Description : update this.state.textValue based on the pressed key
-        
-*/
-/* 
-    Function : scrollToBottom
-
-    Syntax  : scrollToBottom()
-    
-    Description : focus on the bottom of the chat
-        
-*/
-/* 
-    Function : handleClick
-
-    Syntax  : handleClick()
-
-    Description : display or next the chat
-        
-*/
-/* 
-    Function : render
-
-    Syntax  : render()
-        
-    Description : display a chat + a button to make it visible or not
-        
-*/
 import React from 'react'
 import { socket } from './context/socket'
 
 export default class Chat extends React.Component {
+    /* 
+        Function : constructor
+    
+        Syntax  : constructor(props)
+            
+        Input   : props : function and data passed by parent when calling component
+    
+        Description : create the component Chat and initialize its props/state 
+            
+    */
     constructor(props) {
         super(props)
         let messages = {}
@@ -82,9 +30,27 @@ export default class Chat extends React.Component {
         this.receiveMessage = this.receiveMessage.bind(this)
         this.lastMessage = React.createRef()
     }
+    /* 
+        Function : shouldComponentUpdate
+    
+        Description : the component only updates if the state changes
+            
+    */
     shouldComponentUpdate(nextProps, nextState) {
         return this.state !== nextState || this.props.lstConvo !== nextProps.lstConvo
     }
+    /* 
+        Function : handleSubmit
+    
+        Syntax  : handleSubmit(e)
+            
+        Input   : e : event calling the function
+        
+        Description : 
+            update this.state.messages by adding a new value to the object 
+                containing conversation room's name a string and author's id
+            this.state.textValue is set to ""
+    */
     handleSubmit(e) {
         e.preventDefault();
         if (!this.state.textValue) return
@@ -107,6 +73,16 @@ export default class Chat extends React.Component {
         const message = { msg: [newMessage.msg], authore: [newMessage.authore] }
         messages[newMessage.convo].push(message)
     }
+    /* 
+        Function : updateText 
+    
+        Syntax  : updateText(e)
+            
+        Input   : e : the value of the event calling the function
+            
+        Description : update this.state.textValue based on the pressed key
+            
+    */
     updateText(e) {
         this.setState({ textValue: e })
     }
@@ -126,12 +102,34 @@ export default class Chat extends React.Component {
     componentWillUnmount() {
         socket.removeAllListeners()
     }
+    /* 
+        Function : scrollToBottom
+    
+        Syntax  : scrollToBottom()
+        
+        Description : focus on the bottom of the chat
+            
+    */
     scrollToBottom() {
         this.lastMessage?.current?.scrollIntoView({ behavior: 'smooth' })
     }
+    /* 
+        Function : handleConvoChange
+            
+        Description : set the active conversation
+            
+    */
     handleConvoChange(event) {
         this.setState({ convo: event.target.value })
     }
+    /* 
+        Function : render
+    
+        Syntax  : render()
+            
+        Description : display a chat + available conversations
+            
+    */
     render() {
         return (
             <div className="chat">
