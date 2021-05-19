@@ -34,7 +34,7 @@ export function generateHexes(data) {
         //hex = HexUtils.pixelToHex({ x: (data[i].x0 + 164.6719013516826) * 4, y: (328 + data[i].y0) * -4 }, layout)
         // merge hex and data[i] into hexas[i]
         hexas[i] = Object.assign(hex, data[i])
-        renameProperty(hexas[i], "mainCLC1", "activity")
+        //renameProperty(hexas[i], "mainCLC1", "activity")
     }
     return hexas;
 }

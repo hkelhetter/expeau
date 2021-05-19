@@ -1,6 +1,3 @@
-
-
-
 import React, { Component } from 'react'
 import { HexGrid, Layout, Path, Hexagon, Text } from 'react-hexgrid'
 import layoutProps from './layoutProps.js'
@@ -47,13 +44,14 @@ export default class Bassin extends Component {
     */
     createHexeFarmer(hex, i, player) {
         const bassin = getSubBassin(player)
+        console.log(hex)
 
         return <Hexagon
-            activity={hex.activity.toString()}
+            mainCLC1={hex.mainCLC1.toString()}
             subId={hex.cellPlayer}
             key={i} id={i} q={hex.q} r={hex.r} s={hex.s}
             onClick={(e, h) => hex.player == player ? this.props.handleClick(h) : ""}
-            className={hex.basin === bassin ? `${hex.modified} ${activityToString(hex.activity)} 
+            className={hex.basin === bassin ? `${hex.modified} ${activityToString(hex.mainCLC1)} 
                 ${setPlayerClass(hex.player)} ${hex.player % 3}` : "notInBassin"} >
             {hex.basin === bassin ? [
                 hex.cellPlayer != null ? this.displayTileId(hex.cellPlayer) : ""] : ""}
@@ -63,17 +61,17 @@ export default class Bassin extends Component {
 
     createHexeElected(hex, i) {
         return <Hexagon
-            activity={hex.activity.toString()}
+            mainCLC1={hex.mainCLC1.toString()}
             key={i} id={i} q={hex.q} r={hex.r} s={hex.s}
-            className={activityToString(hex.activity)} >
+            className={activityToString(hex.mainCLC1)} >
             {hex.cellPlayer != null ? this.displayTileId(hex.cellPlayer) : ""}
         </Hexagon >
     }
     createHexeManager(hex, i) {
         return <Hexagon
-            activity={hex.activity.toString()}
+            mainCLC1={hex.mainCLC1.toString()}
             key={i} id={i} q={hex.q} r={hex.r} s={hex.s}
-            className={`manager ${activityToString(hex.activity)}`} >
+            className={`manager ${activityToString(hex.mainCLC1)}`} >
             {hex.cellPlayer != null ? this.displayTileId(hex.cellPlayer) : ""}
         </Hexagon>
     }
