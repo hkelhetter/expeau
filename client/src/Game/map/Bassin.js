@@ -44,7 +44,6 @@ export default class Bassin extends Component {
     */
     createHexeFarmer(hex, i, player) {
         const bassin = getSubBassin(player)
-        console.log(hex)
 
         return <Hexagon
             mainCLC1={hex.mainCLC1.toString()}
@@ -101,18 +100,18 @@ export default class Bassin extends Component {
             
     */
     render() {
+        console.log("render")
         return (<>
             <HexGrid width={setMapSize()} height={setMapSize()} viewBox="-50 -50 100 100" >
                 <Layout size={layoutProps.size} flat={layoutProps.flat}
                     spacing={layoutProps.spacing} origin={{ x: layoutProps.x, y: layoutProps.y }} >
-                    {/* boucle créant les hexagones */}
+                    {/* loops are done separetly because else the rivers may not always be visible */}
                     {Object.values(this.props.map.moreHexas).map((hex, i) =>
                         /* this.props.map.player < 10 ? this.createHexeFarmer(hex, i, this.props.map.player) :
                             this.props.map.role === "elu" ? this.createHexeElected(hex, i) :
                                 this.createHexeManager(hex, i) */
                         this.createHexeFarmer(hex, i, this.props.map.player)
                     )}
-                    {/* boucle créant les cours d'eau */}
                     {this.props.map.moreRivers.map((river, i) =>
                         <g key={i} className={river.start.outletFlowAcc < 100 ? "small" : ""} >
                             <Path

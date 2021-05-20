@@ -249,7 +249,7 @@ class Conteneur extends React.Component {
         return (
             < div className="App" >
 
-                <div id="a">
+                <div id="controls">
                     <div id="menu">
                         <p>MENU</p>
                         <button onClick={this.a}>{this.state.tour}</button>

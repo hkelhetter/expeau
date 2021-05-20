@@ -34,6 +34,7 @@ export function generateHexes(data) {
         //hex = HexUtils.pixelToHex({ x: (data[i].x0 + 164.6719013516826) * 4, y: (328 + data[i].y0) * -4 }, layout)
         // merge hex and data[i] into hexas[i]
         hexas[i] = Object.assign(hex, data[i])
+        hexas[i].modified = false
         //renameProperty(hexas[i], "mainCLC1", "activity")
     }
     return hexas;
@@ -95,9 +96,9 @@ export function generateRivers(moreHexas) {
 export function setPlayerClass(player) {
     if (player === 0) return "" //attributé à aucun joueur
     switch (player % 3) {
-        case 0: return "troisieme" //attribué au joueur 3, 6 ou 9
-        case 1: return "premier" //attribué au joueur 1, 4 ou en 7
-        case 2: return "deuxieme" //attribué au joueur 2, 5 ou 8
+        case 0: return "troisieme" //attribué aux joueurs 3, 6 ou 9
+        case 1: return "premier" //attribué aux joueurs 1, 4 ou en 7
+        case 2: return "deuxieme" //attribué aux joueurs 2, 5 ou 8
         default: return ""
     }
 }

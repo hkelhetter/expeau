@@ -150,7 +150,7 @@ export default class Chat extends React.Component {
                     <div className="submit">
                         <form onSubmit={this.handleSubmit} >
                             <fieldset disabled={this.state.inConvo}>
-                                <input id="inputChat" value={this.state.textValue} onChange={e => this.updateText(e.target.value)} />
+                                <input id="inputChat" autoComplete="off" value={this.state.textValue} onChange={e => this.updateText(e.target.value)} />
                                 <input type="submit"></input>
                             </fieldset>
                         </form>

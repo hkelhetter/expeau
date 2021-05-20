@@ -13,7 +13,7 @@ export default class CreateConversation extends React.Component {
     */
     handleChange(event) {
         const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
+        let value = target.type === 'checkbox' ? target.checked : target.value.replace(/[\[\].,\/#!$%\^&\*\\\";:{}=\-_`~()]/g, "");
         this.setState({ [target.name]: value });
     }
     /* 
@@ -34,10 +34,11 @@ export default class CreateConversation extends React.Component {
             
     */
     render() {
+        console.log(this.state)
         return (
             <div id="createConvo">
                 <form >
-                    <input key="convoName" name="convoName" value={this.state.convoName} onChange={this.handleChange}></input>
+                    <input key="convoName" name="convoName" autoComplete="off" value={this.state.convoName} onChange={this.handleChange}></input>
                     {this.props.lstPlayer.map((player, i) =>
                         <label key={i}>{player.Name}
                             <input name={player.Name} type="checkbox" onChange={this.handleChange}></input>
