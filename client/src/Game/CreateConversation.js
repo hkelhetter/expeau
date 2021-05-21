@@ -2,7 +2,12 @@ import React from 'react'
 export default class CreateConversation extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { convoName: "" }
+
+        let lstPlayer = {}
+        for (const player in this.props.lstPlayer) {
+            lstPlayer[this.props.lstPlayer[player].Name] = false
+        }
+        this.state = { convoName: "", lstPlayer }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
@@ -14,7 +19,8 @@ export default class CreateConversation extends React.Component {
     handleChange(event) {
         const target = event.target;
         let value = target.type === 'checkbox' ? target.checked : target.value.replace(/[\[\].,\/#!$%\^&\*\\\";:{}=\-_`~()]/g, "");
-        this.setState({ [target.name]: value });
+        if (target.type === 'checkbox') this.setState({ ...this.state.lstPlayer[target.name] = value });
+        else this.setState({ [target.name]: value });
     }
     /* 
     Function : handleSubmit
@@ -25,6 +31,18 @@ export default class CreateConversation extends React.Component {
         e.preventDefault();
         if (this.props.addConvo(this.state)) {
             this.setState({ convoName: "" })
+            for (const key in this.state.lstPlayer) {
+                if (key != "convoName") {
+                    this.setState({ ...this.state.lstPlayer[key] = false })
+                }
+            }
+            this.unCheck()
+        }
+    }
+    unCheck() {
+        var x = document.getElementsByClassName("checkboxConvo");
+        for (let i = 0; i < x.length; i++) {
+            x[i].value = false;
         }
     }
     /* 
@@ -34,17 +52,16 @@ export default class CreateConversation extends React.Component {
             
     */
     render() {
-        console.log(this.state)
         return (
             <div id="createConvo">
                 <form >
                     <input key="convoName" name="convoName" autoComplete="off" value={this.state.convoName} onChange={this.handleChange}></input>
                     {this.props.lstPlayer.map((player, i) =>
                         <label key={i}>{player.Name}
-                            <input name={player.Name} type="checkbox" onChange={this.handleChange}></input>
+                            <input name={player.Name} className="checkbox" type="checkbox" checked={this.state.lstPlayer[player.Name]} onChange={this.handleChange}></input>
                         </label>
                     )}
-                    <input key="submit" type="submit" onClick={this.handleSubmit}></input>
+                    <input className="checkboxConvo" key="submit" type="submit" onClick={this.handleSubmit}></input>
                 </form>
             </div>
         );

@@ -192,11 +192,13 @@ class Conteneur extends React.Component {
         }
         let newConvo = []
         const name = data.convoName
-        for (const entry in data) {
+        for (const entry in data.lstPlayer) {
             if (!(entry == "convoName" || entry == "lstConvo")) {
-                if (data[entry]) newConvo.push(entry)
+                if (data.lstPlayer[entry]) newConvo.push(entry)
             }
         }
+        console.log(newConvo)
+
         if (newConvo.length > 0) {
             this.setState({ lstConvo: { ...this.state.lstConvo, [name]: newConvo } })
             return true
