@@ -1,3 +1,14 @@
+# Dependencies
+
+Requires npm package   
+```
+sudo apt-get install npm
+```   
+   
+To download project dependencies execute   
+```
+npm install
+```
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

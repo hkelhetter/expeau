@@ -15,9 +15,12 @@ import { socket } from "./context/socket.js"
 import Ressources from "./controls/Ressources.js"
 import '../index.css'
 import CreateConversation from './CreateConversation.js'
+import { useContext } from "react"
+import PlayerContext from "../Menu/player-context.js"
 
 class Conteneur extends React.Component {
     constructor(props) {
+
         super(props)
         this.changeTileActivity = this.changeTileActivity.bind(this)
         this.handleClickTile = handleClickTile.bind(this)
@@ -212,25 +215,25 @@ class Conteneur extends React.Component {
             
     */
     componentDidMount() {
-        socket.emit("createRoom", "player1", 0, (responseCreateRoom) => {
-            this.setState({ room: responseCreateRoom })
-            socket.emit("startGame")
-            socket.emit("updateStats", (response) => {
-                this.setState({ ressources: response[0] })
-            })
-            socket.emit("getCurrentGrid", (response) => {
-                const newHexas = generateHexes(response)
-                const newRivers = generateRivers(newHexas)
-                //const tampon = this.createTampon(newHexas, this.state.map.player)
-                this.setState({ map: { ...this.state.map, moreHexas: newHexas, moreRivers: newRivers } })
-            })
-            socket.emit("getAllActions", (response) => {
-                this.setState({ lstActions: response })
-            })
-            socket.emit("playersInRoom", (response) => {
-                this.setState({ lstPlayer: response })
-            })
+        /*         socket.emit("createRoom", "player1", 0, (responseCreateRoom) => {
+                    this.setState({ room: responseCreateRoom })
+                    socket.emit("startGame") */
+        socket.emit("updateStats", (response) => {
+            this.setState({ ressources: response[0] })
         })
+        socket.emit("getCurrentGrid", (response) => {
+            const newHexas = generateHexes(response)
+            const newRivers = generateRivers(newHexas)
+            //const tampon = this.createTampon(newHexas, this.state.map.player)
+            this.setState({ map: { ...this.state.map, moreHexas: newHexas, moreRivers: newRivers } })
+        })
+        socket.emit("getAllActions", (response) => {
+            this.setState({ lstActions: response })
+        })
+        socket.emit("playersInRoom", (response) => {
+            this.setState({ lstPlayer: response })
+        })
+        //})
     }
     componentWillUnmount() {
         socket.removeAllListeners()

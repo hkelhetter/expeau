@@ -2,12 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import App from './App.js'
-
+import { PlayerContextProvider } from './Menu/player-context'
+import { MenuContextProvider } from './Menu/menu-context'
 ReactDOM.render(
-    <React.StrictMode>
-        <App />
-
-    </React.StrictMode>,
+    <PlayerContextProvider>
+        <MenuContextProvider>
+            <React.StrictMode>
+                <App />
+            </React.StrictMode>
+        </MenuContextProvider>
+    </PlayerContextProvider>,
     document.getElementById('root')
 );
 

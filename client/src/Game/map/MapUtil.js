@@ -39,17 +39,37 @@ export function generateHexes(data) {
     }
     return hexas;
 }
-function renameProperty(obj, oldName, newName) {
-    // Do nothing if the names are the same
-    if (oldName === newName) {
-        return this;
+export function generateMap(data) {
+    let hexas = {};
+    let hex;
+    let hex2;
+    let rivers = [];
+    let path;
+    for (let i = 0; i < data.length; i++) {
+
+        hex = HexUtils.pixelToHex({ x: (data[i].xOutlet), y: (data[i].yOutlet) }, layout)
+        //map ardiere
+        //hex = HexUtils.pixelToHex({ x: (data[i].x0 + 164.6719013516826) * 4, y: (328 + data[i].y0) * -4 }, layout)
+        // merge hex and data[i] into hexas[i]
+        if (!hexas[i]) {
+            hexas[i] = Object.assign(hex, data[i])
+            hexas[i].modified = false
+        }
+        let j = hexas[hexas[i].downTile + 2]
+        if (!hexas[j]) {
+            hexas[j] = Object.assign(hex, data[j])
+            hexas[j].modified = false
+
+        }
+        path = {
+            start: hexas[i],
+            end: hexas[j],
+            outletFlowAcc: hexas[i].outletFlowAcc
+        }
+        rivers.push(path);
+        //renameProperty(hexas[i], "mainCLC1", "activity")
     }
-    // Check for the old property name to avoid a ReferenceError in strict mode.
-    if (obj.hasOwnProperty(oldName)) {
-        obj[newName] = obj[oldName];
-        delete obj[oldName];
-    }
-    return obj;
+    return [hexas, rivers]
 }
 /* 
     Function : generateRivers 

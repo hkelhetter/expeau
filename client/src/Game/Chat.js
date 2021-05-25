@@ -138,7 +138,7 @@ export default class Chat extends React.Component {
                     </div>
                     <div className="convo">
                         {Object.values(this.state.messages[this.state.convo]).map((msg, i) =>
-                            <div key={i} className={`message ${msg.authore !== this.props.authore ? "" : "received"}`}>
+                            <div key={i} className={`message ${msg.authore == this.props.authore ? "" : "received"}`}>
                                 <p className="msg"> {msg.msg}</p>
                                 <p className="authore">{msg.authore === this.props.authore ? "Vous" : this.state.authore?.name}</p>
                             </div>
