@@ -20,7 +20,7 @@ Run ```npm start``` in client directory and ```node src/app``` at /serve-expeau
 
 Run ```node src/app``` at /serve-expeau   
 To make it work you have to have a build of the client. To have it run ```npm run build``` in client directory
-
+Open web browser at follwoing address : ip-address:4000
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
