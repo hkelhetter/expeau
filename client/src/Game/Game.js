@@ -257,8 +257,10 @@ class Conteneur extends React.Component {
                 <div id="controls">
                     <div id="menu">
                         <p>MENU</p>
+                        <p>nom : {this.props.name}</p>
+                        <p>role : {this.props.role}</p>
                         <button onClick={this.a}>{this.state.tour}</button>
-                        {this.state.lstPlayer != undefined ? <CreateConversation lstPlayer={this.state.lstPlayer} addConvo={this.addConvo} /> : ""}
+                        {this.state.lstPlayer != undefined ? <CreateConversation name={this.props.name} lstPlayer={this.state.lstPlayer} addConvo={this.addConvo} /> : ""}
                         <Ressources ressources={this.state.ressources} cost={this.state.cost} />
                         <ValidationTour key="validation" updated={this.state.map.moreHexas} origin={this.state.HexasTampon} tour={this.state.tour} actions={this.state.actions} />
                         {/* only display the components if a tile is selected */}

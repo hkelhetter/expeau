@@ -15,8 +15,9 @@ import PlayerContext from './player-context';
 
 import MenuContext from './menu-context';
 
-
 import Game from '../Game/Game.js'
+
+
 
 
 function Menu() {
@@ -24,22 +25,19 @@ function Menu() {
     const playerCtx = useContext(PlayerContext);
     const MenuCtx = useContext(MenuContext);
 
-    //const [userState, setUserState] = useState(<MainMenu/>);
+
     const marg = {
         marginRight: 5
     }
-    const [role, setRole] = useState("");
 
-    //const [playerName, setPlayerName] = useState("test");
 
-    //useEffect(() => console.log(playerName));
 
     const handleName = (event) => {
         playerCtx.updateName(event.target.value);
     }
 
     const handleChange = (event) => {
-        setRole(event.target.value);
+        playerCtx.updateRole(event.target.value);
     };
 
     const handleRoomName = (event) => {
@@ -54,11 +52,13 @@ function Menu() {
         setPlayerList(resp);
     });
 
-    socket.on("start", () => { MenuCtx.updateLocation("started") })
+    socket.on("start", () => {
+        MenuCtx.updateLocation("started");
+    });
 
     async function handleCreate() {
         const room = await new Promise(resolve => {
-            socket.emit("createRoom", playerCtx.name, role, (response) => {
+            socket.emit("createRoom", playerCtx.name, playerCtx.role, (response) => {
                 resolve(response);
             });
         });
@@ -69,7 +69,7 @@ function Menu() {
 
     async function handleJoin() {
         const room = await new Promise(resolve => {
-            socket.emit("joinRoom", playerCtx.room, playerCtx.name, role, (response) => {
+            socket.emit("joinRoom", playerCtx.room, playerCtx.name, playerCtx.role, (response) => {
                 resolve(response);
             });
         });
@@ -79,21 +79,9 @@ function Menu() {
 
     function handleStart() {
         socket.emit("startGame");
-        //MenuCtx.updateLocation("started")
     }
 
-    // const playerList = [
-    //     {
-    //         Id: 7,
-    //         Name: 'player1-host',
-    //         Role: '1',
-    //         Room: 'jij1h',
-    //         ut: 12,
-    //         ub: 12
-    //       },
-    //       { Id: 8, Name: 'player2', Role: '2', Room: 'jij1h', ut: 12, ub: 12 },
-    //       { Id: 9, Name: 'player3', Role: '0', Room: 'jij1h', ut: 12, ub: 12 }
-    // ]
+
 
     function CreateForm() {
         return (
@@ -107,7 +95,7 @@ function Menu() {
                         <Select
                             labelId="role-label"
                             id="role"
-                            value={role}
+                            value={playerCtx.role}
                             onChange={handleChange}
                         >
                             <MenuItem value={0}>Agriculteur</MenuItem>
@@ -139,7 +127,7 @@ function Menu() {
                         <Select
                             labelId="role-label"
                             id="role"
-                            value={role}
+                            value={playerCtx.role}
                             onChange={handleChange}
                         >
                             <MenuItem value={0}>Agriculteur</MenuItem>
@@ -198,7 +186,7 @@ function Menu() {
     function GameStarted() {
         return (
             <div>
-                <Game />
+                <Game name={playerCtx.name} role={playerCtx.role} />
             </div>
         )
     }
@@ -254,7 +242,7 @@ function Menu() {
             {MenuCtx.loc === "started" && GameStarted()}
         </div>
     )
-    //return (<div> {userState} </div>);
+
 }
 
 export default Menu;

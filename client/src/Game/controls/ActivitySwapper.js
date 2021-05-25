@@ -83,7 +83,7 @@ class ActivitySwapper extends React.Component {
                 <label>
                     <p>Choisissez votre nouvelle activité pour
                         {this.state.checkbox ? ' le sous bassin'
-                            : ` la case ${this.props.selectedTile.id}`}
+                            : ` la case ${this.props.selectedTile.subId}`}
                     </p>
                     <select name="selectActivity" onChange={this.handleChange}>
                         {/* display all possible action for selected tile */}
