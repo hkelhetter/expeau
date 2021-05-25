@@ -9,6 +9,18 @@ To download project dependencies execute
 ```
 npm install
 ```
+
+# Start the app
+
+## Solution n°1
+
+Run ```npm start``` in client directory and ```node src/app``` at /serve-expeau
+
+## Solution n°2
+
+Run ```node src/app``` at /serve-expeau   
+To make it work you have to have a build of the client. To have it run ```npm run build``` in client directory
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
