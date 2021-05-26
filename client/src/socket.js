@@ -3,7 +3,7 @@ import io from 'socket.io-client'
 
 function setIp(event) {
     const ip = event.target.value
-    socket = io(`http://${ip}:4001`)
+    socket = io(`http://${ip}:4001`, { reconnectionAttempts: 3 })
     console.log(socket.connected)
 }
 let socket = io()
