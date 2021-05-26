@@ -11,7 +11,7 @@ import ValidationTour from "./controls/ValidationTour.js"
 import AdminControls from './controls/AdminControls.js'
 import handleClickTile from './controls/handleClickTileFarmer.js'
 import Chat from "./Chat.js"
-import { socket } from "./context/socket.js"
+import { socket } from "../socket.js"
 import Ressources from "./controls/Ressources.js"
 import '../index.css'
 import CreateConversation from './CreateConversation.js'

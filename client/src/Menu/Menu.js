@@ -8,7 +8,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import { socket } from '../Game/context/socket.js';
+import { socket, setIp } from '../socket.js';
 import Typography from '@material-ui/core/Typography';
 
 import PlayerContext from './player-context';
@@ -21,7 +21,6 @@ import Game from '../Game/Game.js'
 
 
 function Menu() {
-
     const playerCtx = useContext(PlayerContext);
     const MenuCtx = useContext(MenuContext);
 
@@ -216,6 +215,7 @@ function Menu() {
     function MainMenu() {
         return (
             <div>
+                <TextField key="ip" label="ipAdresse" onChange={setIp}></TextField>
                 <p>
                     <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("create") }}>Creer la partie</Button>
                 </p>
@@ -225,7 +225,6 @@ function Menu() {
             </div>
         );
     }
-
 
     return (
         <div>

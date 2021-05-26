@@ -1,5 +1,5 @@
 import React from 'react'
-import { socket } from './context/socket'
+import { socket } from '../socket'
 
 export default class Chat extends React.Component {
     /* 

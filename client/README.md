@@ -15,6 +15,7 @@ npm install
 ## Solution n°1
 
 Run ```npm start``` in client directory and ```node src/app``` at /serve-expeau
+Open web browser at follwoing address : ip-address:3000
 
 ## Solution n°2
 

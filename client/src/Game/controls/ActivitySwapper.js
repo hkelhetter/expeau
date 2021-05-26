@@ -15,7 +15,7 @@
 */
 
 import React from 'react'
-import { socket } from "../context/socket.js"
+import { socket } from "../../socket.js"
 class ActivitySwapper extends React.Component {
     /* 
         Function : constructor
