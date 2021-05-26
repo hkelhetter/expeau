@@ -16,7 +16,8 @@ class ValidationTour extends React.Component {
      
         Description : compare the objects origin and updated from the props and 
                         create a new object containing all the differences
-            
+        
+        Authore : Hugo KELHETTER
     */
     handleSubmit() {
         /*         const origin = this.props.origin
@@ -46,7 +47,8 @@ class ValidationTour extends React.Component {
         Outputs : csvData : input object with csv format
     
         Description : convert an object to csv format
-            
+      
+        Authore : Hugo KELHETTER
     */
     generateCSV(data) {
         let str = ""

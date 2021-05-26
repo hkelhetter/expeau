@@ -1,19 +1,3 @@
-
-/* 
-    Function : 
-
-    Syntax
-        
-    
-    Input
-        
-
-    Outputs
-
-    Description
-        
-*/
-
 import React from 'react'
 import { socket } from "../../socket.js"
 class ActivitySwapper extends React.Component {
@@ -25,7 +9,8 @@ class ActivitySwapper extends React.Component {
         Input   : props : function and data passed by parent when calling component
     
         Description : create the component ActivitySwapper and initialize its props/state 
-            
+
+            Authore : Hugo KELHETTER            
     */
     constructor(props) {
         super(props);
@@ -44,6 +29,8 @@ class ActivitySwapper extends React.Component {
             function called when interacting with the form's components
             if the target is a checkBox, change its validation
             update the state value for the corresponding event target
+    
+        Authore : Hugo KELHETTER
     */
     handleChange(event) {
         const target = event.target;
@@ -60,7 +47,8 @@ class ActivitySwapper extends React.Component {
     
         Description : 
             call the function changeTileActivity from parent with in parameters the values of the fieldset 
-            
+           
+        Authore : Hugo KELHETTER
     */
     handleSubmit(event) {
         event.preventDefault();
@@ -74,7 +62,8 @@ class ActivitySwapper extends React.Component {
         Syntax  : render()
             
         Description : display the form to change tile/subBasin's activityy
-            
+           
+        Authore : Hugo KELHETTER
     */
     render() {
         console.log(this.props.selectedTile)

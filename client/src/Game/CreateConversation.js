@@ -15,7 +15,9 @@ export default class CreateConversation extends React.Component {
     /* 
         Function : handleChange
     
-        Description : update checkboxs state        
+        Description : update checkboxs state   
+        
+        Authore : Hugo KELHETTER
     */
     handleChange(event) {
         const target = event.target;
@@ -26,7 +28,9 @@ export default class CreateConversation extends React.Component {
     /* 
     Function : handleSubmit
         
-    Description : call addConvo from parent with current state as parameters        
+    Description : call addConvo from parent with current state as parameters       
+    
+    Authore : Hugo KELHETTER
 */
     handleSubmit(e) {
         e.preventDefault();
@@ -50,7 +54,8 @@ export default class CreateConversation extends React.Component {
         Function : render
             
         Description : display a form to create a conversation with other players
-            
+        
+        Authore : Hugo KELHETTER
     */
     render() {
         return (

@@ -40,7 +40,7 @@ export default class Bassin extends Component {
         
         see /src/map/MapUtil.js for more information about hex'properties
     
-            
+        Authore : Hugo KELHETTER
     */
     createHexeFarmer(hex, i, player) {
         const bassin = getSubBassin(player)
@@ -83,6 +83,7 @@ export default class Bassin extends Component {
             
         Description : return an object <Text> containing the input text
             
+        Authore : Hugo KELHETTER
     */
     displayTileId(text) {
         return <Text key="tileId" y={-2}>{text.toString()}</Text>
@@ -97,7 +98,8 @@ export default class Bassin extends Component {
         Function : render 
         
         Description : display an hexagonal grid and rivers
-            
+        
+        Authore : Hugo KELHETTER
     */
     render() {
         console.log("render")

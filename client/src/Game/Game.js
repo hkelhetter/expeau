@@ -52,6 +52,8 @@ class Conteneur extends React.Component {
         Description : 
             create a copy of moreHexas containing a subset of entries of moreHexas.
             the remaining entries are those the players can change directly.
+
+        Authore : Hugo KELHETTER
     --------------------------------------------------------------------------------------------------------
     not in current use
     --------------------------------------------------------------------------------------------------------
@@ -77,7 +79,8 @@ class Conteneur extends React.Component {
         Input   : object containing the data to update the state
             
         Description : update the state of the map with new data received from the server. call createTampon automatically
-            
+        
+        Authore : Hugo KELHETTER
     */
     updateMap(newData) {
         const newHexas = {}
@@ -105,7 +108,9 @@ class Conteneur extends React.Component {
         Description
             updates the state in 2 ways:
                 changes the selectedTile or all tiles depending on the value of changeAll
-                set the state value of selectedTile to null        
+                set the state value of selectedTile to null  
+                
+        Authore : Hugo KELHETTER
     */
     changeTileActivity(value, changeAll) {
         const hexagons = this.state.map.moreHexas;
@@ -182,6 +187,8 @@ class Conteneur extends React.Component {
     Output  : the success of the function
 
     Description : display the different components of the app
+
+    Authore : Hugo KELHETTER
         
 */
     addConvo(data) {
@@ -212,6 +219,8 @@ class Conteneur extends React.Component {
         Function : componentDidMount
     
         Description : subscribe to the required function from server to keep up to date
+
+        Authore : Hugo KELHETTER
             
     */
     componentDidMount() {
@@ -248,7 +257,8 @@ class Conteneur extends React.Component {
         Syntax  : render()
     
         Description : display the different components of the app
-            
+        
+        Authore : Hugo KELHETTER
     */
     render() {
         return (

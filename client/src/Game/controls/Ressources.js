@@ -6,7 +6,8 @@ class Ressources extends React.Component {
         Syntax  : render()
             
         Description : display the available ressources and an estimated cost of the actions
-            
+        
+        Authore : Hugo KELHETTER      
     */
     render() {
         let ub = 0

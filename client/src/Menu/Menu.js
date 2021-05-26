@@ -8,7 +8,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import { socket, setIp } from '../socket.js';
+import { socket } from '../socket.js';
 import Typography from '@material-ui/core/Typography';
 
 import PlayerContext from './player-context';
@@ -114,6 +114,7 @@ function Menu() {
     function JoinForm() {
         return (
             <div>
+                {console.log(socket.io.engine)}
                 <p>
                     <TextField key="roomName" label="Code Partie" value={playerCtx.room} onChange={handleRoomName}></TextField>
                 </p>
@@ -213,9 +214,9 @@ function Menu() {
 
 
     function MainMenu() {
+
         return (
             <div>
-                <TextField key="ip" label="ipAdresse" onChange={setIp}></TextField>
                 <p>
                     <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("create") }}>Creer la partie</Button>
                 </p>

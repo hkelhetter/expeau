@@ -11,6 +11,7 @@ export default class Chat extends React.Component {
     
         Description : create the component Chat and initialize its props/state 
             
+        Authore : Hugo KELHETTER
     */
     constructor(props) {
         super(props)
@@ -29,6 +30,7 @@ export default class Chat extends React.Component {
     
         Description : the component only updates if the state changes
             
+        Authore : Hugo KELHETTER
     */
     shouldComponentUpdate(nextProps, nextState) {
         return this.state !== nextState || this.props.lstConvo !== nextProps.lstConvo
@@ -44,6 +46,8 @@ export default class Chat extends React.Component {
             update this.state.messages by adding a new value to the object 
                 containing conversation room's name a string and author's id
             this.state.textValue is set to ""
+        
+        Authore : Hugo KELHETTER
     */
     handleSubmit(e) {
         e.preventDefault();
@@ -75,6 +79,8 @@ export default class Chat extends React.Component {
         Input   : e : the value of the event calling the function
             
         Description : update this.state.textValue based on the pressed key
+
+        Authore : Hugo KELHETTER
             
     */
     updateText(e) {
@@ -111,6 +117,8 @@ export default class Chat extends React.Component {
         Function : handleConvoChange
             
         Description : set the active conversation
+
+        Authore : Hugo KELHETTER
             
     */
     handleConvoChange(event) {
@@ -122,7 +130,8 @@ export default class Chat extends React.Component {
         Syntax  : render()
             
         Description : display a chat + available conversations
-            
+        
+        Authore : Hugo KELHETTER
     */
     render() {
         return (
