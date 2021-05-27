@@ -94,7 +94,7 @@ export default class Chat extends React.Component {
     }
     componentDidUpdate(prevProps, prevState) {
         Object.keys(this.props.lstConvo).map((convo) => {
-            if (this.state.messages[convo] == undefined) this.state.messages[convo] = []
+            if (this.state.messages[convo] === undefined) this.state.messages[convo] = []
         })
         if (prevState.messages[this.state.convo].length !== this.state.messages[this.state.convo].length) this.scrollToBottom()
 

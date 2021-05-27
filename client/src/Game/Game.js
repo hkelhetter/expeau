@@ -3,21 +3,18 @@
 
 
 import React from 'react'
-import { generateHexes, generateMap, generateRivers } from "./map/MapUtil.js"
+import { generateHexes, generateRivers } from "./map/MapUtil.js"
 import Bassin from "./map/Bassin.js"
 import ActivitySwapper from "./controls/ActivitySwapper.js"
 import InfoTile from "./controls/InfoTile.js"
 import ValidationTour from "./controls/ValidationTour.js"
-import AdminControls from './controls/AdminControls.js'
 import handleClickTile from './controls/handleClickTileFarmer.js'
 import Chat from "./Chat.js"
 import { socket } from "../socket.js"
 import Ressources from "./controls/Ressources.js"
 import '../index.css'
 import CreateConversation from './CreateConversation.js'
-import { useContext } from "react"
-import PlayerContext from "../Menu/player-context.js"
-
+import AnimatorUI from "./AnimatorUI.js"
 class Conteneur extends React.Component {
     constructor(props) {
 
@@ -192,11 +189,14 @@ class Conteneur extends React.Component {
         
 */
     addConvo(data) {
-        console.log(data)
-        if (data.convoName.length == 0) return false
+
+        if (data.convoName.length == 0) {
+            alert("vous devez entrer un nom")
+            return false
+        }
         for (const entry in this.state.lstConvo) {
             if (entry == data.convoName) {
-                alert("nom déjà pris")
+                alert("Nom déjà pris")
                 return false
             }
         }
@@ -207,12 +207,12 @@ class Conteneur extends React.Component {
                 if (data.lstPlayer[entry]) newConvo.push(entry)
             }
         }
-        console.log(newConvo)
 
         if (newConvo.length > 0) {
             this.setState({ lstConvo: { ...this.state.lstConvo, [name]: newConvo } })
             return true
         }
+        alert("Vous devez selectionner des joueurs")
         return false
     }
     /* 
@@ -224,25 +224,32 @@ class Conteneur extends React.Component {
             
     */
     componentDidMount() {
-        /*         socket.emit("createRoom", "player1", 0, (responseCreateRoom) => {
-                    this.setState({ room: responseCreateRoom })
-                    socket.emit("startGame") */
-        socket.emit("updateStats", (response) => {
-            this.setState({ ressources: response[0] })
-        })
+        /*  socket.emit("createRoom", "player1", 0, (responseCreateRoom) => {
+             this.setState({ room: responseCreateRoom })
+             socket.emit("startGame")
+             socket.emit("updateStats", (response) => {
+                 this.setState({ ressources: response[0] })
+             }) */
         socket.emit("getCurrentGrid", (response) => {
+            let a = {}
+            Object.keys(response).map((tile) => {
+                if (response[tile].player != null) {
+                    a[tile] = { player: response[tile].player, id: response[tile].Id, cellPlayer: response[tile].cellPlayer, role: response[tile].role }
+                }
+            })
+
             const newHexas = generateHexes(response)
             const newRivers = generateRivers(newHexas)
             //const tampon = this.createTampon(newHexas, this.state.map.player)
-            this.setState({ map: { ...this.state.map, moreHexas: newHexas, moreRivers: newRivers } })
+            this.setState({ map: { ...this.state.map, moreHexas: newHexas, moreRivers: newRivers }, lstTile: a })
         })
         socket.emit("getAllActions", (response) => {
             this.setState({ lstActions: response })
         })
         socket.emit("playersInRoom", (response) => {
             this.setState({ lstPlayer: response })
+            //})
         })
-        //})
     }
     componentWillUnmount() {
         socket.removeAllListeners()
@@ -261,12 +268,14 @@ class Conteneur extends React.Component {
         Authore : Hugo KELHETTER
     */
     render() {
+        let selectedId = -1
+        if (this.state.selectedTile) selectedId = this.state.selectedTile.id
         return (
             < div className="App" >
-
-                <div id="controls">
+                {/*  {(this.state.lstPlayer != undefined && this.state.lstTile != undefined) ? <AnimatorUI lstPlayer={this.state.lstPlayer} lstTile={this.state.lstTile} /> : ""} */}
+                < div id="controls">
                     <div id="menu">
-                        <p>MENU</p>
+                        <p>MENU </p>
                         <p>nom : {this.props.name}</p>
                         <p>role : {this.props.role}</p>
                         <button onClick={this.a}>{this.state.tour}</button>
@@ -284,7 +293,10 @@ class Conteneur extends React.Component {
                     </div>
                     {Object.keys(this.state.lstConvo).length > 0 ? <Chat lstConvo={this.state.lstConvo} /> : ""}
                 </div>
-                { this.state.map.moreHexas !== "" ? <Bassin handleClick={this.handleClickTile} map={this.state.map} /> : ""}
+                {
+                    this.state.map.moreHexas !== "" ? <Bassin handleClick={this.handleClickTile}
+                        map={this.state.map} role={this.props.role} selectedId={selectedId} /> : ""
+                }
             </div >
         )
     }

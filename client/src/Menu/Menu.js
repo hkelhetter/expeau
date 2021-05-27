@@ -10,7 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { socket } from '../socket.js';
 import Typography from '@material-ui/core/Typography';
-
+import AnimatorLoader from '../Game/AnimatorLoader.js'
 import PlayerContext from './player-context';
 
 import MenuContext from './menu-context';
@@ -186,7 +186,7 @@ function Menu() {
     function GameStarted() {
         return (
             <div>
-                <Game name={playerCtx.name} role={playerCtx.role} />
+                {playerCtx.role < "3" ? <AnimatorLoader /> : <Game name={playerCtx.name} role={playerCtx.role} />}
             </div>
         )
     }

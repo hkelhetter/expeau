@@ -41,7 +41,7 @@ export function generateHexes(data) {
     return hexas;
 }
 /* this function doesn't work */
-export function generateMap(data) {
+/* export function generateMap(data) {
     let hexas = {};
     let hex;
     let hex2;
@@ -72,7 +72,7 @@ export function generateMap(data) {
         //renameProperty(hexas[i], "mainCLC1", "activity")
     }
     return [hexas, rivers]
-}
+} */
 /* 
     Function : generateRivers 
 

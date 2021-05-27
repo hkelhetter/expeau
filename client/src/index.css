@@ -129,7 +129,9 @@ svg g.notInBassin polygon   {
     fill-opacity: 0;
     stroke-width: 0;
 }
-
+svg g.selected polygon{
+    stroke-width:0.5px;
+}
 svg g.premier text{
     fill: rgb(32, 138, 6);
 
@@ -182,4 +184,9 @@ div.convo{
 }
 .message.received{
     align-self: flex-start;
+}
+
+#animatorControl form{
+    display:flex;
+    flex-direction: column;
 }

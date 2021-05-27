@@ -34,7 +34,6 @@ class ActivitySwapper extends React.Component {
     */
     handleChange(event) {
         const target = event.target;
-        console.log(target.value)
         const value = target.type === 'checkbox' ? target.checked : target.value;
         this.setState({ [target.name]: value });
     }
@@ -66,7 +65,6 @@ class ActivitySwapper extends React.Component {
         Authore : Hugo KELHETTER
     */
     render() {
-        console.log(this.props.selectedTile)
         return (
             < form onSubmit={this.handleSubmit} >
                 <label>

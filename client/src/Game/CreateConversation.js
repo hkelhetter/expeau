@@ -5,7 +5,6 @@ export default class CreateConversation extends React.Component {
 
         let lstPlayer = {}
         for (const player in this.props.lstPlayer) {
-            console.log(this.props.lstPlayer[player].Name == this.props.name)
             if (this.props.lstPlayer[player].Name != this.props.name) lstPlayer[this.props.lstPlayer[player].Name] = false
         }
         this.state = { convoName: "", lstPlayer }
@@ -61,12 +60,15 @@ export default class CreateConversation extends React.Component {
         return (
             <div id="createConvo">
                 <form >
+                    Choisissez un nom, sélectionnez des joueurs et créez une salle de discussion
                     <input key="convoName" name="convoName" autoComplete="off" value={this.state.convoName} onChange={this.handleChange}></input>
-                    {Object.values(this.state.lstPlayer).map((player, i) =>
-                        <label key={i}>{player.Name}
-                            <input name={player.Name} className="checkbox" type="checkbox" checked={this.state.lstPlayer[player.Name]} onChange={this.handleChange}></input>
-                        </label>
+                    {Object.keys(this.state.lstPlayer).map((player, i) =>
+                        [<br />
+                            , <label key={i}>{player}
+                            <input name={player} className="checkbox" type="checkbox" checked={this.state.lstPlayer[player]} onChange={this.handleChange}></input>
+                        </label>]
                     )}
+                    <br />
                     <input className="checkboxConvo" key="submit" type="submit" onClick={this.handleSubmit}></input>
                 </form>
             </div>
