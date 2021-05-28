@@ -1,15 +1,15 @@
 import React from 'react'
 import { socket } from '../socket'
+import PropTypes from 'prop-types';
 
 export default class Chat extends React.Component {
-    /* 
-        Function : constructor
-    
-        Syntax  : constructor(props)
-            
-        Input   : props : function and data passed by parent when calling component
-    
-        Description : create the component Chat and initialize its props/state 
+    /*             
+        Input : props={lstPlayer,lstConvo,authore}
+                lstPlayer : object : list of all the players
+                lstConvo : object : list of all the conversations
+                authore : string : name of the player
+
+        Syntax : <Chat lstPlayer={lstPlayer} lstConvo={lstConvo} authore={authore} />
             
         Authore : Hugo KELHETTER
     */
@@ -24,6 +24,10 @@ export default class Chat extends React.Component {
         this.handleConvoChange = this.handleConvoChange.bind(this)
         this.receiveMessage = this.receiveMessage.bind(this)
         this.lastMessage = React.createRef()
+    }
+    static propTypes = {
+        lstPlayer: PropTypes.object.isRequired,
+        lstConvo: PropTypes.object.isRequired
     }
     /* 
         Function : shouldComponentUpdate

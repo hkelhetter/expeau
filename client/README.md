@@ -12,18 +12,20 @@ npm install
 
 # Start the app
 
+Only works if all players are on the same network
+
 ## Solution n°1
+
+Run ```node src/app``` at /serve-expeau   
+To make it work you have to have a build of the client. To have it run ```npm run build``` in client directory   
+Open web browser at following address : ```ip-address:4000``` or ```localhost:4000```   
+Other players must go to the page : ```ip-address:4000``` where ip-address is the ip address of the person that launched the app   
+
+## Solution n°2
 
 Run ```npm start``` in client directory and ```node src/app``` at /serve-expeau   
 Open web browser at following address : ```ip-address:3000``` or ```localhost:3000```   
 Other players must go to the page : ```ip-address:3000``` where ip-address is the ip address of the person that launched the app   
-
-## Solution n°2
-
-Run ```node src/app``` at /serve-expeau   
-To make it work you have to have a build of the client. To have it run ```npm run build``` in client directory   
-Open web browser at following address : ```ip-address:4000```   
-Other players must go to the page : ```ip-address:4000``` where ip-address is the ip address of the person that launched the app   
 
 # Getting Started with Create React App
 

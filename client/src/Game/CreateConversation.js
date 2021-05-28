@@ -1,8 +1,18 @@
 import React from 'react'
+import PropTypes from 'prop-types';
+
 export default class CreateConversation extends React.Component {
+    /* 
+        Input : props={lstPlayer,addConvo,name}
+                lstPlayer : object : list of all the players
+                addConvo : func : create a new convo from parent component
+                name : name of the player
+
+        Syntax : <CreateConversation lstPlayer={lstPlayer} addConvo={this.addConvo} name={name} />
+
+    */
     constructor(props) {
         super(props);
-
         let lstPlayer = {}
         for (const player in this.props.lstPlayer) {
             if (this.props.lstPlayer[player].Name != this.props.name) lstPlayer[this.props.lstPlayer[player].Name] = false
@@ -10,6 +20,11 @@ export default class CreateConversation extends React.Component {
         this.state = { convoName: "", lstPlayer }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+    }
+    static propTypes = {
+        lstPlayer: PropTypes.object.isRequired,
+        addConvo: PropTypes.func.isRequired,
+        name: PropTypes.string.isRequired
     }
     /* 
         Function : handleChange

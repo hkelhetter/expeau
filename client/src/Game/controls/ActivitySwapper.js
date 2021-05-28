@@ -1,22 +1,29 @@
 import React from 'react'
 import { socket } from "../../socket.js"
-class ActivitySwapper extends React.Component {
-    /* 
-        Function : constructor
-    
-        Syntax  : constructor(props)
-            
-        Input   : props : function and data passed by parent when calling component
-    
-        Description : create the component ActivitySwapper and initialize its props/state 
+import PropTypes from 'prop-types';
 
-            Authore : Hugo KELHETTER            
+class ActivitySwapper extends React.Component {
+    /*    
+        Input : props={changeTileActivity,selectedTile,actions}
+                changeTileActivity : func : function declared in parent to change tile(s)'s activity
+                selectedTile : object : tile selected by the player
+                actions : object : list of all the available actions
+
+        Syntax : <ActivitySwapper changeTileActivity={this.changeTileActivity} 
+            selectedTile={the selected tile} actions={the list of actions} />
+
+        Authore : Hugo KELHETTER            
     */
     constructor(props) {
         super(props);
         this.state = { selectActivity: 0, checkbox: false };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+    static propTypes = {
+        changeTileActivity: PropTypes.func.isRequired,
+        selectedTile: PropTypes.object.isRequired,
+        actions: PropTypes.object.isRequired
     }
     /* 
         Function : handleChange

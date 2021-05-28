@@ -1,13 +1,25 @@
 
 
 import React from 'react'
+import { socket } from "../../socket.js"
+import PropTypes from 'prop-types';
 
 class ValidationTour extends React.Component {
+    /* 
+        Input : props={tour,actions}
+                tour : number : number of round
+                actions : list of  actions played for each tile
 
+        Syntax : <ValidationTour tour={number of the round} actions={list of actions} />
+    */
     constructor(props) {
         super(props)
         this.state = { validated: false }
         this.handleSubmit = this.handleSubmit.bind(this)
+    }
+    static propTypes = {
+        tour: PropTypes.number.isRequired,
+        actions: PropTypes.object.isRequired
     }
     /* 
         Function : handleSubmit
@@ -33,8 +45,8 @@ class ValidationTour extends React.Component {
                     if (Object.entries(subLog).length !== 0) log[index] = subLog
         
                 } */
-        /*         let a = [{ hexID: 13, action: "swapActivity", typeAction: 0 }]
-                        socket.emit("addActions", a, 1) */
+        let actions = [{ hexID: 13, action: "swapActivity", typeAction: 0 }]
+        socket.emit("addActions", actions, 1)
         const csv = this.generateCSV(this.props.actions)
     }
     /* 

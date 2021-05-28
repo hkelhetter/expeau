@@ -2,9 +2,28 @@ import React, { Component } from 'react'
 import { HexGrid, Layout, Path, Hexagon, Text } from 'react-hexgrid'
 import layoutProps from './layoutProps.js'
 import { setPlayerClass, activityToString, getSubBassin, setMapSize } from './MapUtil.js'
-
+import PropTypes from 'prop-types';
 export default class Bassin extends Component {
+    /* 
+        Input : props={map:{moreHexas,moreRivers,player},handleClick,role,selectedId}
+                map.moreHexas : object : contains all data to create the map
+                map.Rivers : array : contains object to create river
+                        They look like that {start,end,outletFlowAcc}
+                        start : hexagon where the river stats
+                        end : hexagon where the river ends
+                        outletFlowAcc : how much water there is
+                handleClick : func : set the selected tile in parent component
+                selectedId : number : id of the selected tile
 
+        Syntax : <Bassin map={moreHewas,moreRivers,player} handleClick={this.handleClick} 
+            role={role} selectedId={selectedId} />
+    */
+    static propTypes = {
+        map: PropTypes.object.isRequired,
+        handleClick: PropTypes.func.isRequired,
+        role: PropTypes.number.isRequired,
+        selectedId: PropTypes.number.isRequired
+    }
     componentDidMount() {
         /* 
             re-render when window is resized
