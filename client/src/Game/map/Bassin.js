@@ -2,9 +2,28 @@ import React, { Component } from 'react'
 import { HexGrid, Layout, Path, Hexagon, Text } from 'react-hexgrid'
 import layoutProps from './layoutProps.js'
 import { setPlayerClass, activityToString, getSubBassin, setMapSize } from './MapUtil.js'
-
+import PropTypes from 'prop-types';
 export default class Bassin extends Component {
+    /* 
+        Input : props={map:{moreHexas,moreRivers,player},handleClick,role,selectedId}
+                map.moreHexas : object : contains all data to create the map
+                map.Rivers : array : contains object to create river
+                        They look like that {start,end,outletFlowAcc}
+                        start : hexagon where the river stats
+                        end : hexagon where the river ends
+                        outletFlowAcc : how much water there is
+                handleClick : func : set the selected tile in parent component
+                selectedId : number : id of the selected tile
 
+        Syntax : <Bassin map={moreHewas,moreRivers,player} handleClick={this.handleClick} 
+            role={role} selectedId={selectedId} />
+    */
+    static propTypes = {
+        map: PropTypes.object.isRequired,
+        handleClick: PropTypes.func.isRequired,
+        role: PropTypes.number.isRequired,
+        selectedId: PropTypes.number.isRequired
+    }
     componentDidMount() {
         /* 
             re-render when window is resized
@@ -40,18 +59,21 @@ export default class Bassin extends Component {
         
         see /src/map/MapUtil.js for more information about hex'properties
     
-            
+        Authore : Hugo KELHETTER
     */
     createHexeFarmer(hex, i, player) {
-        const bassin = getSubBassin(player)
 
+        const bassin = getSubBassin(player)
+        let classname = "";
+        classname += hex.basin === bassin ? `${hex.modified} ${activityToString(hex.mainCLC1)} 
+        ${setPlayerClass(hex.player)} ${hex.player % 3} ${hex.Id}` : "notInBassin"
+        if (hex.Id - 1 == this.props.selectedId) classname += " selected"
         return <Hexagon
             mainCLC1={hex.mainCLC1.toString()}
             subId={hex.cellPlayer}
             key={i} id={i} q={hex.q} r={hex.r} s={hex.s}
             onClick={(e, h) => hex.player == player ? this.props.handleClick(h) : ""}
-            className={hex.basin === bassin ? `${hex.modified} ${activityToString(hex.mainCLC1)} 
-                ${setPlayerClass(hex.player)} ${hex.player % 3}` : "notInBassin"} >
+            className={classname}>
             {hex.basin === bassin ? [
                 hex.cellPlayer != null ? this.displayTileId(hex.cellPlayer) : ""] : ""}
 
@@ -83,6 +105,7 @@ export default class Bassin extends Component {
             
         Description : return an object <Text> containing the input text
             
+        Authore : Hugo KELHETTER
     */
     displayTileId(text) {
         return <Text key="tileId" y={-2}>{text.toString()}</Text>
@@ -97,20 +120,19 @@ export default class Bassin extends Component {
         Function : render 
         
         Description : display an hexagonal grid and rivers
-            
+        
+        Authore : Hugo KELHETTER
     */
     render() {
-        console.log("render")
         return (<>
             <HexGrid width={setMapSize()} height={setMapSize()} viewBox="-50 -50 100 100" >
                 <Layout size={layoutProps.size} flat={layoutProps.flat}
                     spacing={layoutProps.spacing} origin={{ x: layoutProps.x, y: layoutProps.y }} >
                     {/* loops are done separetly because else the rivers may not always be visible */}
                     {Object.values(this.props.map.moreHexas).map((hex, i) =>
-                        /* this.props.map.player < 10 ? this.createHexeFarmer(hex, i, this.props.map.player) :
-                            this.props.map.role === "elu" ? this.createHexeElected(hex, i) :
-                                this.createHexeManager(hex, i) */
-                        this.createHexeFarmer(hex, i, this.props.map.player)
+                        this.props.role == 0 ? this.createHexeFarmer(hex, i, this.props.map.player) :
+                            this.props.role == 1 ? this.createHexeElected(hex, i) :
+                                this.createHexeManager(hex, i)
                     )}
                     {this.props.map.moreRivers.map((river, i) =>
                         <g key={i} className={river.start.outletFlowAcc < 100 ? "small" : ""} >

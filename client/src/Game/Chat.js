@@ -1,16 +1,17 @@
 import React from 'react'
-import { socket } from './context/socket'
+import { socket } from '../socket'
+import PropTypes from 'prop-types';
 
 export default class Chat extends React.Component {
-    /* 
-        Function : constructor
-    
-        Syntax  : constructor(props)
+    /*             
+        Input : props={lstPlayer,lstConvo,authore}
+                lstPlayer : object : list of all the players
+                lstConvo : object : list of all the conversations
+                authore : string : name of the player
+
+        Syntax : <Chat lstPlayer={lstPlayer} lstConvo={lstConvo} authore={authore} />
             
-        Input   : props : function and data passed by parent when calling component
-    
-        Description : create the component Chat and initialize its props/state 
-            
+        Authore : Hugo KELHETTER
     */
     constructor(props) {
         super(props)
@@ -24,11 +25,16 @@ export default class Chat extends React.Component {
         this.receiveMessage = this.receiveMessage.bind(this)
         this.lastMessage = React.createRef()
     }
+    static propTypes = {
+        lstPlayer: PropTypes.object.isRequired,
+        lstConvo: PropTypes.object.isRequired
+    }
     /* 
         Function : shouldComponentUpdate
     
         Description : the component only updates if the state changes
             
+        Authore : Hugo KELHETTER
     */
     shouldComponentUpdate(nextProps, nextState) {
         return this.state !== nextState || this.props.lstConvo !== nextProps.lstConvo
@@ -44,6 +50,8 @@ export default class Chat extends React.Component {
             update this.state.messages by adding a new value to the object 
                 containing conversation room's name a string and author's id
             this.state.textValue is set to ""
+        
+        Authore : Hugo KELHETTER
     */
     handleSubmit(e) {
         e.preventDefault();
@@ -75,6 +83,8 @@ export default class Chat extends React.Component {
         Input   : e : the value of the event calling the function
             
         Description : update this.state.textValue based on the pressed key
+
+        Authore : Hugo KELHETTER
             
     */
     updateText(e) {
@@ -88,7 +98,7 @@ export default class Chat extends React.Component {
     }
     componentDidUpdate(prevProps, prevState) {
         Object.keys(this.props.lstConvo).map((convo) => {
-            if (this.state.messages[convo] == undefined) this.state.messages[convo] = []
+            if (this.state.messages[convo] === undefined) this.state.messages[convo] = []
         })
         if (prevState.messages[this.state.convo].length !== this.state.messages[this.state.convo].length) this.scrollToBottom()
 
@@ -111,6 +121,8 @@ export default class Chat extends React.Component {
         Function : handleConvoChange
             
         Description : set the active conversation
+
+        Authore : Hugo KELHETTER
             
     */
     handleConvoChange(event) {
@@ -122,7 +134,8 @@ export default class Chat extends React.Component {
         Syntax  : render()
             
         Description : display a chat + available conversations
-            
+        
+        Authore : Hugo KELHETTER
     */
     render() {
         return (
@@ -138,7 +151,7 @@ export default class Chat extends React.Component {
                     </div>
                     <div className="convo">
                         {Object.values(this.state.messages[this.state.convo]).map((msg, i) =>
-                            <div key={i} className={`message ${msg.authore !== this.props.authore ? "" : "received"}`}>
+                            <div key={i} className={`message ${msg.authore == this.props.authore ? "" : "received"}`}>
                                 <p className="msg"> {msg.msg}</p>
                                 <p className="authore">{msg.authore === this.props.authore ? "Vous" : this.state.authore?.name}</p>
                             </div>

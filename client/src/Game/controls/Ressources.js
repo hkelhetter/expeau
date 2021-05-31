@@ -1,12 +1,25 @@
 import React from 'react'
+import PropTypes from 'prop-types';
 class Ressources extends React.Component {
+    /* 
+        Input : props={ressources:{ut,ub},cost:{ut,ub}}
+                ressources : object : ut/ub : the player's ressources
+                cost : object : ut/ub : estimation of the reduction of ressources
+            
+        Syntax : <Ressources ressources={ut,ub} cost={ut,ub} /> 
+    */
+    static propTypes = {
+        cost: PropTypes.object.isRequired,
+        ressources: PropTypes.object.isRequired
+    }
     /* 
         Function : render
     
         Syntax  : render()
             
         Description : display the available ressources and an estimated cost of the actions
-            
+        
+        Authore : Hugo KELHETTER      
     */
     render() {
         let ub = 0

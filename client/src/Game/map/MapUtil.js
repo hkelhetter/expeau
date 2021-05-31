@@ -23,6 +23,7 @@ export const layout = {
 
     Description : return an object containing all the data needed to generate the map in class Bassin
         
+    Authore : Hugo KELHETTER
 */
 export function generateHexes(data) {
     let hexas = {};
@@ -39,18 +40,39 @@ export function generateHexes(data) {
     }
     return hexas;
 }
-function renameProperty(obj, oldName, newName) {
-    // Do nothing if the names are the same
-    if (oldName === newName) {
-        return this;
+/* this function doesn't work */
+/* export function generateMap(data) {
+    let hexas = {};
+    let hex;
+    let hex2;
+    let rivers = [];
+    let path;
+    for (let i = 0; i < data.length; i++) {
+
+        hex = HexUtils.pixelToHex({ x: (data[i].xOutlet), y: (data[i].yOutlet) }, layout)
+        //map ardiere
+        //hex = HexUtils.pixelToHex({ x: (data[i].x0 + 164.6719013516826) * 4, y: (328 + data[i].y0) * -4 }, layout)
+        // merge hex and data[i] into hexas[i]
+        if (!hexas[i]) {
+            hexas[i] = Object.assign(hex, data[i])
+            hexas[i].modified = false
+        }
+        let j = hexas[hexas[i].downTile + 2]
+        if (!hexas[j]) {
+            hexas[j] = Object.assign(hex, data[j])
+            hexas[j].modified = false
+
+        }
+        path = {
+            start: hexas[i],
+            end: hexas[j],
+            outletFlowAcc: hexas[i].outletFlowAcc
+        }
+        rivers.push(path);
+        //renameProperty(hexas[i], "mainCLC1", "activity")
     }
-    // Check for the old property name to avoid a ReferenceError in strict mode.
-    if (obj.hasOwnProperty(oldName)) {
-        obj[newName] = obj[oldName];
-        delete obj[oldName];
-    }
-    return obj;
-}
+    return [hexas, rivers]
+} */
 /* 
     Function : generateRivers 
 
@@ -61,7 +83,8 @@ function renameProperty(obj, oldName, newName) {
     Description : cycle through the hexagones to create and array of object path
                     containing the hexagon where the river starts and and where it ends
                     by reading the downStreamCell property
-        
+    
+    Authore : Hugo KELHETTER
 */
 export function generateRivers(moreHexas) {
     let rivers = [];
@@ -92,6 +115,8 @@ export function generateRivers(moreHexas) {
 
     Description
         Compute player's id on their subBasin based on their global id
+
+    Authore : Hugo KELHETTER
 */
 export function setPlayerClass(player) {
     if (player === 0) return "" //attributé à aucun joueur
@@ -117,6 +142,8 @@ export function setPlayerClass(player) {
     Description
         returns a string based on the input
         this is meant to set className to components and apply css style
+    
+    Authore : Hugo KELHETTER
 */
 export function activityToString(activity) {
     switch (activity) {
@@ -141,6 +168,8 @@ export function activityToString(activity) {
 
     Description
         Calculate player's subBassin based on their id
+
+    Authore : Hugo KELHETTER
 */
 export function getSubBassin(id) {
     if (id < 4) return 1
