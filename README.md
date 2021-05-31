@@ -28,9 +28,10 @@ Other players must go to the page : ```ip-address:4000``` where ip-address is th
 
 ## Solution n°2
 
-Run ```npm start``` in client directory and ```node src/app``` at /serve-expeau   
+Run ```npm start``` at /client  and ```node src/app``` at /serve-expeau   
 Open web browser at following address : ```ip-address:3000``` or ```localhost:3000```   
 Other players must go to the page : ```ip-address:3000``` where ip-address is the ip address of the person that launched the app   
+This solution starts a development server. It will work but it is a worse version of the first solution.   
 
 # Getting Started with Create React App
 
