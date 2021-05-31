@@ -8,7 +8,7 @@ const Grid = require("./Grid.js");
 const httpServer = require("http").createServer();
 const path = require('path');
 const app = express();
-const reactAppPath = "/home/hugo-ubuntu/Documents/expeau/client"
+const reactAppPath = "../../../client/build/index.html"
 app.use(express.static(path.join(reactAppPath, 'build')));
 app.get('*', function (req, res) {
     res.sendFile(path.join(reactAppPath, 'build', 'index.html'));
