@@ -1,11 +1,16 @@
 # Dependencies
 
+Requires nodejs package   
+```
+sudo apt install nodejs
+```
+
 Requires npm package   
 ```
 sudo apt-get install npm
 ```   
    
-To download project dependencies execute   
+To download project dependencies execute in client and serv-expeau folders   
 ```
 npm install
 ```
