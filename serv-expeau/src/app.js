@@ -8,10 +8,12 @@ const Grid = require("./Grid.js");
 const httpServer = require("http").createServer();
 const path = require('path');
 const app = express();
-const reactAppPath = "../../../client/build/index.html"
+const reactAppPath = "/home/hugo-ubuntu/Documents/expeau/client"
 app.use(express.static(path.join(reactAppPath, 'build')));
+console.log(__dirname, "aa")
+
 app.get('*', function (req, res) {
-    res.sendFile(path.join(reactAppPath, 'build', 'index.html'));
+    res.sendFile('../../client/build/index.html', { root: __dirname });
 });
 const port2 = process.env.PORT - 1 || 4000;
 app.listen(port2)
