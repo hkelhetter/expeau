@@ -10,7 +10,6 @@ const path = require('path');
 const app = express();
 const reactAppPath = "/home/hugo-ubuntu/Documents/expeau/client"
 app.use(express.static(path.join(reactAppPath, 'build')));
-console.log(__dirname, "aa")
 
 app.get('*', function (req, res) {
     res.sendFile('../../client/build/index.html', { root: __dirname });
