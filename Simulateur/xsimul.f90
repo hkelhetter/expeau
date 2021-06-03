@@ -273,7 +273,7 @@ DO r=0,nbrounds-1				    !loop on the rounds
 	! file containing the current UT and UB values to be used for the next round
 	! note that returning UB could be sufficient since the UT are set to a constant
 	filename='newUtUbP1.txt'
-	DO i=1,9
+	DO i=0,9
 		filename(9:9)=char(48+i)
 		write(*,*) filename
 		OPEN(1,FILE=filename)
