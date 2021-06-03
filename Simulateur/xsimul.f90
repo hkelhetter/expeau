@@ -269,21 +269,23 @@ DO r=0,nbrounds-1				    !loop on the rounds
 	   	!WRITE(*,*) 'Invested UT:', -iut(:,y),'|'  
 	ENDDO			!end of the loop on the years
 	
+ENDDO
+	
+	
 	WRITE(*,*)'OUTPUT FILES'
 	! file containing the current UT and UB values to be used for the next round
 	! note that returning UB could be sufficient since the UT are set to a constant
 	filename='newUtUbP1.txt'
-	DO i=0,9
+	DO i=1,9
 		filename(9:9)=char(48+i)
 		write(*,*) filename
 		OPEN(1,FILE=filename)
 		REWIND(1)
 		WRITE(1,*) '	  UT          UB'	
-		WRITE(1,*) 	UT(i,y),	   UB(i,y)	 
+		WRITE(1,*) 	UT(i,y-1),	   UB(i,y)	 
 		CLOSE(1)
 	ENDDO
-	
-ENDDO			     !end of the loop on the rounds
+		     !end of the loop on the rounds
 
 ! save results
 DO i=1,nbP
