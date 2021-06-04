@@ -19,7 +19,7 @@ app.listen(port2)
 
 const joinRoom = async (socket, room, name, role) => {
     room.sockets.push(socket);
-    if(role === 1){
+    if (role === 1) {
         room.socketsAgr.push(socket);
     }
 
@@ -106,6 +106,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("changeOwner", async (obj) => {
+        console.log(obj)
         await Grid.changeOwner(socket.roomName, obj.selectedReceiver, obj.selectedTile);
     });
 
@@ -114,11 +115,13 @@ io.on("connection", (socket) => {
     });
 
     socket.on("setMarket", async (obj) => {
-        await Grid.setMarket(socket.roomName, obj.selectedTile);
+        console.log(obj)
+        await Grid.setMarket(socket.roomName, obj.selectedTile, obj.market);
     });
 
     socket.on("transformToCity", async (obj) => {
-        await Grid.transformToCity(socket.roomName, obj.selectedTile, obj.market, obj.newActivity);
+        console.log(obj.selectedTile, obj.market)
+        await Grid.transformToCity(socket.roomName, obj.selectedTile, obj.market);
     })
 
     //Called by the coach when everyone submitted their actions for the turn
@@ -128,10 +131,10 @@ io.on("connection", (socket) => {
         await Sim.calculate(cRoom.name, cRoom.turn);
 
         cRoom.turn++;
-        
-        for(const aSock of cRoom.socketsAgr){
+
+        for (const aSock of cRoom.socketsAgr) {
             const stats = await Sim.getLastPlayerStats(cRoom.name, aSock.playerId);
-            if(stats === -1){
+            if (stats === -1) {
                 console.log("No UTUB file for turn", cRoom.turn - 1);
             }
             const graph = await Sim.getPlayerGraph(cRoom.name, aSock.playerId);
@@ -146,7 +149,7 @@ io.on("connection", (socket) => {
         }
 
         callback();
-        
+
     })
 
 
