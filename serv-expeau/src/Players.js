@@ -15,7 +15,7 @@ const connectKnex = knex({
 
 const newGame = async (roomName) => {
     await connectKnex.schema.createTable(roomName, table => {
-        table.increments('Id');
+        table.integer('Id');
         table.integer('Role');
         table.text('Name');
         table.integer('ut');
@@ -38,11 +38,19 @@ const newGame = async (roomName) => {
 //     playerId:      Id given to this player
 //
 const addPlayer = async (name, role, roomName) => {
-    console.log("adding player", name, role, roomName);
-    var playerId = await connectKnex(roomName).count();
-    playerId = playerId[0]['count(*)'] + 1;
-    const ut = 12;
-    const ub = 12;
+    var playerId;
+
+    if(role === 1){
+        const agrId = await connectKnex(roomName).where({Role: 1}).count();
+        playerId = agrId[0]['count(*)'] + 1;
+    }
+
+    else{
+        playerId = await connectKnex(roomName).whereNot({Role: 1}).count();
+        playerId = playerId[0]['count(*)'] + 11;
+    }
+    const ut = 30;  //Init values
+    const ub = 30;
     await connectKnex(roomName).insert({Id : playerId, Name: name, Role: role, ut: ut, ub: ub});
     return playerId;
 }
@@ -85,11 +93,27 @@ const getPlayersStats = async (playerId, roomName) => {
     return await connectKnex(roomName).select("ut", "ub").where({ID : playerId});
 }
 
+const cleanUp = async (callback) => {
+    const tables = await connectKnex.schema.raw("SELECT name FROM sqlite_master WHERE type='table';");
+    for(var i = 0; i < tables.length; i++){
+        if(tables[i].name === 'sqlite_sequence'){
+            tables.splice(i, 1);
+            break;
+        }
+    }
+    for(table of tables){
+        await connectKnex.schema.dropTable(table.name);
+    }
+    callback();
+
+}
+
 module.exports = {
     newGame,
     addPlayer,
     removePlayer,
     getPlayersFromRoom,
-    getPlayersStats
+    getPlayersStats,
+    cleanUp
 }
 

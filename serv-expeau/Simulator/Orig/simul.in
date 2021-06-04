@@ -1,0 +1,4 @@
+2							! nb rounds
+xscenario.txt					! un exemple de scenario
+cartesActionSaufGranivores.txt	! les cartes actions disponibles
+round0.txt					! les données des actions jouées par les agriculteurs pour un round de 3 ans 

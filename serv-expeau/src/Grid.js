@@ -28,12 +28,59 @@ const getPlayersHexes = async (room, playerId) => {
 }
 
 const changeOwner = async (room, newOwner, hex) => {
-    await connectKnex(room).where({Id:hex}).update({player: newOwner});
+    var pHexId = await connectKnex(room).where({player: newOwner}).max('cellPlayer');
+    pHexId = parseInt(pHexId[0]["max(`cellPlayer`)"]) + 1;
+    await connectKnex(room).where({Id:hex}).update({player: newOwner, cellPlayer: pHexId});
+}
+
+const setPractice = async (room, hex ,practice) => {
+    await connectKnex(room).where({Id:hex}).update({practice: practice});
+}
+
+const addInfra = async (room, hex, eco, irrig) => {
+    await connectKnex(room).where({Id:hex}).update({eco: eco, irrig: irrig});
+}
+
+const setMarket = async (room, hex) => {
+    await connectKnex(room).where({Id:hex}).update({market: 1});
+}
+
+const transformToCity = async (room, hex, market, newActivity) => {
+    const inewActivity = parseInt(newActivity);
+    await connectKnex(room).where({Id:hex}).update({market: market,mainCLC1: 1, mainCLC3: inewActivity});
+}
+
+const cleanUp = async (callback) => {
+    const tables = await connectKnex.schema.raw("SELECT name FROM sqlite_master WHERE type='table';");
+    var found = 0;
+    for(var i = 0; i < tables.length; i++){
+        
+        if(tables[i].name === 'sqlite_sequence'){
+            tables.splice(i, 1);
+            found++;
+        }
+        if(tables[i].name === 'Grid'){
+            tables.splice(i, 1);
+            found++;
+        }
+        if(found === 2){
+            break;
+        }
+    }
+    for(table of tables){
+        await connectKnex.schema.dropTable(table.name);
+    }
+    callback();
 }
 
 module.exports = {
     createGrid,
     getCurrentGrid,
     getPlayersHexes,
-    changeOwner
+    changeOwner,
+    setPractice,
+    addInfra,
+    setMarket,
+    transformToCity,
+    cleanUp
 }
