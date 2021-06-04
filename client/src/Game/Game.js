@@ -11,8 +11,11 @@ import Ressources from "./controls/Ressources.js"
 import '../index.css'
 import CreateConversation from './CreateConversation.js'
 import AnimatorUI from "./animator/AnimatorUI.js"
-import Diary from "./diary/Diary.js"
+//import Diary from "./diary/Diary.js"
 import PropTypes from 'prop-types';
+import SlideField from "./controls/SlideField.js"
+import Menu from "./controls/Menu.js"
+import Diary from "./Diary.js"
 class Conteneur extends React.Component {
     /* 
         Input : props={name,role}
@@ -23,17 +26,17 @@ class Conteneur extends React.Component {
     */
     constructor(props) {
         super(props)
-        this.changeTileActivity = this.changeTileActivity.bind(this)
+        //this.changeTileActivity = this.changeTileActivity.bind(this)
         this.handleClickTile = handleClickTile.bind(this)
-        this.a = this.a.bind(this)
+        //this.a = this.a.bind(this)
 
 
         this.state = {
-            map: { moreHexas: "", moreRivers: null, player: 6 },
+            map: { moreHexas: "", moreRivers: null },
             selectedTile: null, HexasTampon: null,
-            ressources: { ut: null, ub: null },
             cost: {},
             tour: 0,
+            fini: false,
             actions: {},
             lstConvo: {}
         }
@@ -61,6 +64,7 @@ class Conteneur extends React.Component {
     --------------------------------------------------------------------------------------------------------
     */
     createTampon(moreHexas, player) {
+
         let HexasTampon = {}
         for (const key in moreHexas) {
             if (moreHexas[key].player === player) {
@@ -114,7 +118,7 @@ class Conteneur extends React.Component {
                 
         Authore : Hugo KELHETTER
     */
-    changeTileActivity(value, changeAll) {
+    changeTileActivity = (value, changeAll) => {
         const hexagons = this.state.map.moreHexas;
         /*         if (changeAll) {
                     const player = hexagons[this.state.selectedTile.id].player
@@ -181,32 +185,35 @@ class Conteneur extends React.Component {
             
     */
     componentDidMount() {
+        if (this.props.role < 10) {
+            socket.emit("updateStats", (response) => {
+                this.setState({ ressources: response[0] })
+            })
+        }
         /*  socket.emit("createRoom", "player1", 0, (responseCreateRoom) => {
              this.setState({ room: responseCreateRoom })
              socket.emit("startGame")*/
-        socket.emit("updateStats", (response) => {
-            this.setState({ ressources: response[0] })
-        })
-        socket.emit("getCurrentGrid", (response) => {
-            let a = {}
-            Object.keys(response).map((tile) => {
-                if (response[tile].player != null) {
-                    a[tile] = { player: response[tile].player, id: response[tile].Id, cellPlayer: response[tile].cellPlayer, role: response[tile].role }
-                }
-            })
 
-            const newHexas = generateHexes(response)
+        socket.emit("getCurrentGrid", (response) => {
+            /*             let lstTile = {}
+                        Object.keys(response).map((tile) => {
+            
+                            if (response[tile].player != null) {
+                                lstTile[tile] = { player: response[tile].player, id: response[tile].Id, cellPlayer: response[tile].cellPlayer, role: response[tile].role }
+                            }
+                        }) */
+            const [newHexas, lstTile] = generateHexes(response)
+            //let lstTile = newHexas[1]
             const newRivers = generateRivers(newHexas)
+
             //const tampon = this.createTampon(newHexas, this.state.map.player)
-            this.setState({ map: { ...this.state.map, moreHexas: newHexas, moreRivers: newRivers }, lstTile: a })
+            this.setState({ map: { ...this.state.map, moreHexas: newHexas, moreRivers: newRivers }, lstTile })
         })
         socket.emit("getAllActions", (response) => {
             this.setState({ lstActions: response })
         })
         socket.emit("playersInRoom", (response) => {
-            console.log(response, this.props.Name)
             const player = response.filter((player, i) => player.Name == this.props.name)
-            console.log(player)
             this.setState({ lstPlayer: response, id: player[0].Id })
             //})
         })
@@ -214,14 +221,22 @@ class Conteneur extends React.Component {
     componentWillUnmount() {
         socket.removeAllListeners()
     }
-    async a() {
-        this.setState({ tour: this.state.tour + 1 })
+    a = () => {
+        this.setState({ tour: this.state.tour + 1, fini: false })
 
     }
     roleToString(role) {
         if (role < 10) return "agriculteur"
         if (role < 14) return "élu"
         return "gestionnaire"
+    }
+    endRound = () => { this.setState({ fini: true }) }
+    PlayerDescription = (id) => {
+        const role = this.roleToString(id)
+        const de = <p>Vous êtes {role}</p>
+        switch (role) {
+            case "agriculteur":
+        }
     }
     /* 
         Function : render
@@ -232,37 +247,36 @@ class Conteneur extends React.Component {
         
         Authore : Hugo KELHETTER
     */
+
     render() {
-        console.log(this.props)
-        let selectedId = -1
-        if (this.state.selectedTile) selectedId = this.state.selectedTile.id
+        /*  let selectedId = -1
+         if (this.state.selectedTile) selectedId = this.state.selectedTile.id */
         return (<>
 
             < div className="App" >
-                <td onClick={() => window.open("tutorial")}>text</td>
+                <SlideField />
+
                 {/*  {(this.state.lstPlayer != undefined && this.state.lstTile != undefined) ? <AnimatorUI lstPlayer={this.state.lstPlayer} lstTile={this.state.lstTile} /> : ""} */}
-                < div id="controls">
+                <Menu player={{ role: this.roleToString(this.props.role), id: this.state.id }}>
                     <div id="menu">
-                        <p>MENU </p>
-                        <p>vous êtes : {this.roleToString(this.props.role)} et votre numéro est {this.state.id}</p>
                         <Diary />
                         <button onClick={this.a}>{this.state.tour}</button>
-                        <Ressources ressources={this.state.ressources} cost={this.state.cost} />
-                        <ValidationTour key="validation" /* updated={this.state.map.moreHexas} origin={this.state.HexasTampon} */ tour={this.state.tour} actions={this.state.actions} />
-                        {/* only display the components if a tile is selected */}
-                        {this.state.selectedTile === null ? "" :
-                            [
-                                <InfoTile key="info" />,
+                        {!this.state.fini ? <>
+                            {this.state.ressources !== undefined ? <Ressources ressources={this.state.ressources} cost={this.state.cost} /> : <p>aaaaaaaaa</p>}
+                            <ValidationTour key="validation" endRound={this.endRound} tour={this.state.tour} actions={this.state.actions} />
+                            {/* only display the components if a tile is selected */}
+                            {this.state.selectedTile === null ? "" :
                                 <ActivitySwapper key="changeActivity" changeTileActivity={this.changeTileActivity}
                                     selectedTile={this.state.selectedTile} actions={this.state.lstActions} />
-                            ]
-                        }
+                            }
+                        </> : ""}
                     </div>
-                    {Object.keys(this.state.lstConvo).length > 0 ? <Chat lstConvo={this.state.lstConvo} /> : ""}
-                </div>
+                </Menu>
+                {Object.keys(this.state.lstConvo).length > 0 ? <Chat lstConvo={this.state.lstConvo} /> : ""}
+
                 {
                     this.state.map.moreHexas !== "" ? <Bassin handleClick={this.handleClickTile}
-                        map={this.state.map} role={this.props.role} selectedId={selectedId} /> : ""
+                        map={this.state.map} role={this.props.role} selectedId={this.state.selectedTile?.id} id={this.state.id} /> : ""
                 }
             </div >
         </>

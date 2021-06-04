@@ -7,7 +7,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+
 }
+
 .pop{
     position: absolute;
     width:50%;
@@ -16,6 +18,16 @@ body {
     top:12.5%;
     border:solid;
     background-color: bisque;
+}
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
 }
 #btnRecap{
     position: absolute;
@@ -76,12 +88,7 @@ code {
     monospace;
 }
 
-body {
-    margin: 0;
-    padding: 1em;
-    font-family: sans-serif;
-    background: #f0f0f0;
-  }
+
   #controls{
     display: flex;
     flex-direction: row;
@@ -91,23 +98,19 @@ select{
 }
 
   svg g polygon{
-    stroke-width: 0.2;
-    stroke:black;
-
     fill-opacity: 0.5;
+    stroke-width: 0.3px;
 /*     scale: 2; */
   }
   svg g:hover {
     fill-opacity: 1;
   }
-/*   svg g:hover text {
-    fill-opacity: 1;
-  }
-*/
-
+  svg g:is(.water ,.foret, .eco) polygon{
+    stroke:green
+}
   svg g text {
     
-    font-size: 0.1em;
+    font-size: 0.12em;
     fill-opacity: 1;
     pointer-events: none;
     user-select: none;
@@ -144,7 +147,7 @@ svg g.notInBassin polygon   {
     stroke-width: 0;
 }
 svg g.selected polygon{
-    stroke-width:0.5px;
+    stroke: black;
 }
 svg g.premier text{
     fill: rgb(32, 138, 6);
@@ -156,8 +159,8 @@ svg g.deuxieme text{
 }
 svg g.troisieme text{
     fill: rgb(189, 19, 19)
-
 }
+
 .chat{
 /*     position: absolute;
     top: 0;
@@ -203,4 +206,11 @@ div.convo{
 #animatorControl form{
     display:flex;
     flex-direction: column;
+}
+#slider{
+    width:80% !important;
+    margin-left: 10%;
+}
+#createConvo{
+    width:50%
 }

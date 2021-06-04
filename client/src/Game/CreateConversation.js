@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types';
-
+import Select from 'react-select'
 export default class CreateConversation extends React.Component {
     /* 
         Input : props={lstPlayer,addConvo,name}
@@ -13,13 +13,21 @@ export default class CreateConversation extends React.Component {
     */
     constructor(props) {
         super(props);
-        let lstPlayer = {}
+        let lstPlayer = []
         for (const player in this.props.lstPlayer) {
             if (this.props.lstPlayer[player].Name != this.props.name) lstPlayer[this.props.lstPlayer[player].Name] = false
         }
-        this.state = { convoName: "", lstPlayer }
-        this.handleChange = this.handleChange.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
+        this.state = { convoName: "", lstPlayer, selectedPlayers: null }
+        for (const player in this.props.lstPlayer) {
+            lstPlayer.push({
+                value: player, label
+                    : this.props.lstPlayer[player].Name
+            })
+
+
+        }
+        //this.handleChange = this.handleChange.bind(this)
+        //this.handleSubmit = this.handleSubmit.bind(this)
     }
     static propTypes = {
         lstPlayer: PropTypes.object.isRequired,
@@ -33,12 +41,7 @@ export default class CreateConversation extends React.Component {
         
         Authore : Hugo KELHETTER
     */
-    handleChange(event) {
-        const target = event.target;
-        let value = target.type === 'checkbox' ? target.checked : target.value.replace(/[\[\].,\/#!$%\^&\*\\\";:{}=\-_`~()]/g, "");
-        if (target.type === 'checkbox') this.setState({ ...this.state.lstPlayer[target.name] = value });
-        else this.setState({ [target.name]: value });
-    }
+
     /* 
     Function : handleSubmit
         
@@ -46,7 +49,7 @@ export default class CreateConversation extends React.Component {
     
     Authore : Hugo KELHETTER
 */
-    handleSubmit(e) {
+    handleSubmit = (e) => {
         e.preventDefault();
         if (this.props.addConvo(this.state)) {
             this.setState({ convoName: "" })
@@ -71,10 +74,34 @@ export default class CreateConversation extends React.Component {
         
         Authore : Hugo KELHETTER
     */
+    handleChange = (newValue, actionMeta) => {
+        this.setState({ selectedPlayers: newValue })
+    };
+    handleInputChange = (inputValue, actionMeta) => {
+        /*   console.group('Input Changed');
+          console.log(inputValue);
+          console.log(`action: ${actionMeta.action}`);
+          console.groupEnd();
+          this.setState({ selectedPlayers: inputValue }) */
+    };
     render() {
+        console.log(this.state.selectedPlayers)
         return (
             <div id="createConvo">
-                <form >
+                <Select
+                    placeholder="sélectionnez les membres de la conversation"
+                    closeMenuOnSelect={false}
+                    isMulti
+                    name="colors"
+                    options={this.state.lstPlayer}
+                    className="basic-multi-select"
+                    classNamePrefix="select"
+                    onChange={this.handleChange}
+                    onInputChange={this.handleInputChange}
+                />
+                <input className="checkboxConvo" key="submit" type="submit" onClick={this.handleSubmit}></input>
+
+                {/*   <form >
                     Choisissez un nom, sélectionnez des joueurs et créez une salle de discussion
                     <input key="convoName" name="convoName" autoComplete="off" value={this.state.convoName} onChange={this.handleChange}></input>
                     {Object.keys(this.state.lstPlayer).map((player, i) =>
@@ -84,8 +111,7 @@ export default class CreateConversation extends React.Component {
                         </label>]
                     )}
                     <br />
-                    <input className="checkboxConvo" key="submit" type="submit" onClick={this.handleSubmit}></input>
-                </form>
+                </form> */}
             </div>
         );
     }

@@ -5,7 +5,8 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
-
+import { generateHexes, generateRivers } from "../map/MapUtil.js"
+import Bassin from '../map/Bassin.js'
 export default class AnimatorUi extends React.Component {
     /* 
         Input : props={lstPlayer,lstTile}
@@ -17,20 +18,19 @@ export default class AnimatorUi extends React.Component {
     constructor(props) {
         super(props)
         this.state = { selectedGifter: "", selectedTile: "", selectedReceiver: "" }
-        this.handleChange = this.handleChange.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
+        //this.handleChange = this.handleChange.bind(this)
+        //this.handleSubmit = this.handleSubmit.bind(this)
     }
     static propTypes = {
         lstPlayer: PropTypes.object.isRequired,
         lstTile: PropTypes.object.isRequired
     }
-    handleSubmit(event) {
+    handleSubmit = (event) => {
         event.preventDefault()
-        console.log("event")
         if (this.state.selectedGifter === "" || this.state.selectedTile === "" || this.state.selectedReceiver === "") return false
         if (this.state.selectedReceiver === this.state.selectedGifter) return false
     }
-    handleChange(event) {
+    handleChange = (event) => {
         const target = event.target.name
         const value = event.target.value
         this.setState({ [target]: value })
@@ -53,7 +53,7 @@ export default class AnimatorUi extends React.Component {
                         <Select name="selectedGifter" labelId="selectedGifter" id="gifter"
                             value={this.state.selectedGifter} onChange={this.handleChange}>
                             {this.props.lstPlayer.map((player, i) =>
-                                player.Role === "0" ? <MenuItem value={player.Id}>{player.Name}</MenuItem> : ""
+                                player.Role === "0" && <MenuItem value={player.Id}>{player.Name}</MenuItem>
                             )}
                         </Select>
                     </FormControl>
@@ -72,7 +72,7 @@ export default class AnimatorUi extends React.Component {
                         <Select name="selectedReceiver" labelId="selectedReceiver" id="gifter"
                             value={this.state.selectedReceiver} onChange={this.handleChange}>
                             {this.props.lstPlayer.map((player, i) =>
-                                player.Role === "0" ? <MenuItem value={player.Id}>{player.Name}</MenuItem> : ""
+                                player.Role === "0" && <MenuItem value={player.Id}>{player.Name}</MenuItem>
                             )}
                         </Select>
                     </FormControl>

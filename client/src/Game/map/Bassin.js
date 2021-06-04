@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { HexGrid, Layout, Path, Hexagon, Text } from 'react-hexgrid'
 import layoutProps from './layoutProps.js'
-import { setPlayerClass, activityToString, getSubBassin, setMapSize } from './MapUtil.js'
+import { setPlayerClass, activityToString, getSubBassin, setMapSize, setBaseClasses } from './MapUtil.js'
 import PropTypes from 'prop-types';
 export default class Bassin extends Component {
     /* 
@@ -22,7 +22,7 @@ export default class Bassin extends Component {
         map: PropTypes.object.isRequired,
         handleClick: PropTypes.func.isRequired,
         role: PropTypes.number.isRequired,
-        selectedId: PropTypes.number.isRequired
+        selectedId: PropTypes.number
     }
     componentDidMount() {
         /* 
@@ -65,35 +65,55 @@ export default class Bassin extends Component {
 
         const bassin = getSubBassin(player)
         let classname = "";
-        classname += hex.basin === bassin ? `${hex.modified} ${activityToString(hex.mainCLC1)} 
+        const mainCLC1 = hex.mainCLC1.toString()
+        classname += hex.basin === bassin ? `${hex.modified} ${setBaseClasses(hex)} 
         ${setPlayerClass(hex.player)} ${hex.player % 3} ${hex.Id}` : "notInBassin"
         if (hex.Id - 1 == this.props.selectedId) classname += " selected"
         return <Hexagon
-            mainCLC1={hex.mainCLC1.toString()}
+            onClick={(e, h) => hex.player == player && this.props.handleClick(h)}
+            mainCLC1
+            className={classname}
+            /* data can be found in h.props in handleClick */
             subId={hex.cellPlayer}
             key={i} id={i} q={hex.q} r={hex.r} s={hex.s}
-            onClick={(e, h) => hex.player == player ? this.props.handleClick(h) : ""}
-            className={classname}>
-            {hex.basin === bassin ? [
-                hex.cellPlayer != null ? this.displayTileId(hex.cellPlayer) : ""] : ""}
-
+        >
+            {(hex.basin === bassin && hex.cellPlayer != null) && this.displayTileId(hex.cellPlayer)}
+            {(hex.basin === bassin && mainCLC1 == 1) && this.displayMarket(hex)}
         </Hexagon>
     }
 
     createHexeElected(hex, i) {
+        let classname = setBaseClasses(hex)
+        if (hex.Id - 1 == this.props.selectedId) classname += " selected"
+        const mainCLC1 = hex.mainCLC1.toString()
         return <Hexagon
-            mainCLC1={hex.mainCLC1.toString()}
+            onClick={(e, h) => this.props.handleClick(h)}
+
+            className={classname}
             key={i} id={i} q={hex.q} r={hex.r} s={hex.s}
-            className={activityToString(hex.mainCLC1)} >
-            {hex.cellPlayer != null ? this.displayTileId(hex.cellPlayer) : ""}
+            mainCLC1
+        >
+            {hex.cellPlayer != null && this.displayTileId(hex.cellPlayer)}
+            {mainCLC1 == 1 && this.displayMarket(hex)}
+
         </Hexagon >
     }
     createHexeManager(hex, i) {
+        let classname = setBaseClasses(hex)
+        if (hex.Id - 1 == this.props.selectedId) classname += " selected"
+        const mainCLC1 = hex.mainCLC1.toString()
+
         return <Hexagon
-            mainCLC1={hex.mainCLC1.toString()}
+            className={classname}
+            bassin={hex.basin}
+            player={hex.player}
+            onClick={(e, h) => this.props.handleClick(h)}
             key={i} id={i} q={hex.q} r={hex.r} s={hex.s}
-            className={`manager ${activityToString(hex.mainCLC1)}`} >
-            {hex.cellPlayer != null ? this.displayTileId(hex.cellPlayer) : ""}
+            mainCLC1
+        >
+            {hex.cellPlayer != null && this.displayTileId(hex.cellPlayer)}
+            {mainCLC1 == 1 && this.displayMarket(hex)}
+
         </Hexagon>
     }
     /* 
@@ -110,12 +130,10 @@ export default class Bassin extends Component {
     displayTileId(text) {
         return <Text key="tileId" y={-2}>{text.toString()}</Text>
     }
-    /* 
-        don't allow the component to update if the props don't change
-    */
-    shouldComponentUpdate(nextProps, nextState) {
-        return this.props !== nextProps
+    displayMarket(hex) {
+        return hex.market == 1 && <Text key="tileId" y={2}>M</Text>
     }
+
     /* 
         Function : render 
         
@@ -130,12 +148,12 @@ export default class Bassin extends Component {
                     spacing={layoutProps.spacing} origin={{ x: layoutProps.x, y: layoutProps.y }} >
                     {/* loops are done separetly because else the rivers may not always be visible */}
                     {Object.values(this.props.map.moreHexas).map((hex, i) =>
-                        this.props.role == 0 ? this.createHexeFarmer(hex, i, this.props.map.player) :
+                        this.props.role == 0 ? this.createHexeFarmer(hex, i, this.props.id) :
                             this.props.role == 1 ? this.createHexeElected(hex, i) :
                                 this.createHexeManager(hex, i)
                     )}
                     {this.props.map.moreRivers.map((river, i) =>
-                        <g key={i} className={river.start.outletFlowAcc < 100 ? "small" : ""} >
+                        <g key={i} className={river.start.outletFlowAcc == 1 && "small"} >
                             <Path
                                 key={i} start={river.start} end={river.end}
                             />

@@ -3,6 +3,18 @@ import { socket } from '../../socket.js'
 import AnimatorUI from './AnimatorUI.js'
 import CreateConversation from "../CreateConversation.js"
 import PropTypes from 'prop-types';
+import { generateHexes, generateRivers } from "../map/MapUtil.js"
+import Bassin from "../map/Bassin.js"
+import handleClickTile from '../controls/handleClickTileFarmer.js'
+import ChangeTile from './ChangeTile.js'
+import Menu from '../controls/Menu.js'
+
+import Checkbox from '@material-ui/core/Checkbox';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+//import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+//import CheckBoxIcon from '@material-ui/icons/CheckBox';
+
 
 export default class AnimatorLoader extends React.Component {
     /* 
@@ -12,10 +24,11 @@ export default class AnimatorLoader extends React.Component {
         Syntax : <AnimatorLoader name="player's name"/>
     */
     constructor(props) {
-        console.log(props)
         super(props)
-        this.state = { lstPlayer: "", lstTile: "" }
-        this.addConvo = this.addConvo.bind(this)
+        this.state = { lstPlayer: "", lstTile: "", map: { moreHexas: "", moreRivers: null } }
+        //this.addConvo = this.addConvo.bind(this)
+        this.handleClickTile = handleClickTile.bind(this)
+
     }
     static propTypes = {
         name: PropTypes.string.isRequired
@@ -42,7 +55,7 @@ Description : display the different components of the app
 Authore : Hugo KELHETTER
     
 */
-    addConvo(data) {
+    addConvo = (data) => {
 
         if (data.convoName.length == 0) {
             alert("vous devez entrer un nom")
@@ -72,26 +85,45 @@ Authore : Hugo KELHETTER
     componentDidMount() {
 
         socket.emit("getCurrentGrid", (response) => {
-            let tiles = {}
-
-            Object.keys(response).map((tile) => {
-                if (response[tile].player != null) {
-                    tiles[tile] = { player: response[tile].player, id: response[tile].Id, cellPlayer: response[tile].cellPlayer }
-                }
-            })
-            this.setState({ lstTile: tiles })
+            const newHexas = generateHexes(response)
+            let lstTile = newHexas[1]
+            const newRivers = generateRivers(newHexas[0])
+            //const tampon = this.createTampon(newHexas, this.state.map.player)
+            this.setState({ map: { ...this.state.map, moreHexas: newHexas[0], moreRivers: newRivers, selectedTile: null }, lstTile })
         })
         socket.emit("playersInRoom", (response) => {
             this.setState({ lstPlayer: response })
             //})
         })
     }
+    updateMap = (tileChange) => {
+        let modif = {}
+
+        let hexa = this.state.map.moreHexas[tileChange.selectedTile]
+        console.log(hexa)
+    }
     render() {
         return (
-            <>
-                {(this.state.lstPlayer != "" && this.state.lstTile != "") ?
-                    [<AnimatorUI lstPlayer={this.state.lstPlayer} lstTile={this.state.lstTile} />,
-                    <CreateConversation lstPlayer={this.state.lstPlayer} addConvo={this.addConvo} name={this.props.name} />] : ""}
-            </>);
+            <div className="App">
+                {
+                    <Menu>
+                        {this.state.lstPlayer != "" && <CreateConversation lstPlayer={this.state.lstPlayer} addConvo={this.addConvo} name={this.props.name} />}
+                        {(this.state.lstPlayer != "" && this.state.lstTile != "" && this.state.selectedTile) &&
+                            <ChangeTile lstPlayer={this.state.lstPlayer} lstTile={this.state.lstTile} updateMap={this.updateMap}
+                                selectedTile={this.state.selectedTile} type={this.state.selectedTile.className} id={this.state.selectedTile.id} />
+                        }
+                    </Menu>
+                }
+                {
+                    this.state.map.moreHexas !== "" && <Bassin handleClick={this.handleClickTile} selectedId={this.state.selectedTile?.id}
+                        map={this.state.map} role={this.props.role} id={this.state.id} handleClick={this.handleClickTile} />
+                }
+
+
+            </div>);
     }
 }
+/*
+
+
+*/

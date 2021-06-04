@@ -1,6 +1,11 @@
 import React from 'react'
 import { socket } from "../../socket.js"
 import PropTypes from 'prop-types';
+import Select from '@material-ui/core/Select';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 class ActivitySwapper extends React.Component {
     /*    
@@ -17,13 +22,13 @@ class ActivitySwapper extends React.Component {
     constructor(props) {
         super(props);
         this.state = { selectActivity: 0, checkbox: false };
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        //this.handleChange = this.handleChange.bind(this);
+        //this.handleSubmit = this.handleSubmit.bind(this);
     }
     static propTypes = {
         changeTileActivity: PropTypes.func.isRequired,
         selectedTile: PropTypes.object.isRequired,
-        actions: PropTypes.object.isRequired
+        actions: PropTypes.array.isRequired
     }
     /* 
         Function : handleChange
@@ -39,7 +44,7 @@ class ActivitySwapper extends React.Component {
     
         Authore : Hugo KELHETTER
     */
-    handleChange(event) {
+    handleChange = (event) => {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         this.setState({ [target.name]: value });
@@ -56,7 +61,7 @@ class ActivitySwapper extends React.Component {
            
         Authore : Hugo KELHETTER
     */
-    handleSubmit(event) {
+    handleSubmit = (event) => {
         event.preventDefault();
         if (this.state.selectActivity != null) {
             this.props.changeTileActivity(this.props.actions[this.state.selectActivity], this.state.checkbox)
@@ -74,26 +79,37 @@ class ActivitySwapper extends React.Component {
     render() {
         return (
             < form onSubmit={this.handleSubmit} >
-                <label>
-                    <p>Choisissez votre nouvelle activité pour
-                        {this.state.checkbox ? ' le sous bassin'
-                            : ` la case ${this.props.selectedTile.subId}`}
-                    </p>
-                    <select name="selectActivity" onChange={this.handleChange}>
-                        {/* display all possible action for selected tile */}
-                        {this.props.actions.map((action, i) =>
-                            <option key={i} value={i}>{action.Pratique}</option>,
-                        )}
-                        {/*  {this.props.selectedTile.activity === "1" ? "" : <option value="1">vigne</option>}
+                <FormLabel>
+                    Choisissez votre nouvelle activité pour
+                    {this.state.checkbox ? ' le sous bassin'
+                        : ` la case ${this.props.selectedTile.subId}`}
+                </FormLabel >
+                <Select name="selectActivity" onChange={this.handleChange} value={this.state.selectActivity}>
+                    {/* display all possible action for selected tile */}
+                    {this.props.actions.map((action, i) =>
+                        <option key={i} value={i}>{action.Pratique}</option>,
+
+                    )}
+                    {/*  {this.props.selectedTile.activity === "1" ? "" : <option value="1">vigne</option>}
                         {this.props.selectedTile.activity === "2" ? "" : <option value="2">blé</option>}
                         {this.props.selectedTile.activity === "3" ? "" : <option value="3">bovins</option>} */}
-                    </select>
-                </label>
+                </Select>
+
+
                 <br />
-                <label>modifer toutes les cases
-                        <input name="checkbox" type="checkbox" onChange={this.handleChange}></input>
-                </label>
-                <input type="submit" value="Envoyer" />
+
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            onChange={this.handleChange}
+                            name="checkbox"
+                            color="primary"
+                        />
+                    }
+                    label="modifer toutes les cases"
+                />
+
+                <input type="submit" value="Envoyer" class="btn btn-primary" />
             </form >
         );
     }

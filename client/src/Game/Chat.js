@@ -20,9 +20,9 @@ export default class Chat extends React.Component {
             messages[convo] = []
         )
         this.state = { textValue: "", convo: Object.keys(this.props.lstConvo)[0], messages, inConvo: false }
-        this.handleSubmit = this.handleSubmit.bind(this)
-        this.handleConvoChange = this.handleConvoChange.bind(this)
-        this.receiveMessage = this.receiveMessage.bind(this)
+        //this.handleSubmit = this.handleSubmit.bind(this)
+        //this.handleConvoChange = this.handleConvoChange.bind(this)
+        //this.receiveMessage = this.receiveMessage.bind(this)
         this.lastMessage = React.createRef()
     }
     static propTypes = {
@@ -53,7 +53,7 @@ export default class Chat extends React.Component {
         
         Authore : Hugo KELHETTER
     */
-    handleSubmit(e) {
+    handleSubmit = (e) => {
         e.preventDefault();
         if (!this.state.textValue) return
         const newMessage = { msg: this.state.textValue, authore: this.props.authore, convo: this.state.convo }
@@ -70,7 +70,7 @@ export default class Chat extends React.Component {
         messages[this.state.convo].push(newMessage)
         return messages
     }
-    receiveMessage(newMessage) {
+    receiveMessage = (newMessage) => {
         let messages = this.state.messages
         const message = { msg: [newMessage.msg], authore: [newMessage.authore] }
         messages[newMessage.convo].push(message)
@@ -125,7 +125,7 @@ export default class Chat extends React.Component {
         Authore : Hugo KELHETTER
             
     */
-    handleConvoChange(event) {
+    handleConvoChange = (event) => {
         this.setState({ convo: event.target.value })
     }
     /* 

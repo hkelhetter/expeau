@@ -227,20 +227,22 @@ function Menu() {
         );
     }
 
-    return (
-        <div>
-            {MenuCtx.loc === "menu" && MainMenu()}
+    return (<>
+        {MenuCtx.loc === "started" ? GameStarted() :
+            <div class="App-header">
+                {MenuCtx.loc === "menu" && MainMenu()}
 
-            {MenuCtx.loc === "create" && CreateForm()}
+                {MenuCtx.loc === "create" && CreateForm()}
 
-            {MenuCtx.loc === "join" && JoinForm()}
+                {MenuCtx.loc === "join" && JoinForm()}
 
-            {MenuCtx.loc === "lobbyCreated" && LobbyCreated()}
+                {MenuCtx.loc === "lobbyCreated" && LobbyCreated()}
 
-            {MenuCtx.loc === "lobbyJoined" && LobbyJoined()}
+                {MenuCtx.loc === "lobbyJoined" && LobbyJoined()}
 
-            {MenuCtx.loc === "started" && GameStarted()}
-        </div>
+
+            </div>}
+    </>
     )
 
 }

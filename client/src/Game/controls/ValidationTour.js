@@ -15,7 +15,7 @@ class ValidationTour extends React.Component {
     constructor(props) {
         super(props)
         this.state = { validated: false }
-        this.handleSubmit = this.handleSubmit.bind(this)
+        //this.handleSubmit = this.handleSubmit.bind(this)
     }
     static propTypes = {
         tour: PropTypes.number.isRequired,
@@ -31,7 +31,7 @@ class ValidationTour extends React.Component {
         
         Authore : Hugo KELHETTER
     */
-    handleSubmit() {
+    handleSubmit = () => {
         /*         const origin = this.props.origin
                 const updated = this.props.updated
         
@@ -45,9 +45,13 @@ class ValidationTour extends React.Component {
                     if (Object.entries(subLog).length !== 0) log[index] = subLog
         
                 } */
-        let actions = [{ hexID: 13, action: "swapActivity", typeAction: 0 }]
-        socket.emit("addActions", actions, 1)
-        const csv = this.generateCSV(this.props.actions)
+        //let actions = [{ hexID: 13, action: "swapActivity", typeAction: 0 }]
+        let lstActions = this.props.actions
+        delete lstActions.cost
+        socket.emit("addActions", lstActions, this.props.tour)
+        console.log(lstActions)
+        this.props.endRound()
+        //const csv = this.generateCSV(this.props.actions)
     }
     /* 
         Function : generateCSV 
@@ -83,7 +87,7 @@ class ValidationTour extends React.Component {
         return (
             <>
                 {this.state.validated ? <p>Nombre de joueurs prêts : nb joueurs prêts/ nb joueurs totaux</p> :
-                    <button onClick={this.handleSubmit}>Finir le tour</button>}
+                    <button onClick={this.handleSubmit} class="btn btn-primary">Finir le tour</button>}
             </>
         )
     }

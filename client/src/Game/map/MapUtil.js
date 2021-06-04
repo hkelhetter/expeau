@@ -27,6 +27,7 @@ export const layout = {
 */
 export function generateHexes(data) {
     let hexas = {};
+    let lstTile = {}
     let hex;
     for (let i = 0; i < data.length; i++) {
 
@@ -36,9 +37,12 @@ export function generateHexes(data) {
         // merge hex and data[i] into hexas[i]
         hexas[i] = Object.assign(hex, data[i])
         hexas[i].modified = false
+        if (hexas[i].player != null) {
+            lstTile[i] = { player: hexas[i].player, id: hexas[i].Id, cellPlayer: hexas[i].cellPlayer }
+        }
         //renameProperty(hexas[i], "mainCLC1", "activity")
     }
-    return hexas;
+    return [hexas, lstTile];
 }
 /* this function doesn't work */
 /* export function generateMap(data) {
@@ -89,7 +93,6 @@ export function generateHexes(data) {
 export function generateRivers(moreHexas) {
     let rivers = [];
     let path;
-
     for (let i = 0; i < Object.keys(moreHexas).length; i++) {
         path = {
             start: moreHexas[i],
@@ -192,4 +195,9 @@ export function getSubBassin(id) {
 */
 export function setMapSize() {
     return window.matchMedia('(orientation:landscape)').matches ? '50%' : '100%'
+}
+export function setBaseClasses(hex) {
+    let classname = activityToString(hex.mainCLC1)
+    if (hex.infrastruture == 1) classname += " eco"
+    return classname
 }
