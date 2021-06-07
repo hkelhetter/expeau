@@ -97,9 +97,9 @@ function Menu() {
                             value={playerCtx.role}
                             onChange={handleChange}
                         >
-                            <MenuItem value={0}>Agriculteur</MenuItem>
-                            <MenuItem value={1}>Elu</MenuItem>
-                            <MenuItem value={2}>Responsable</MenuItem>
+                            <MenuItem value={1}>Agriculteur</MenuItem>
+                            <MenuItem value={2}>Elu</MenuItem>
+                            <MenuItem value={3}>Responsable</MenuItem>
                         </Select>
                     </FormControl>
                 </p>
@@ -114,7 +114,6 @@ function Menu() {
     function JoinForm() {
         return (
             <div>
-                {console.log(socket.io.engine)}
                 <p>
                     <TextField key="roomName" label="Code Partie" value={playerCtx.room} onChange={handleRoomName}></TextField>
                 </p>
@@ -130,9 +129,9 @@ function Menu() {
                             value={playerCtx.role}
                             onChange={handleChange}
                         >
-                            <MenuItem value={0}>Agriculteur</MenuItem>
-                            <MenuItem value={1}>Elu</MenuItem>
-                            <MenuItem value={2}>Responsable</MenuItem>
+                            <MenuItem value={1}>Agriculteur</MenuItem>
+                            <MenuItem value={2}>Elu</MenuItem>
+                            <MenuItem value={3}>Responsable</MenuItem>
                         </Select>
                     </FormControl>
                 </p>

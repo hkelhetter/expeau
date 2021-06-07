@@ -9,7 +9,10 @@ body {
 
 
 }
-
+form{
+    display: flex;
+    flex-direction: column;
+}
 .pop{
     position: absolute;
     width:50%;
@@ -44,6 +47,7 @@ border-color: black;
 border-width: 1px;
 height: 95vh;
 overflow-y: scroll;
+padding: 20px;
 }
 
 @media (orientation: landscape) {

@@ -9,21 +9,12 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 export default class ScrollDialog extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { open: true }
     }
-
-
-    handleClose = () => {
-        this.setState({ open: false })
-    };
-
-
     render() {
         return (
             <div>
                 <Dialog
-                    open={this.state.open}
-                    onClose={this.handleClose}
+                    open={true}
                     scroll="paper"
                     aria-labelledby="scroll-dialog-title"
                     aria-describedby="scroll-dialog-description"
@@ -45,7 +36,7 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleClose} color="primary">
+                        <Button onClick={this.props.closeDiary} color="primary">
                             Fermer
                         </Button>
                     </DialogActions>

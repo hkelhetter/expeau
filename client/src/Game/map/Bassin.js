@@ -68,14 +68,14 @@ export default class Bassin extends Component {
         const mainCLC1 = hex.mainCLC1.toString()
         classname += hex.basin === bassin ? `${hex.modified} ${setBaseClasses(hex)} 
         ${setPlayerClass(hex.player)} ${hex.player % 3} ${hex.Id}` : "notInBassin"
-        if (hex.Id - 1 == this.props.selectedId) classname += " selected"
+        if (hex.Id == this.props.selectedId) classname += " selected"
         return <Hexagon
             onClick={(e, h) => hex.player == player && this.props.handleClick(h)}
-            mainCLC1
+            mainCLC1={mainCLC1} irrig={hex.irrig} eco={hex.eco} market={hex.market}
             className={classname}
             /* data can be found in h.props in handleClick */
             subId={hex.cellPlayer}
-            key={i} id={i} q={hex.q} r={hex.r} s={hex.s}
+            key={hex.Id} id={hex.Id} q={hex.q} r={hex.r} s={hex.s}
         >
             {(hex.basin === bassin && hex.cellPlayer != null) && this.displayTileId(hex.cellPlayer)}
             {(hex.basin === bassin && mainCLC1 == 1) && this.displayMarket(hex)}
@@ -84,14 +84,14 @@ export default class Bassin extends Component {
 
     createHexeElected(hex, i) {
         let classname = setBaseClasses(hex)
-        if (hex.Id - 1 == this.props.selectedId) classname += " selected"
+        if (hex.Id == this.props.selectedId) classname += " selected"
         const mainCLC1 = hex.mainCLC1.toString()
         return <Hexagon
             onClick={(e, h) => this.props.handleClick(h)}
 
             className={classname}
             key={i} id={i} q={hex.q} r={hex.r} s={hex.s}
-            mainCLC1
+            mainCLC1={mainCLC1} irrig={hex.irrig} eco={hex.eco} market={hex.market}
         >
             {hex.cellPlayer != null && this.displayTileId(hex.cellPlayer)}
             {mainCLC1 == 1 && this.displayMarket(hex)}
@@ -100,7 +100,7 @@ export default class Bassin extends Component {
     }
     createHexeManager(hex, i) {
         let classname = setBaseClasses(hex)
-        if (hex.Id - 1 == this.props.selectedId) classname += " selected"
+        if (hex.Id == this.props.selectedId) classname += " selected"
         const mainCLC1 = hex.mainCLC1.toString()
 
         return <Hexagon
@@ -108,12 +108,12 @@ export default class Bassin extends Component {
             bassin={hex.basin}
             player={hex.player}
             onClick={(e, h) => this.props.handleClick(h)}
-            key={i} id={i} q={hex.q} r={hex.r} s={hex.s}
-            mainCLC1
+            key={hex.Id} id={hex.Id} q={hex.q} r={hex.r} s={hex.s}
+            mainCLC1={mainCLC1} irrig={hex.irrig} eco={hex.eco} market={hex.market}
         >
             {hex.cellPlayer != null && this.displayTileId(hex.cellPlayer)}
             {mainCLC1 == 1 && this.displayMarket(hex)}
-
+            <Text key="ileId" y={2}>{hex.Id}</Text>
         </Hexagon>
     }
     /* 
@@ -148,8 +148,8 @@ export default class Bassin extends Component {
                     spacing={layoutProps.spacing} origin={{ x: layoutProps.x, y: layoutProps.y }} >
                     {/* loops are done separetly because else the rivers may not always be visible */}
                     {Object.values(this.props.map.moreHexas).map((hex, i) =>
-                        this.props.role == 0 ? this.createHexeFarmer(hex, i, this.props.id) :
-                            this.props.role == 1 ? this.createHexeElected(hex, i) :
+                        this.props.role == 1 ? this.createHexeFarmer(hex, i, this.props.id) :
+                            this.props.role == 2 ? this.createHexeElected(hex, i) :
                                 this.createHexeManager(hex, i)
                     )}
                     {this.props.map.moreRivers.map((river, i) =>

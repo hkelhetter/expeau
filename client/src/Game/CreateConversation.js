@@ -85,7 +85,6 @@ export default class CreateConversation extends React.Component {
           this.setState({ selectedPlayers: inputValue }) */
     };
     render() {
-        console.log(this.state.selectedPlayers)
         return (
             <div id="createConvo">
                 <Select

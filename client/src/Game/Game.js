@@ -38,7 +38,8 @@ class Conteneur extends React.Component {
             tour: 0,
             fini: false,
             actions: {},
-            lstConvo: {}
+            lstConvo: {},
+            displayDiary: false
         }
     }
     static propTypes = {
@@ -152,10 +153,10 @@ class Conteneur extends React.Component {
             let cost = this.state.cost
             cost[this.state.selectedTile.id] = { ub: value.Intrants, ut: value.Travail }
             this.setState({ actions: { ...this.state.actions, [this.state.selectedTile.id]: value.Id, cost } })
-            hexagons[this.state.selectedTile.id].modified = true
+            hexagons[this.state.selectedTile.id - 1].modified = true
         }
-
-        this.setState({ moreHexas: hexagons, selectedTile: null })
+        const a = this.state.map.moreHexas
+        this.setState({ a: hexagons, selectedTile: null })
 
 
         /*
@@ -185,11 +186,22 @@ class Conteneur extends React.Component {
             
     */
     componentDidMount() {
+        socket.on("nextTurn", () => {
+            this.setState({ tour: this.state.tour + 1, fini: false })
+            console.log("fini")
+        })
+
         if (this.props.role < 10) {
             socket.emit("updateStats", (response) => {
                 this.setState({ ressources: response[0] })
             })
         }
+        socket.on("results", (response) => {
+            this.setState({ ressources: response.stats, data: response.graph, tour: this.state.tour + 1, fini: false })
+            console.log(response)
+            //    this.setState({ ressources: response[0] })
+
+        })
         /*  socket.emit("createRoom", "player1", 0, (responseCreateRoom) => {
              this.setState({ room: responseCreateRoom })
              socket.emit("startGame")*/
@@ -222,7 +234,9 @@ class Conteneur extends React.Component {
         socket.removeAllListeners()
     }
     a = () => {
-        this.setState({ tour: this.state.tour + 1, fini: false })
+
+        console.log("aa")
+
 
     }
     roleToString(role) {
@@ -247,29 +261,35 @@ class Conteneur extends React.Component {
         
         Authore : Hugo KELHETTER
     */
+    closeDiary = () => {
+        this.setState({ displayDiary: false })
+    }
 
     render() {
+        console.log(this.state.moreHexas)
         /*  let selectedId = -1
          if (this.state.selectedTile) selectedId = this.state.selectedTile.id */
         return (<>
 
             < div className="App" >
                 <SlideField />
-
+                {this.state.data != undefined &&
+                    <img src={`data:image/png;base64,${this.state.data}`} />}
                 {/*  {(this.state.lstPlayer != undefined && this.state.lstTile != undefined) ? <AnimatorUI lstPlayer={this.state.lstPlayer} lstTile={this.state.lstTile} /> : ""} */}
                 <Menu player={{ role: this.roleToString(this.props.role), id: this.state.id }}>
                     <div id="menu">
-                        <Diary />
+                        {this.state.displayDiary && <Diary closeDiary={this.closeDiary} />}
                         <button onClick={this.a}>{this.state.tour}</button>
+                        {this.state.ressources !== undefined ? <Ressources ressources={this.state.ressources} cost={this.state.cost} /> : <p>aaaaaaaaa</p>}
+
                         {!this.state.fini ? <>
-                            {this.state.ressources !== undefined ? <Ressources ressources={this.state.ressources} cost={this.state.cost} /> : <p>aaaaaaaaa</p>}
                             <ValidationTour key="validation" endRound={this.endRound} tour={this.state.tour} actions={this.state.actions} />
                             {/* only display the components if a tile is selected */}
                             {this.state.selectedTile === null ? "" :
                                 <ActivitySwapper key="changeActivity" changeTileActivity={this.changeTileActivity}
                                     selectedTile={this.state.selectedTile} actions={this.state.lstActions} />
                             }
-                        </> : ""}
+                        </> : "En attente des autres joueurs..."}
                     </div>
                 </Menu>
                 {Object.keys(this.state.lstConvo).length > 0 ? <Chat lstConvo={this.state.lstConvo} /> : ""}

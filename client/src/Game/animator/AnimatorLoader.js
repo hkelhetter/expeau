@@ -96,22 +96,43 @@ Authore : Hugo KELHETTER
             //})
         })
     }
+    updateObject(source, newData) {
+        for (const key in newData) {
+            source[key] = newData[key]
+        }
+        console.log(source.eco)
+        return source
+    }
     updateMap = (tileChange) => {
-        let modif = {}
-
-        let hexa = this.state.map.moreHexas[tileChange.selectedTile]
-        console.log(hexa)
+        const id = tileChange.selectedTile
+        let hexas = this.state.map.moreHexas
+        let tile = hexas[id]
+        delete tileChange.selectedId
+        //tile = Object.assign(tile, tileChange)
+        const a = { ...this.state.map.moreHexas }
+        hexas[id] = this.updateObject(tile, tileChange)
+        this.setState({ a: hexas })
+        console.log(hexas[id].eco)
+    }
+    handleSubmit() {
+        socket.emit("nextTurn", () => {
+            console.log("fini")
+        })
     }
     render() {
+        console.log(this.state)
+
         return (
             <div className="App">
                 {
                     <Menu>
-                        {this.state.lstPlayer != "" && <CreateConversation lstPlayer={this.state.lstPlayer} addConvo={this.addConvo} name={this.props.name} />}
                         {(this.state.lstPlayer != "" && this.state.lstTile != "" && this.state.selectedTile) &&
                             <ChangeTile lstPlayer={this.state.lstPlayer} lstTile={this.state.lstTile} updateMap={this.updateMap}
                                 selectedTile={this.state.selectedTile} type={this.state.selectedTile.className} id={this.state.selectedTile.id} />
+
                         }
+                        <button class="btn btn-primary" data-testid="submit" onClick={this.handleSubmit}>Terminer le tour</button>
+
                     </Menu>
                 }
                 {

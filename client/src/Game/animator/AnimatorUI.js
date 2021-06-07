@@ -7,6 +7,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
 import { generateHexes, generateRivers } from "../map/MapUtil.js"
 import Bassin from '../map/Bassin.js'
+import { socket } from '../../socket.js';
 export default class AnimatorUi extends React.Component {
     /* 
         Input : props={lstPlayer,lstTile}
@@ -27,10 +28,12 @@ export default class AnimatorUi extends React.Component {
     }
     handleSubmit = (event) => {
         event.preventDefault()
+
         if (this.state.selectedGifter === "" || this.state.selectedTile === "" || this.state.selectedReceiver === "") return false
         if (this.state.selectedReceiver === this.state.selectedGifter) return false
     }
     handleChange = (event) => {
+
         const target = event.target.name
         const value = event.target.value
         this.setState({ [target]: value })
@@ -43,7 +46,6 @@ export default class AnimatorUi extends React.Component {
         return Object.values(lstTile).filter(tile => tile.player == player)
     }
     render() {
-
         let subListTile = this.getTilesOfPlayer(this.props.lstTile, this.state.selectedGifter)
         return (
             <div id="animatorControl">
@@ -81,6 +83,5 @@ export default class AnimatorUi extends React.Component {
                 </form>
             </div>
         );
-        console.log(subListTile)
     }
 }

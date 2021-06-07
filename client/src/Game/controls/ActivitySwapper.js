@@ -4,9 +4,8 @@ import PropTypes from 'prop-types';
 import Select from '@material-ui/core/Select';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
-import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-
+import createCheckbox from "./createCheckbox.js"
 class ActivitySwapper extends React.Component {
     /*    
         Input : props={changeTileActivity,selectedTile,actions}
@@ -22,6 +21,7 @@ class ActivitySwapper extends React.Component {
     constructor(props) {
         super(props);
         this.state = { selectActivity: 0, checkbox: false };
+        this.createCheckbox = createCheckbox.bind(this)
         //this.handleChange = this.handleChange.bind(this);
         //this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -77,6 +77,7 @@ class ActivitySwapper extends React.Component {
         Authore : Hugo KELHETTER
     */
     render() {
+        console.log(this.props)
         return (
             < form onSubmit={this.handleSubmit} >
                 <FormLabel>
@@ -98,16 +99,10 @@ class ActivitySwapper extends React.Component {
 
                 <br />
 
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            onChange={this.handleChange}
-                            name="checkbox"
-                            color="primary"
-                        />
-                    }
-                    label="modifer toutes les cases"
-                />
+                <FormLabel>modifer toutes les cases
+                        {this.createCheckbox("checkbox")}
+                </FormLabel>
+
 
                 <input type="submit" value="Envoyer" class="btn btn-primary" />
             </form >
