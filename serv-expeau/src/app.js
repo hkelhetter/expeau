@@ -124,10 +124,15 @@ io.on("connection", (socket) => {
         await Grid.transformToCity(socket.roomName, obj.selectedTile, obj.market);
     })
 
+    socket.on("transformToFarm", async (obj) => {
+        await Grid.transformToFarm(socket.roomName, obj.selectedTile, obj.selectedReceiver, obj.irrig, obj.eco);
+    })
+
     //Called by the coach when everyone submitted their actions for the turn
     socket.on("nextTurn", async (callback) => {
         const cRoom = rooms[socket.roomName];
         await Actions.applyActions(cRoom.name, cRoom.turn);
+        await Grid.genFile(cRoom.name, cRoom.turn);
         await Sim.calculate(cRoom.name, cRoom.turn);
 
         cRoom.turn++;
@@ -150,7 +155,9 @@ io.on("connection", (socket) => {
 
         callback();
 
-    })
+    });
+
+
 
 
 

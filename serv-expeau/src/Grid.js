@@ -3,7 +3,9 @@
 // Author: Daniil Kudriashov (daniil.kudriashov@etu.unistra.fr)
 // Date: 3 may 2021
 
-const knex = require("knex")
+const knex = require("knex");
+
+const fs = require("fs");
 
 const connectKnex = knex({
     client: "sqlite3",
@@ -49,6 +51,35 @@ const transformToCity = async (room, hex, market) => {
     await connectKnex(room).where({ Id: hex }).update({ market: market, mainCLC1: 1 });
 }
 
+const transformToFarm = async (room, hex, newOwner, irrig, eco) => {
+    var pHexId = await connectKnex(room).where({ player: newOwner }).max('cellPlayer');
+    pHexId = parseInt(pHexId[0]["max(`cellPlayer`)"]) + 1;
+    await connectKnex(room).where({ Id: hex }).update({ player: newOwner, cellPlayer: pHexId, irrig: irrig, eco: eco, mainCLC1: 2});
+}
+
+const genFile = async (room, tour) => {
+    const actions = await connectKnex(room).where('practice', '>', 0).orWhere(function () {
+        this.where({eco: 1}).orWhere({irrig: 1}).orWhere({market: 1})
+    }).select('Id', 'player', 'practice', 'irrig', 'market');
+
+    const file = `./Simulator/Games/${room}/round${tour}.txt`;
+    await new Promise(resolve => {
+            fs.writeFile(file, "Id   player   practice   infra   localMarket\n", err => {
+            if (err) {
+            console.error(err)
+            }
+            resolve();
+        })
+    });
+    for(const action of actions){
+        fs.writeFile(file, `${action.Id}   ${action.player}   ${action.practice}   ${action.irrig}   ${action.market}\n`, {flag: 'a+'}, err => {
+            if(err){  
+                console.log(err);
+            }
+        });
+    };
+}
+
 const cleanUp = async (callback) => {
     const tables = await connectKnex.schema.raw("SELECT name FROM sqlite_master WHERE type='table';");
     var found = 0;
@@ -81,5 +112,7 @@ module.exports = {
     addInfra,
     setMarket,
     transformToCity,
+    transformToFarm,
+    genFile,
     cleanUp
 }

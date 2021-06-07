@@ -103,7 +103,7 @@ async function getLastPlayerStats(room, playerId){
 async function getPlayerGraph(room, playerId){
     const file = `./Simulator/Games/${room}/imgP${playerId}.png`;
 
-    const res = await new Promise(resolve => {
+    var res = await new Promise(resolve => {
         fs.readFile(file, 'utf8', (err, data) => {
             if(err) {
                 console.error(err);
@@ -112,8 +112,11 @@ async function getPlayerGraph(room, playerId){
             resolve(data)
         })
     });
+    res = "data:image/png;base64,"+ res.toString("base64");
     return res;
 }
+
+
 
 async function cleanUp(callback){
     const comm = 'rm -r ./Simulator/Games/*';
@@ -136,5 +139,5 @@ module.exports = {
     newGame,
     getLastPlayerStats,
     getPlayerGraph,
-    cleanUp
+    cleanUp,
 }

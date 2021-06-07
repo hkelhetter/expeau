@@ -81,22 +81,22 @@ const getAllActions = async () => {
 const applyActions = async (room, tour) => {
     //console.log("looking for actions in room", room);
     const actions = await connectKnex(room).select("*").where({tour: tour}).orderBy("hexID", "asc");
-    const file = `./Simulator/Games/${room}/round${tour}.txt`;
-    await new Promise(resolve => {
-            fs.writeFile(file, "Id   player   practice   infra   localMarket\n", err => {
-            if (err) {
-            console.error(err)
-            }
-            resolve();
-        })
-    });
+    // const file = `./Simulator/Games/${room}/round${tour}.txt`;
+    // await new Promise(resolve => {
+    //         fs.writeFile(file, "Id   player   practice   infra   localMarket\n", err => {
+    //         if (err) {
+    //         console.error(err)
+    //         }
+    //         resolve();
+    //     })
+    // });
     for(const action of actions){
         await setPractice(room, action.hexID, action.actionID);
-        fs.writeFile(file, `${action.hexID}   ${action.playerId}   ${action.actionID}   0   0   0\n`, {flag: 'a+'}, err => {
-            if(err){  
-                console.log(err);
-            }
-        })
+        // fs.writeFile(file, `${action.hexID}   ${action.playerId}   ${action.actionID}   0   0   0\n`, {flag: 'a+'}, err => {
+        //     if(err){  
+        //         console.log(err);
+        //     }
+        // })
     };
 }
 
