@@ -9,7 +9,7 @@ const Sim = require("./Sumulator");
 const httpServer = require("http").createServer();
 const path = require('path');
 const app = express();
-app.use(express.static(path.join(reactAppPath, 'build')));
+//app.use(express.static(path.join(reactAppPath, 'build')));
 app.get('*', function (req, res) {
     res.sendFile('../../client/build/index.html', { root: __dirname });
 });
