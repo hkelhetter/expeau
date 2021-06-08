@@ -4,14 +4,13 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Radio from '@material-ui/core/Radio';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import "bootstrap/dist/css/bootstrap.min.css";
 import Checkbox from '@material-ui/core/Checkbox';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { Button } from "reactstrap";
 import { socket } from "../../socket.js"
 import { getSubBassin } from "../map/MapUtil.js"
 import createCheckbox from "../controls/createCheckbox.js"
+import { Button } from '@material-ui/core'
 
 export default class ChangeTile extends React.Component {
     constructor(props) {
@@ -40,7 +39,6 @@ export default class ChangeTile extends React.Component {
     }
     modifyTile = () => {
         const [problem] = "quelque chose s'est mal passé"
-        if (this.props.selectedTile.className === "water") return ["case non valide"]
         let res = { selectedTile: this.props.selectedTile.id }
         switch (this.props.selectedTile.mainCLC1) {
             case "1":
@@ -55,6 +53,10 @@ export default class ChangeTile extends React.Component {
                     case "changeOwner":
                         const ok = this.checkReceiver(res)
                         if (ok === "") socket.emit("changeOwner", res)
+                        res.cellPlayer = res.selectedReceiver
+                        console.log(res.selectedReceiver)
+                        res.player = res.selectedReceiver
+                        delete res.selectedReceiver
                         return [ok, res]
                     case "addInfra":
                         if (this.state.checkboxEco == this.props.selectedTile.eco && this.state.checkboxIrrig == this.props.selectedTile.irrig) {
@@ -65,6 +67,7 @@ export default class ChangeTile extends React.Component {
                         return ["", res]
                     case "transformToForest":
                         socket.emit("transformToForest", res)
+                        res.mainCLC1 = 3
                         return ["", res]
                     default:
                         return [problem]
@@ -77,11 +80,13 @@ export default class ChangeTile extends React.Component {
                     case "transformToCity":
                         res = { ...res, market: this.state.checkboxMarket }
                         socket.emit("transformToCity", res)
+                        res.mainCLC1 = 1
                         return ["", res]
                     case "transformToFarm":
                         res = { ...res, selectedReceiver: this.state.selectedReceiver }
                         const ok = this.checkReceiver(res)
                         if (ok === "") socket.emit("transformToFarm", res)
+                        res.mainCLC1 = 2
                         return [ok, res]
                     default:
                         return [problem]
@@ -94,9 +99,12 @@ export default class ChangeTile extends React.Component {
                         res = { ...res, selectedReceiver: this.state.selectedReceiver }
                         const ok = this.checkReceiver(res)
                         if (ok === "") socket.emit("transformToFarm", res)
+                        res.mainCLC1 = 2
                         return [ok, res]
-                    case "tranformToForest":
+                    case "transformToForest":
+                        console.log("a")
                         socket.emit("transformToForest", res)
+                        res.mainCLC1 = 3
                         return ["", res]
                     default:
                         return [problem]
@@ -165,19 +173,19 @@ export default class ChangeTile extends React.Component {
             this.setState({
                 checkboxEco: this.props.selectedTile.eco,
                 checkboxIrrig: this.props.selectedTile.irrig,
-                checkboxMarket: this.props.selectedTile.checkboxMarket,
+                checkboxMarket: this.props.selectedTile.market,
                 selectedReceiver: ""
             })
+
         }
     }
     render() {
-
         return (
             <FormControl component="fieldset">
-                {this.props.selectedTile.mainCLC1 === "1" ?
+                {this.props.selectedTile.mainCLC1 === "1" /* city */ ?
 
                     <FormLabel component="legend">{this.props.selectedTile.market ? "Supprimer le marché" : "Etablir un marché local"}</FormLabel>
-                    : this.props.selectedTile.mainCLC1 === "2" ?
+                    : this.props.selectedTile.mainCLC1 === "2" /* farm */ ?
                         <>
                             <RadioGroup name="agriAction" value={this.state.agriAction} onChange={this.handleChange} >
                                 <FormControlLabel key="1" value="changeOwner" control={<Radio />} label="donner la case" id="giveTile" />
@@ -188,7 +196,7 @@ export default class ChangeTile extends React.Component {
 
                             </RadioGroup>
                         </>
-                        : this.props.selectedTile.mainCLC1 === "3" ?
+                        : this.props.selectedTile.mainCLC1 === "3" /* forest */ ?
                             <>
 
                                 <RadioGroup aria-label="type" name="agriAction" value={this.state.agriAction} onChange={this.handleChange}>
@@ -198,14 +206,14 @@ export default class ChangeTile extends React.Component {
                                     {this.selectedPlayer()}
                                 </RadioGroup>
 
-                            </> :
+                            </> : /* water */
                             <RadioGroup aria-label="type" name="agriAction" value={this.state.agriAction} onChange={this.handleChange}>
                                 <FormControlLabel key="1" value="transformToFarm" control={<Radio />} label="tranformer en zone agricole" />
                                 {this.selectedPlayer()}
                                 <FormControlLabel key="2" value="transformToForest" control={<Radio />} label="transformer en forêt" />
                             </RadioGroup>
                 }
-                <button type="submit" class="btn btn-primary" data-testid="submit" onClick={this.handleSubmit}>Valider</button>
+                <Button type="submit" variant="contained" color="primary" data-testid="submit" onClick={this.handleSubmit}>Valider</Button>
                 <div id="helpSubmit" class="invalid-feedback d-block">
 
                     {this.state.feedBack}

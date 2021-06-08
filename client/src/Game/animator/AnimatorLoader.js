@@ -1,17 +1,12 @@
 import React from 'react'
 import { socket } from '../../socket.js'
-import AnimatorUI from './AnimatorUI.js'
-import CreateConversation from "../CreateConversation.js"
 import PropTypes from 'prop-types';
 import { generateHexes, generateRivers } from "../map/MapUtil.js"
 import Bassin from "../map/Bassin.js"
 import handleClickTile from '../controls/handleClickTileFarmer.js'
 import ChangeTile from './ChangeTile.js'
 import Menu from '../controls/Menu.js'
-
-import Checkbox from '@material-ui/core/Checkbox';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { Button } from '@material-ui/core'
 //import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 //import CheckBoxIcon from '@material-ui/icons/CheckBox';
 
@@ -104,13 +99,19 @@ Authore : Hugo KELHETTER
         return source
     }
     updateMap = (tileChange) => {
-        socket.emit("getCurrentGrid", (response) => {
+        /* socket.emit("getCurrentGrid", (response) => {
             const newHexas = generateHexes(response)
             let lstTile = newHexas[1]
             const newRivers = generateRivers(newHexas[0])
             //const tampon = this.createTampon(newHexas, this.state.map.player)
             this.setState({ map: { ...this.state.map, moreHexas: newHexas[0], moreRivers: newRivers, selectedTile: null }, lstTile })
-        })
+        }) */
+        let tile = this.state.map.moreHexas[tileChange.selectedTile - 1]
+        console.log(tile)
+        delete tileChange.selectedTile
+        tile = this.updateObject(tile, tileChange)
+        this.setState({ selectedTile: "" })
+
     }
 
     handleSubmit() {
@@ -118,7 +119,6 @@ Authore : Hugo KELHETTER
         })
     }
     render() {
-        console.log(this.state)
 
         return (
             <div className="App">
@@ -129,7 +129,7 @@ Authore : Hugo KELHETTER
                                 selectedTile={this.state.selectedTile} type={this.state.selectedTile.className} id={this.state.selectedTile.id} />
 
                         }
-                        <button class="btn btn-primary" data-testid="submit" onClick={this.handleSubmit}>Terminer le tour</button>
+                        <Button variant="contained" color="primary" data-testid="submit" onClick={this.handleSubmit}>Terminer le tour</Button>
 
                     </Menu>
                 }
@@ -139,7 +139,7 @@ Authore : Hugo KELHETTER
                 }
 
 
-            </div>);
+            </div >);
     }
 }
 /*

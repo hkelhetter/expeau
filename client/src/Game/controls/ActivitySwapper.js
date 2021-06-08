@@ -6,6 +6,8 @@ import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import createCheckbox from "./createCheckbox.js"
+import { Button } from '@material-ui/core'
+
 class ActivitySwapper extends React.Component {
     /*    
         Input : props={changeTileActivity,selectedTile,actions}
@@ -104,7 +106,7 @@ class ActivitySwapper extends React.Component {
                 </FormLabel>
 
 
-                <input type="submit" value="Envoyer" class="btn btn-primary" />
+                <Button variant="contained" onClick={this.handleSubmit} color="primary">Envoyer</Button>
             </form >
         );
     }

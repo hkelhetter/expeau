@@ -193,6 +193,7 @@ export function getSubBassin(id) {
     Description
         
 */
+
 export function setMapSize() {
     return window.matchMedia('(orientation:landscape)').matches ? '50%' : '100%'
 }

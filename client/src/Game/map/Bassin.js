@@ -4,6 +4,10 @@ import layoutProps from './layoutProps.js'
 import { setPlayerClass, activityToString, getSubBassin, setMapSize, setBaseClasses } from './MapUtil.js'
 import PropTypes from 'prop-types';
 export default class Bassin extends Component {
+    constructor(props) {
+        super(props)
+        this.update = this.update.bind(this)
+    }
     /* 
         Input : props={map:{moreHexas,moreRivers,player},handleClick,role,selectedId}
                 map.moreHexas : object : contains all data to create the map
@@ -24,16 +28,21 @@ export default class Bassin extends Component {
         role: PropTypes.number.isRequired,
         selectedId: PropTypes.number
     }
+    update = () => {
+        this.forceUpdate()
+    }
     componentDidMount() {
         /* 
             re-render when window is resized
             allows to update dimensions of Hexgrid
         */
-        window.addEventListener('resize', () => {
-            this.forceUpdate()
-        })
+        window.addEventListener('resize', this.update)
 
     }
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.update)
+    }
+
     /* 
         Function : createHexeFarmer
     

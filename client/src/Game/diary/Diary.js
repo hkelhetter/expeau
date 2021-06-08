@@ -1,30 +1,28 @@
 import React from 'react'
 import Recap from './Recap.js'
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
 import { Button } from '@material-ui/core';
 export default class Diary extends React.Component {
     constructor(props) {
         super(props)
         this.state = { show: false }
-        this.displayRecap = this.displayRecap.bind(this)
-        this.hideRecap = this.hideRecap.bind(this)
-    }
-    displayRecap() {
-        this.setState({ show: true })
-    }
-    hideRecap() {
-        this.setState({ show: false })
     }
     render() {
-
         return (
             <>
-                {this.state.show ?
-                    <div className="pop">
-                        <Recap hideRecap={this.hideRecap} />
-                    </div>
-                    : ""}
-                <Button onClick={this.displayRecap}>afficher le récap</Button>
+                <Dialog
+                    scroll="paper"
+                    aria-labelledby="scroll-dialog-title"
+                    aria-describedby="scroll-dialog-description"
+                >
+                    <DialogTitle id="scroll-dialog-title">Récapitulatif</DialogTitle>
+                    <DialogContent dividers="paper">
+                        <img src={this.props.data} />
+                    </DialogContent>
+                </Dialog>
             </>
-        );
+        )
     }
 }
