@@ -157,6 +157,11 @@ io.on("connection", (socket) => {
 
     });
 
+    // socket.on("testImage", async (callback) => {
+    //     const res = await Sim.testImage();
+    //     callback(res);
+    // })
+
 
 
 

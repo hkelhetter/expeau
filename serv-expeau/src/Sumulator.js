@@ -104,7 +104,7 @@ async function getPlayerGraph(room, playerId){
     const file = `./Simulator/Games/${room}/imgP${playerId}.png`;
 
     var res = await new Promise(resolve => {
-        fs.readFile(file, 'utf8', (err, data) => {
+        fs.readFile(file, (err, data) => {
             if(err) {
                 console.error(err);
                 return
@@ -115,6 +115,22 @@ async function getPlayerGraph(room, playerId){
     res = "data:image/png;base64,"+ res.toString("base64");
     return res;
 }
+
+// async function testImage(){
+//     const file = `./Simulator/TestIm/test.png`;
+
+//     var res = await new Promise(resolve => {
+//         fs.readFile(file, (err, data) => {
+//             if(err) {
+//                 console.error(err);
+//                 return
+//             }
+//             resolve(data)
+//         })
+//     });
+//     res = "data:image/png;base64,"+ res.toString("base64");
+//     return res;
+// }
 
 
 
