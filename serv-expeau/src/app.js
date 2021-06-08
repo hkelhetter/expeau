@@ -9,10 +9,13 @@ const Sim = require("./Sumulator");
 const httpServer = require("http").createServer();
 const path = require('path');
 const app = express();
-app.use(express.static(path.join(reactAppPath, 'build')));
+const root = path.join(__dirname, "../../client")
+console.log(root)
+app.use(express.static(path.join(root, 'build')));
 app.get('*', function (req, res) {
-    res.sendFile('../../client/build/index.html', { root: __dirname });
+    res.sendFile(path.join(root, 'build', 'index.html'));
 });
+
 const port2 = process.env.PORT - 1 || 4000;
 app.listen(port2)
 
