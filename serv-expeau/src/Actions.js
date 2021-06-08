@@ -43,13 +43,13 @@ const newGame = async (roomName) => {
 //     tour:          Number of the current tour
 //  
 const addActions = async (roomName, playerId, actions, tour) => {
-    //var actionId = await connectKnex(roomName).count();
-    //actionId = actionId[0]['count(*)'] + 1;
 
-    for(const action of actions){
-        await connectKnex(roomName).insert({playerId: playerId, hexID: action.hexID, actionID: action.action, tour: tour});
-        //actionId++;
+    for (const [key, value] of Object.entries(actions)) {
+        await connectKnex(roomName).insert({playerId: playerId, hexID: key, actionID: value, tour: tour});
     }
+    // for(const action of actions){
+    //     await connectKnex(roomName).insert({playerId: playerId, hexID: action.hexID, actionID: action.action, tour: tour});
+    // }
     
     
 }

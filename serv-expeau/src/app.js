@@ -128,6 +128,10 @@ io.on("connection", (socket) => {
         await Grid.transformToFarm(socket.roomName, obj.selectedTile, obj.selectedReceiver, obj.irrig, obj.eco);
     })
 
+    socket.on("transformToForest", async (hex) => {
+        await Grid.transformToForest(socket.roomName, hex);
+    })
+
     //Called by the coach when everyone submitted their actions for the turn
     socket.on("nextTurn", async (callback) => {
         const cRoom = rooms[socket.roomName];

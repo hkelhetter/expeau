@@ -104,15 +104,13 @@ describe('Lobby tests', function() {
 });
 
 describe('Game itself', function() {
-    this.timeout(5000);
+    this.timeout(10000);
     it('Player should be able to send and recieve his actions', async function() {
         await new Promise(resolve => {
-            sockP1.emit("addActions", [
-                {hexID: 1, action: 230},
-                {hexID: 2, action: 230},
-                {hexID: 4, action: 230},
-            ], () => resolve());
+            sockP1.emit("addActions", {1:230, 2:230, 4:230}, () => resolve());
         });
+
+        
 
         await new Promise(r => setTimeout(r, 1000));
 
@@ -247,22 +245,23 @@ describe("Simaulator", function() {
 
     it("Round 1", async function() {
         await new Promise(resolve => {
-            sockP2.emit("addActions", [
-            {hexID: 23, action: 230},
-            {hexID: 24, action: 230},
-            {hexID: 25, action: 230},
-            ], () => resolve());
+            sockP2.emit("addActions", {23:230, 24:230, 25:230}, () => resolve());
         });
+        
         await new Promise(resolve => {
-            sockP3.emit("addActions", [
-                {hexID: 73, action: 230},
-                {hexID: 74, action: 230},
-            ], () => resolve());
+            sockP3.emit("addActions", {73:230, 74:230}, () => resolve());
         });
+        
         await new Promise(resolve => {
             sockP1.emit("nextTurn", () => resolve());
         });
     })
+
+    // it("Actions", async function(){
+    //     const act = require("../src/Actions");
+    //     const testAct = {5 : 200, 8 : 900, 2 : 250};
+    //     await act.addActions("test", 1, testAct, 3);
+    // })
 
 })
 

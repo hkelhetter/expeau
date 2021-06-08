@@ -48,13 +48,17 @@ const setMarket = async (room, hex, market) => {
 }
 
 const transformToCity = async (room, hex, market) => {
-    await connectKnex(room).where({ Id: hex }).update({ market: market, mainCLC1: 1 });
+    await connectKnex(room).where({ Id: hex }).update({ market: market, mainCLC1: 1, player : 0, cellPlayer: 0, practice: 0 });
 }
 
 const transformToFarm = async (room, hex, newOwner, irrig, eco) => {
     var pHexId = await connectKnex(room).where({ player: newOwner }).max('cellPlayer');
     pHexId = parseInt(pHexId[0]["max(`cellPlayer`)"]) + 1;
     await connectKnex(room).where({ Id: hex }).update({ player: newOwner, cellPlayer: pHexId, irrig: irrig, eco: eco, mainCLC1: 2});
+}
+
+const transformToForest = async (room, hex) => {
+    await connectKnex(room).where({Id: hex}).update({ player: 0, cellPlayer: 0, mainCLC1: 3});
 }
 
 const genFile = async (room, tour) => {
@@ -113,6 +117,7 @@ module.exports = {
     setMarket,
     transformToCity,
     transformToFarm,
+    transformToForest,
     genFile,
     cleanUp
 }
