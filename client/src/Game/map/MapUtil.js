@@ -198,6 +198,6 @@ export function setMapSize() {
 }
 export function setBaseClasses(hex) {
     let classname = activityToString(hex.mainCLC1)
-    if (hex.infrastruture == 1) classname += " eco"
+    if (hex.eco == 1) classname += " eco"
     return classname
 }
