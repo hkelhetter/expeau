@@ -3,6 +3,7 @@
 import React from 'react'
 import { socket } from "../../socket.js"
 import PropTypes from 'prop-types';
+import { Button } from '@material-ui/core'
 
 class ValidationTour extends React.Component {
     /* 
@@ -87,7 +88,7 @@ class ValidationTour extends React.Component {
         return (
             <>
                 {this.state.validated ? <p>Nombre de joueurs prêts : nb joueurs prêts/ nb joueurs totaux</p> :
-                    <button onClick={this.handleSubmit} class="btn btn-primary">Finir le tour</button>}
+                    <Button onClick={this.handleSubmit} variant="contained" color="primary">Finir le tour</Button>}
             </>
         )
     }

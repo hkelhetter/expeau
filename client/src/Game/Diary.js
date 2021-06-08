@@ -14,25 +14,21 @@ export default class ScrollDialog extends React.Component {
         return (
             <div>
                 <Dialog
+                    fullScreen
                     open={true}
                     scroll="paper"
                     aria-labelledby="scroll-dialog-title"
                     aria-describedby="scroll-dialog-description"
                 >
-                    <DialogTitle id="scroll-dialog-title">Que s'est-il passé pendant 3 ans ?</DialogTitle>
-                    <DialogContent dividers={'paper'}>
+                    <DialogTitle id="scroll-dialog-title">Que s'est-il passé ?</DialogTitle>
+                    <DialogContent dividers='paper'>
                         <DialogContentText
                             id="scroll-dialog-description"
                             tabIndex={-1}
                         >
-                            {[...new Array(50)]
-                                .map(
-                                    () => `Cras mattis consectetur purus sit amet fermentum.
-Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
-                                )
-                                .join('\n')}
+                            <img src={this.props.data} width="100%" />
+                            <img src={this.props.data} width="100%" />
+
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

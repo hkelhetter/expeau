@@ -188,7 +188,7 @@ class Conteneur extends React.Component {
     componentDidMount() {
         socket.on("nextTurn", () => {
             this.setState({ tour: this.state.tour + 1, fini: false })
-            console.log("fini")
+            console.log(this.state.displayDiary)
         })
 
         if (this.props.role < 10) {
@@ -197,8 +197,8 @@ class Conteneur extends React.Component {
             })
         }
         socket.on("results", (response) => {
-            this.setState({ ressources: response.stats, data: response.graph, tour: this.state.tour + 1, fini: false })
-            console.log(response)
+            this.setState({ ressources: response.stats, data: response.graph, fini: false, displayDiary: true })
+            console.log(response.stats.ut, response.stats.ub)
             //    this.setState({ ressources: response[0] })
 
         })
@@ -233,12 +233,7 @@ class Conteneur extends React.Component {
     componentWillUnmount() {
         socket.removeAllListeners()
     }
-    a = () => {
 
-        console.log("aa")
-
-
-    }
     roleToString(role) {
         if (role < 10) return "agriculteur"
         if (role < 14) return "élu"
@@ -266,20 +261,19 @@ class Conteneur extends React.Component {
     }
 
     render() {
-        console.log(this.state.moreHexas)
+        console.log(this.state.displayDiary)
         /*  let selectedId = -1
          if (this.state.selectedTile) selectedId = this.state.selectedTile.id */
         return (<>
 
             < div className="App" >
                 <SlideField />
-                {this.state.data != undefined &&
-                    <img src={`data:image/png;base64,${this.state.data}`} />}
+                {this.state.displayDiary &&
+                    <Diary data={this.state.data} closeDiary={this.closeDiary} />}
                 {/*  {(this.state.lstPlayer != undefined && this.state.lstTile != undefined) ? <AnimatorUI lstPlayer={this.state.lstPlayer} lstTile={this.state.lstTile} /> : ""} */}
                 <Menu player={{ role: this.roleToString(this.props.role), id: this.state.id }}>
                     <div id="menu">
-                        {this.state.displayDiary && <Diary closeDiary={this.closeDiary} />}
-                        <button onClick={this.a}>{this.state.tour}</button>
+                        {/* {this.state.displayDiary && <Diary closeDiary={this.closeDiary} />} */}
                         {this.state.ressources !== undefined ? <Ressources ressources={this.state.ressources} cost={this.state.cost} /> : <p>aaaaaaaaa</p>}
 
                         {!this.state.fini ? <>
