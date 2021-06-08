@@ -78,7 +78,7 @@ export default class Bassin extends Component {
             key={hex.Id} id={hex.Id} q={hex.q} r={hex.r} s={hex.s}
         >
             {(hex.basin === bassin && hex.cellPlayer != null) && this.displayTileId(hex.cellPlayer)}
-            {(hex.basin === bassin && mainCLC1 == 1) && this.displayMarket(hex)}
+            {(hex.basin === bassin && mainCLC1 == 1) && this.displayMarket(hex.market)}
         </Hexagon>
     }
 
@@ -94,7 +94,7 @@ export default class Bassin extends Component {
             mainCLC1={mainCLC1} irrig={hex.irrig} eco={hex.eco} market={hex.market}
         >
             {hex.cellPlayer != null && this.displayTileId(hex.cellPlayer)}
-            {mainCLC1 == 1 && this.displayMarket(hex)}
+            {mainCLC1 == 1 && this.displayMarket(hex.market)}
 
         </Hexagon >
     }
@@ -102,7 +102,6 @@ export default class Bassin extends Component {
         let classname = setBaseClasses(hex)
         if (hex.Id == this.props.selectedId) classname += " selected"
         const mainCLC1 = hex.mainCLC1.toString()
-
         return <Hexagon
             className={classname}
             bassin={hex.basin}
@@ -112,7 +111,7 @@ export default class Bassin extends Component {
             mainCLC1={mainCLC1} irrig={hex.irrig} eco={hex.eco} market={hex.market}
         >
             {hex.cellPlayer != null && this.displayTileId(hex.cellPlayer)}
-            {mainCLC1 == 1 && this.displayMarket(hex)}
+            {mainCLC1 == 1 && this.displayMarket(hex.market)}
             <Text key="ileId" y={2}>{hex.Id}</Text>
         </Hexagon>
     }
@@ -127,11 +126,11 @@ export default class Bassin extends Component {
             
         Authore : Hugo KELHETTER
     */
-    displayTileId(text) {
-        return <Text key="tileId" y={-2}>{text.toString()}</Text>
+    displayTileId(id) {
+        return id !== "-1" && <Text key="tileId" y={-2}>{id.toString()}</Text>
     }
-    displayMarket(hex) {
-        return hex.market == 1 && <Text key="tileId" y={2}>M</Text>
+    displayMarket(market) {
+        return market == 1 && <Text key="market" y={2}>M</Text>
     }
 
     /* 

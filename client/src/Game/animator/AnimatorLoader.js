@@ -104,19 +104,17 @@ Authore : Hugo KELHETTER
         return source
     }
     updateMap = (tileChange) => {
-        const id = tileChange.selectedTile
-        let hexas = this.state.map.moreHexas
-        let tile = hexas[id]
-        delete tileChange.selectedId
-        //tile = Object.assign(tile, tileChange)
-        const a = { ...this.state.map.moreHexas }
-        hexas[id] = this.updateObject(tile, tileChange)
-        this.setState({ a: hexas })
-        console.log(hexas[id].eco)
+        socket.emit("getCurrentGrid", (response) => {
+            const newHexas = generateHexes(response)
+            let lstTile = newHexas[1]
+            const newRivers = generateRivers(newHexas[0])
+            //const tampon = this.createTampon(newHexas, this.state.map.player)
+            this.setState({ map: { ...this.state.map, moreHexas: newHexas[0], moreRivers: newRivers, selectedTile: null }, lstTile })
+        })
     }
+
     handleSubmit() {
         socket.emit("nextTurn", () => {
-            console.log("fini")
         })
     }
     render() {
@@ -127,7 +125,7 @@ Authore : Hugo KELHETTER
                 {
                     <Menu>
                         {(this.state.lstPlayer != "" && this.state.lstTile != "" && this.state.selectedTile) &&
-                            <ChangeTile lstPlayer={this.state.lstPlayer} lstTile={this.state.lstTile} updateMap={this.updateMap}
+                            <ChangeTile lstPlayer={this.state.lstPlayer} lstTile={this.state.map.moreHexas} updateMap={this.updateMap}
                                 selectedTile={this.state.selectedTile} type={this.state.selectedTile.className} id={this.state.selectedTile.id} />
 
                         }

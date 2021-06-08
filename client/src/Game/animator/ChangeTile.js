@@ -42,8 +42,13 @@ export default class ChangeTile extends React.Component {
         const [problem] = "quelque chose s'est mal passé"
         if (this.props.selectedTile.className === "water") return ["case non valide"]
         let res = { selectedTile: this.props.selectedTile.id }
-        switch (this.props.selectedTile.className) {
-            case "agriculture":
+        switch (this.props.selectedTile.mainCLC1) {
+            case "1":
+                res = { ...res, market: +!this.props.selectedTile.market }
+                //res = { ...res, infrastructure: 0, market: 1, newActivity: 0 }
+                socket.emit("setMarket", res)
+                return ["", res]
+            case "2":
                 switch (this.state.agriAction) {
                     case "":
                         return ["selectionnez l'action à effectuer"]
@@ -65,8 +70,8 @@ export default class ChangeTile extends React.Component {
                         return [problem]
                 }
 
-            case "foret":
-                switch (this.state.action) {
+            case "3":
+                switch (this.state.agriAction) {
                     case "":
                         return ["selectionnez l'action à effectuer"]
                     case "transformToCity":
@@ -81,13 +86,8 @@ export default class ChangeTile extends React.Component {
                     default:
                         return [problem]
                 }
-            case "ville":
-                res = { ...res, market: 1 }
-                //res = { ...res, infrastructure: 0, market: 1, newActivity: 0 }
-                socket.emit("setMarket", res)
-                return ["", res]
-            case "water":
-                switch (this.state.action) {
+            case "5":
+                switch (this.state.agriAction) {
                     case "":
                         return ["selectionnez l'action à effectuer"]
                     case "transformToFarm":
@@ -124,13 +124,14 @@ export default class ChangeTile extends React.Component {
 
     selectedPlayer() {
         const tile = this.props.selectedTile
+
+        let playerArray = this.props.lstPlayer.filter(player => (player.Role < 9 && getSubBassin(player.Id) === tile.bassin && player.Id != tile.player))
         return (this.state.agriAction === "changeOwner" || this.state.agriAction === "transformToFarm") && <>
             <FormLabel component="legend">Qui reçoit cette case ?</FormLabel>
             <Select name="selectedReceiver" labelId="selectedReceiver"
                 value={this.state.selectedReceiver} onChange={this.handleChange}>
-                {this.props.lstPlayer.map((player, i) =>
-                    (player.Role < 9 && getSubBassin(player.Id) === tile.bassin) ?
-                        <MenuItem value={player.Id} key={player.Id}>{player.Name} </MenuItem> : ""
+                {playerArray.map((player, i) =>
+                    <MenuItem value={player.Id} key={player.Id}>{player.Name} </MenuItem>
                 )}
             </Select>
         </>
@@ -159,13 +160,24 @@ export default class ChangeTile extends React.Component {
             label="Etablir un marché local"
         />
     }
+    componentDidUpdate(prevProps) {
+        if (prevProps.selectedTile.id != this.props.selectedTile.id) {
+            this.setState({
+                checkboxEco: this.props.selectedTile.eco,
+                checkboxIrrig: this.props.selectedTile.irrig,
+                checkboxMarket: this.props.selectedTile.checkboxMarket,
+                selectedReceiver: ""
+            })
+        }
+    }
     render() {
+
         return (
             <FormControl component="fieldset">
-                {this.props.selectedTile.className === "ville" ?
+                {this.props.selectedTile.mainCLC1 === "1" ?
 
                     <FormLabel component="legend">{this.props.selectedTile.market ? "Supprimer le marché" : "Etablir un marché local"}</FormLabel>
-                    : this.props.selectedTile.className === "agriculture" ?
+                    : this.props.selectedTile.mainCLC1 === "2" ?
                         <>
                             <RadioGroup name="agriAction" value={this.state.agriAction} onChange={this.handleChange} >
                                 <FormControlLabel key="1" value="changeOwner" control={<Radio />} label="donner la case" id="giveTile" />
@@ -176,7 +188,7 @@ export default class ChangeTile extends React.Component {
 
                             </RadioGroup>
                         </>
-                        : this.props.selectedTile.className === "foret" ?
+                        : this.props.selectedTile.mainCLC1 === "3" ?
                             <>
 
                                 <RadioGroup aria-label="type" name="agriAction" value={this.state.agriAction} onChange={this.handleChange}>
