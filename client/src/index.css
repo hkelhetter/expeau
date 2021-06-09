@@ -32,6 +32,11 @@ form{
   font-size: calc(10px + 2vmin);
   color: white;
 }
+.App-header div{
+    display: flex;
+    flex-direction: column;
+
+}
 #btnRecap{
     position: absolute;
     bottom: 0%;
@@ -47,7 +52,7 @@ form{
     border-width: 1px;
     height: 90vh;
     overflow-y: scroll;
-    padding: 20px;
+    padding: 10px;
     margin:2.5%
 }
 
@@ -220,3 +225,8 @@ div.convo{
 #createConvo{
     width:50%
 }
+.MuiButtonBase-root{
+    margin-top: 5px!important;
+    margin-bottom: 5px!important;
+}
+    

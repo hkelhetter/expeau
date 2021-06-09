@@ -51,6 +51,11 @@ function Menu() {
         setPlayerList(resp);
     });
 
+    const [playerGameStarted, setPlayerGameStarted] = useState(true);
+
+    socket.on("mapReady", () => {
+        setPlayerGameStarted(true)
+    })
     socket.on("start", () => {
         MenuCtx.updateLocation("started");
     });
@@ -85,28 +90,23 @@ function Menu() {
     function CreateForm() {
         return (
             <div>
-                <p>
-                    <TextField key="name" label="Pseudo" value={playerCtx.name} onChange={handleName}></TextField>
-                </p>
-                <p>
-                    <FormControl>
-                        <InputLabel id="role-label">Role</InputLabel>
-                        <Select
-                            labelId="role-label"
-                            id="role"
-                            value={playerCtx.role}
-                            onChange={handleChange}
-                        >
-                            <MenuItem value={1}>Agriculteur</MenuItem>
-                            <MenuItem value={2}>Elu</MenuItem>
-                            <MenuItem value={3}>Responsable</MenuItem>
-                        </Select>
-                    </FormControl>
-                </p>
-                <p>
-                    <Button variant="contained" color="primary" style={marg} onClick={() => { MenuCtx.updateLocation("menu") }}>Menu</Button>
-                    <Button variant="contained" color="primary" onClick={handleCreate}>Create</Button>
-                </p>
+                <TextField key="name" label="Pseudo" value={playerCtx.name} onChange={handleName}></TextField>
+                <FormControl>
+                    <InputLabel id="role-label">Role</InputLabel>
+                    <Select
+                        labelId="role-label"
+                        id="role"
+                        value={playerCtx.role}
+                        onChange={handleChange}
+                    >
+                        <MenuItem value={1}>Agriculteur</MenuItem>
+                        <MenuItem value={2}>Elu</MenuItem>
+                        <MenuItem value={3}>Responsable</MenuItem>
+                    </Select>
+                </FormControl>
+                <Button variant="contained" color="primary" style={marg} onClick={() => { MenuCtx.updateLocation("menu") }}>Menu</Button>
+                <Button variant="contained" color="primary" onClick={handleCreate}>Create</Button>
+
             </div>
         )
     }
@@ -114,31 +114,24 @@ function Menu() {
     function JoinForm() {
         return (
             <div>
-                <p>
-                    <TextField key="roomName" label="Code Partie" value={playerCtx.room} onChange={handleRoomName}></TextField>
-                </p>
-                <p>
-                    <TextField key="nameJoin" label="Pseudo" value={playerCtx.name} onChange={handleName}></TextField>
-                </p>
-                <p>
-                    <FormControl>
-                        <InputLabel id="role-label">Role</InputLabel>
-                        <Select
-                            labelId="role-label"
-                            id="role"
-                            value={playerCtx.role}
-                            onChange={handleChange}
-                        >
-                            <MenuItem value={1}>Agriculteur</MenuItem>
-                            <MenuItem value={2}>Elu</MenuItem>
-                            <MenuItem value={3}>Responsable</MenuItem>
-                        </Select>
-                    </FormControl>
-                </p>
-                <p>
-                    <Button variant="contained" color="primary" style={marg} onClick={() => { MenuCtx.updateLocation("menu") }}>Menu</Button>
-                    <Button variant="contained" color="primary" onClick={handleJoin}>Rejoindre la partie</Button>
-                </p>
+                <TextField key="roomName" label="Code Partie" value={playerCtx.room} onChange={handleRoomName}></TextField>
+                <TextField key="nameJoin" label="Pseudo" value={playerCtx.name} onChange={handleName}></TextField>
+                <FormControl>
+                    <InputLabel id="role-label">Role</InputLabel>
+                    <Select
+                        labelId="role-label"
+                        id="role"
+                        value={playerCtx.role}
+                        onChange={handleChange}
+                    >
+                        <MenuItem value={1}>Agriculteur</MenuItem>
+                        <MenuItem value={2}>Elu</MenuItem>
+                        <MenuItem value={3}>Responsable</MenuItem>
+                    </Select>
+                </FormControl>
+                <Button variant="contained" color="primary" onClick={handleJoin}>Rejoindre la partie</Button>
+                <Button variant="contained" color="primary" style={marg} onClick={() => { MenuCtx.updateLocation("menu") }}>Menu</Button>
+
             </div>
         )
     }
@@ -162,7 +155,15 @@ function Menu() {
             </div>
         );
     }
-
+    function PlayersWaitingLobby() {
+        return (
+            <div>
+                <Typography>
+                    L'animateur est en train de préparer la carte. Veuillez patienter
+                </Typography>
+            </div>
+        )
+    }
     function LobbyJoined() {
         return (
             <div>
@@ -185,7 +186,9 @@ function Menu() {
     function GameStarted() {
         return (
             <div>
-                {playerCtx.role >= 2 ? <AnimatorLoader name={playerCtx.name} /> : <Game name={playerCtx.name} role={playerCtx.role} />}
+                {playerCtx.role >= 2 ? <AnimatorLoader name={playerCtx.name} /> :
+                    playerGameStarted ? <Game name={playerCtx.name} role={playerCtx.role} /> :
+                        <div className="App-header">{PlayersWaitingLobby()}</div>}
             </div>
         )
     }
@@ -194,9 +197,7 @@ function Menu() {
     function RejoinGame() {
         return (
             <div>
-                <p>
-                    <TextField key="roomRejoin" label="Code Partie" value={playerCtx.room} onChange={handleRoomName}></TextField>
-                </p>
+                <TextField key="roomRejoin" label="Code Partie" value={playerCtx.room} onChange={handleRoomName}></TextField>
                 <List>
                     {playerList.map(item => (
                         <ListItem
@@ -216,19 +217,15 @@ function Menu() {
 
         return (
             <div>
-                <p>
-                    <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("create") }}>Creer la partie</Button>
-                </p>
-                <p>
-                    <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("join") }}>Rejoindre la partie</Button>
-                </p>
+                <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("join") }}>Rejoindre la partie</Button>
+                <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("create") }}>Creer la partie</Button>
             </div>
         );
     }
 
     return (<>
         {MenuCtx.loc === "started" ? GameStarted() :
-            <div class="App-header">
+            <div className="App-header">
                 {MenuCtx.loc === "menu" && MainMenu()}
 
                 {MenuCtx.loc === "create" && CreateForm()}
