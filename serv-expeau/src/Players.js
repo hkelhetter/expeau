@@ -55,6 +55,11 @@ const addPlayer = async (name, role, roomName) => {
     return playerId;
 }
 
+const getPlayerInfo = async (roomName, playerName) => {
+    const playerId = await connectKnex(roomName).where({Name: playerName}).select(`*`);
+    return playerId[0];
+}
+
 // Function: remove existing player
 // 
 //  Inputs
@@ -114,6 +119,7 @@ module.exports = {
     removePlayer,
     getPlayersFromRoom,
     getPlayersStats,
+    getPlayerInfo,
     cleanUp
 }
 

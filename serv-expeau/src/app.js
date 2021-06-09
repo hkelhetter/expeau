@@ -4,6 +4,7 @@ const Players = require("./Players.js");
 const Actions = require("./Actions.js");
 const Grid = require("./Grid.js");
 const Sim = require("./Sumulator");
+const Rooms = require("./Rooms");
 
 
 const httpServer = require("http").createServer();
@@ -69,6 +70,33 @@ io.on("connection", (socket) => {
         callback(room.name);
 
     });
+
+    socket.on("reconnect", async (roomName, playerName, callback) => {
+        var room = rooms[roomName];
+        if(room === null){
+            const cTurn = await Rooms.getTurn(roomName);
+            room = {
+                name: roomName,
+                sockets: [],
+                socketsAgr: [],
+                turn: cTurn
+            }
+            rooms[roomName] = room;
+        }
+        socket.join(room.name);
+        socket.roomName = roomName;
+        const info = await Players.getPlayerInfo(roomName, playerName);
+        socket.playerId = info['Id'];
+        room.sockets.push(socket);
+
+        if(parseInt(info['Role']) === 1){
+            room.socketsAgr.push(socket);
+        }
+        callback();
+
+    });
+
+
 
     socket.on("startGame", async () => {
         await Grid.createGrid(socket.roomName);
