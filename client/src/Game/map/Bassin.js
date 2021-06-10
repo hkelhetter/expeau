@@ -93,7 +93,7 @@ export default class Bassin extends Component {
 
         </Hexagon>
     }
-
+    /* same thing as createHexeFarm but for elected players */
     createHexeElected(hex, i) {
         let classname = setBaseClasses(hex)
         if (hex.Id == this.props.selectedId) classname += " selected"
@@ -110,6 +110,7 @@ export default class Bassin extends Component {
 
         </Hexagon >
     }
+    /* same thing as createHexeFarmer but for animator */
     createHexeAnimator(hex, i) {
         let classname = setBaseClasses(hex)
         if (hex.Id == this.props.selectedId) classname += " selected"
@@ -145,9 +146,31 @@ export default class Bassin extends Component {
     displayMarket(market) {
         return market == 1 && <Text key="market" y={2}>M</Text>
     }
+    /* 
+        Function : displayTextBottom 
+        
+        Syntax  :  displayTextBottom(text)
+        
+        Input   : text : text to display
+            
+        Description : return an object <Text> containing the input text at the bottom of the parent
+            
+        Author : Hugo KELHETTER
+    */
     displayTextBottom(text) {
         return <Text key={text} y={2}>{text}</Text>
     }
+    /* 
+        Function : displayTextTop 
+        
+        Syntax  :  displayTextTop(text)
+        
+        Input   : text : text to display
+            
+        Description : return an object <Text> containing the input text at the top of the parent
+            
+        Author : Hugo KELHETTER
+    */
     displayTextTop(text) {
         return <Text key={text} y={-2}>{text}</Text>
     }

@@ -182,21 +182,28 @@ export function getSubBassin(id) {
 /* 
     Function : setMapSize
 
-    Syntax
+    Syntax : setMapSize()
         
-    
-    Input
-        
-
-    Outputs
-
-    Description
+    Description : return a size considering if the scrren if in portrait or landscape 
         
 */
 
 export function setMapSize() {
     return window.matchMedia('(orientation:landscape)').matches ? '50%' : '100%'
 }
+/* 
+    Function : setBaseCLasses 
+    
+    Syntax  : classes=setBaseClasses(hex)
+    
+    Input   : hex : object : contains the data of an hexagon
+    
+    Output : classes : string : a set of css classes to add to the hexagon
+
+    Description : return a string of classes to add to the hexagon
+        
+    Author : Hugo KELHETTER
+*/
 export function setBaseClasses(hex) {
     let classname = activityToString(hex.mainCLC1)
     if (hex.eco == 1) classname += " eco"

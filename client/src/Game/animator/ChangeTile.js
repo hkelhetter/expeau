@@ -24,11 +24,37 @@ export default class ChangeTile extends React.Component {
             checkboxMarket: !!this.props.selectedTile.market
         }
     }
+    /* 
+            Function : handleChange
+    
+            Syntax  : handleChange
+    
+            Input   : event : the event calling the function        
+    
+            Description : update the form controls's state
+    
+            Author : Hugo KELHETTER
+        
+    */
     handleChange = (event) => {
         const target = event.target;
         const value = target.type === 'checkbox' ? +target.checked : target.value;
         this.setState({ [target.name]: value });
     }
+    /* 
+        Function : checkReceiver
+
+        Syntax  : resString=checkReceiver(res)
+
+        Input   : res : object : contains the key/value pair selectedReceiver:player's id  
+        
+        Output  : resString : string : string explaining what went wrong in the submission
+
+        Description : check if res.selectedReceiver equals this.state.selectedReceiver or "" and returns a string according to it
+
+        Author : Hugo KELHETTER
+    
+    */
     checkReceiver(res) {
         res.selectedReceiver = this.state.selectedReceiver
         if (this.state.selectedReceiver === "") return "selectionnez le joueur qui reçoit la case"
@@ -36,7 +62,20 @@ export default class ChangeTile extends React.Component {
 
         return ""
     }
-
+    /* 
+            Function : modifyTile
+    
+            Syntax  : [resString,res]=modifyTile()
+    
+            Output : resString : string : string explaining what went wrong in the submission
+                     res : object : contains the modifications sent to the server
+    
+            Description : check the form submission and return a log of it and an object containing the modifications
+                        if everything is fine, send to the server the modifications
+    
+            Author : Hugo KELHETTER
+        
+        */
     modifyTile = () => {
         const [problem] = "quelque chose s'est mal passé"
         let res = { selectedTile: this.props.selectedTile.id }
@@ -119,23 +158,40 @@ export default class ChangeTile extends React.Component {
                 return [problem]
         }
     }
-
+    /* 
+            Function : handleSubmit
+    
+            Syntax  : handleSubmit
+    
+            Description : call modifyTile. If it succeeded, update map, else display message to explain what went wrong
+    
+            Author : Hugo KELHETTER
+        
+    */
     handleSubmit = (event) => {
         event.preventDefault()
         const [feedBack, change] = this.modifyTile()
         if (feedBack === "") this.props.updateMap(change)
         this.setState({ feedBack })
     }
-    /*     createCheckbox(name) {
-            return <Checkbox
-                onChange={this.handleChange}
-                name={name}
-                color="primary"
-                checked={this.state[name]}
-                disabled={this.props.selectedTile[name]}
-            />
-        } */
+    /* 
+        Function : selectedPLayer
 
+        Syntax  : selectedBox=selectedPlayer()
+
+        Output :  selectedBox=<>
+                                <FormLabel>
+                                <Select>
+                                    <MenuItem/>
+                                </Select>
+                                </> 
+                                
+        Description : display a selectedBox containing the farmer present in the 
+                        same sub basin as the selected tile
+
+        Author : Hugo KELHETTER
+        
+    */
     selectedPlayer() {
         const tile = this.props.selectedTile
 
@@ -150,6 +206,25 @@ export default class ChangeTile extends React.Component {
             </Select>
         </>
     }
+    /* 
+        Function : addInfra
+
+        Syntax  : selectedBoxes=addInfra()
+
+        Output :  selectedBoxes=<>
+                                <FormControlLabel>
+                                    <CheckBox>
+                                </FormControlLabel>
+                                <FormControlLabel>
+                                    <CheckBox>
+                                </FormControlLabel>
+                                </> 
+                                
+        Description : display checkBoxes to add infrastructures
+
+        Author : Hugo KELHETTER
+        
+    */
     addInfra() {
         return (this.state.agriAction === 'addInfra' || this.state.agriAction === 'transformToFarm') && <>
             < FormControlLabel
@@ -166,6 +241,22 @@ export default class ChangeTile extends React.Component {
             />
         </>
     }
+    /* 
+        Function : transformToCity
+
+        Syntax  : transformToCity
+
+        Output :  selectedBox=<>
+                                <FormControlLabel>
+                                    <CheckBox>
+                                </FormControlLabel>
+                                </> 
+                                
+        Description : display checkBox to add a market 
+
+        Author : Hugo KELHETTER
+        
+    */
     transformToCity() {
         return this.state.agriAction === "transformToCity" && <FormControlLabel
             control={
@@ -174,6 +265,16 @@ export default class ChangeTile extends React.Component {
             label="Etablir un marché local"
         />
     }
+    /* 
+        Function : ComponentDidUpdate
+
+        Syntax  : ComponentDidUpdate(prevProps)
+                                
+        Description : if the selectedTile changes, update controls to the new tile's state
+
+        Author : Hugo KELHETTER
+        
+    */
     componentDidUpdate(prevProps) {
         if (prevProps.selectedTile.id !== this.props.selectedTile.id) {
             this.setState({
@@ -185,6 +286,16 @@ export default class ChangeTile extends React.Component {
 
         }
     }
+    /* 
+        Function : render
+
+        Syntax  : render
+        
+        Description : Display all controls to update the map as an animator
+
+        Author : Hugo KELHETTER
+        
+    */
     render() {
         return (
             <FormControl component="fieldset">

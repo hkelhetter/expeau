@@ -249,24 +249,16 @@ class Conteneur extends React.Component {
     }
 
     render() {
-        /*  let selectedId = -1
-         if (this.state.selectedTile) selectedId = this.state.selectedTile.id */
         return (<>
-
             < div className="App" >
                 <SlideField />
                 {this.state.displayDiary &&
                     <Diary data={this.state.data} closeDiary={this.closeDiary} />}
-                {/*  {(this.state.lstPlayer != undefined && this.state.lstTile != undefined) ? <AnimatorUI lstPlayer={this.state.lstPlayer} lstTile={this.state.lstTile} /> : ""} */}
                 <Menu >
                     <div id="menu">
-
-                        <p>tour : {this.state.tour}</p>
-                        <p>Bonjour {this.props.name}.</p>
-                        Vous êtes {this.roleToString(this.props.role)}, votre identifiant est {this.state.id}
-                        {/* {this.state.displayDiary && <Diary closeDiary={this.closeDiary} />} */}
+                        <p></p>Nous sommes au tour : {this.state.tour}
+                        <p>Bonjour {this.props.name}. Vous êtes {this.roleToString(this.props.role)}, votre identifiant est {this.state.id}</p>
                         {this.state.ressources !== undefined && <Ressources ressources={this.state.ressources} cost={this.state.cost} />}
-
                         {!this.state.fini ?
                             <>
                                 <ValidationTour key="validation" endRound={this.endRound} tour={this.state.tour} actions={this.state.actions} />
@@ -276,13 +268,10 @@ class Conteneur extends React.Component {
                                         selectedTile={this.state.selectedTile} actions={this.state.lstActions} />
                                 }
                             </>
-
-
                             : " En attente des autres joueurs..."}
                     </div>
                 </Menu>
                 {Object.keys(this.state.lstConvo).length > 0 ? <Chat lstConvo={this.state.lstConvo} /> : ""}
-
                 {
                     this.state.map.moreHexas !== "" && <Bassin handleClick={this.handleClickTile}
                         map={this.state.map} role={this.props.role} selectedId={this.state.selectedTile?.id} id={this.state.id} />

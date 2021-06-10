@@ -9,8 +9,17 @@ export default class SlideField extends React.Component {
         super(props)
         this.state = { slider: 0, open: false }
     }
+    /* 
+        Function : handleSubmit
+
+        Syntax  : handleSubmit
+                                
+        Description : send the form data to the server
+
+        Author : Hugo KELHETTER
+        
+    */
     handleSubmit = () => {
-        console.log(this.state.slider)
         socket.emit("satisfaction", this.state.value)
         this.setState({ open: false, slider: 0 })
     }
@@ -39,7 +48,18 @@ export default class SlideField extends React.Component {
             label: '😊'
         }
     ];
+    /* updates the slider's value on change */
     handleChange = (event, value) => { this.setState({ slider: value }) }
+    /* 
+        Function : render
+
+        Syntax  : render
+        
+        Description : display a slider in a popup
+
+        Author : Hugo KELHETTER
+        
+    */
     render() {
         return (
             <Dialog open={this.state.open} disableBackdropClick

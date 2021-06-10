@@ -77,6 +77,14 @@ Author : Hugo KELHETTER
         alert("Vous devez selectionner des joueurs")
         return false
     }
+    /* 
+        Function : componentDidMount
+
+        Description : retrieve the map and players's data
+
+        Author : Hugo KELHETTER
+ 
+    */
     componentDidMount() {
 
         socket.emit("getCurrentGrid", (response) => {
@@ -91,29 +99,60 @@ Author : Hugo KELHETTER
             //})
         })
     }
+    /* 
+        Function : updateObject
+
+        Syntax  : obj=updateObject(source,newData)
+
+        Input   : source : object : the object to update
+                  newData : object : the object containing new data
+
+        Output  : obj : object : an updated object
+
+        Description : update source with the subset of data contained in newData
+                        let source = {firstname:hugo,name:kelhetter} and newData={firstname:jhon}
+                        let newObject=updateObject(source,newData)
+                        newObject = {firstname:jhon,name:kelhetter}
+
+        Author : Hugo KELHETTER
+    
+    */
     updateObject(source, newData) {
         for (const key in newData) {
             source[key] = newData[key]
         }
-        console.log(source.eco)
         return source
     }
+    /* 
+        Function : updateMap
+
+        Syntax  : updateMap(tileChange)
+
+        Input   : tileChange : object : new set of data for a tile of the map
+
+        Description : update the map with new data
+
+        Author : Hugo KELHETTER
+    
+    */
+
     updateMap = (tileChange) => {
-        /* socket.emit("getCurrentGrid", (response) => {
-            const newHexas = generateHexes(response)
-            let lstTile = newHexas[1]
-            const newRivers = generateRivers(newHexas[0])
-            //const tampon = this.createTampon(newHexas, this.state.map.player)
-            this.setState({ map: { ...this.state.map, moreHexas: newHexas[0], moreRivers: newRivers, selectedTile: null }, lstTile })
-        }) */
         let tile = this.state.map.moreHexas[tileChange.selectedTile - 1]
-        console.log(tile)
         delete tileChange.selectedTile
         tile = this.updateObject(tile, tileChange)
         this.setState({ selectedTile: "" })
-
     }
+    /* 
+        Function : handleSubmit
 
+        Syntax  : handleSubmit()
+
+        Description : if mapReady == false then it starts the game for other players
+                      else it ends the turn
+
+        Author : Hugo KELHETTER
+    
+    */
     handleSubmit = () => {
         if (this.state.mapReady) {
             this.setState({ mapReady: false })
@@ -124,6 +163,16 @@ Author : Hugo KELHETTER
             })
         }
     }
+    /* 
+    Function : render
+
+    Syntax  : render()
+
+    Description : display the UI of the animator : the map, and controls over the map and the game in general
+
+    Author : Hugo KELHETTER
+ 
+*/
     render() {
 
         return (<>
@@ -140,16 +189,12 @@ Author : Hugo KELHETTER
                                 selectedTile={this.state.selectedTile} type={this.state.selectedTile.className} id={this.state.selectedTile.id} />
                             </div>
                         }
-
-
                     </Menu>
                 }
                 {
                     this.state.map.moreHexas !== "" && <Bassin handleClick={this.handleClickTile} selectedId={this.state.selectedTile?.id}
                         map={this.state.map} role={this.props.role} id={this.state.id} />
                 }
-
-
             </div >
         </>);
     }
