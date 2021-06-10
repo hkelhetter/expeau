@@ -272,15 +272,9 @@ function Menu() {
 
         return (
             <div>
-                <p>
                     <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("create") }}>Creer la partie</Button>
-                </p>
-                <p>
                     <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("join") }}>Rejoindre la partie</Button>
-                </p>
-                <p>
                     <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("reconnect") }}>Reconnexion a la partie en cours</Button>
-                </p>
             </div>
         );
     }
@@ -300,7 +294,7 @@ function Menu() {
                         {MenuCtx.loc === "lobbyCreated" && LobbyCreated()}
 
                         {MenuCtx.loc === "reconnect" && RejoinGame()}
-                        
+
                         {MenuCtx.loc === "lobbyJoined" && LobbyJoined()}
 
 
