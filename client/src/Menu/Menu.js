@@ -7,7 +7,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
+
+
 import { socket } from '../socket.js';
 import Typography from '@material-ui/core/Typography';
 import AnimatorLoader from '../Game/animator/AnimatorLoader.js'
@@ -78,6 +79,28 @@ function Menu() {
 
     function handleStart() {
         socket.emit("startGame");
+    }
+
+    async function getNewPlayerList() {
+        const newLst = await new Promise(resolve => {
+            socket.emit("playersFromRoom", playerCtx.room, (resp) => {
+                resolve(resp);
+            })
+        });
+        setPlayerList(newLst);
+    }
+
+    async function handleReconnectChange(event){
+        const lngth = event.target.value.length;
+        const pName = event.target.value.substring(0, lngth - 1);
+        const pRole = event.target.value.substring(lngth - 1);
+        playerCtx.updateName(pName);
+        playerCtx.updateRole(pRole);
+        
+    }
+
+    async function handleReconnect() {
+        socket.emit("reconnect", playerCtx.room, playerCtx.name, () => {MenuCtx.updateLocation("started")});
     }
 
 
@@ -197,15 +220,26 @@ function Menu() {
                 <p>
                     <TextField key="roomRejoin" label="Code Partie" value={playerCtx.room} onChange={handleRoomName}></TextField>
                 </p>
-                <List>
+                <p>
+                    <Button variant="contained" color="primary" onClick={getNewPlayerList}>Chercher les joueurs</Button>
+                </p>
+                <InputLabel id="nameLabel">Votre nom dans la partie</InputLabel>
+                <FormControl>
+                
+                <Select
+                    labelId="nameLabel"
+                    id="playerSelect"
+                    value={playerCtx.name + playerCtx.role}
+                    onChange={handleReconnectChange}
+                >
                     {playerList.map(item => (
-                        <ListItem
-                            key={item.Id}
-                        >
-                            <ListItemText primary={item.Name} />
-                        </ListItem>
+                        <MenuItem value={item.Name + item.Role}>{item.Name + ` (role : ` + item.Role + `)`}</MenuItem>
                     ))}
-                </List>
+                </Select>
+                </FormControl>
+                <p>
+                    <Button variant="contained" color="primary" onClick={handleReconnect}>Rejoindre</Button>
+                </p>
 
             </div>
         )
@@ -221,6 +255,9 @@ function Menu() {
                 </p>
                 <p>
                     <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("join") }}>Rejoindre la partie</Button>
+                </p>
+                <p>
+                    <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("reconnect") }}>Reconnexion a la partie en cours</Button>
                 </p>
             </div>
         );
@@ -239,6 +276,7 @@ function Menu() {
 
                 {MenuCtx.loc === "lobbyJoined" && LobbyJoined()}
 
+                {MenuCtx.loc === "reconnect" && RejoinGame()}
 
             </div>}
     </>

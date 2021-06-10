@@ -73,7 +73,7 @@ io.on("connection", (socket) => {
 
     socket.on("reconnect", async (roomName, playerName, callback) => {
         var room = rooms[roomName];
-        if(room === null){
+        if(typeof room === "undefined"){
             const cTurn = await Rooms.getTurn(roomName);
             room = {
                 name: roomName,
@@ -102,6 +102,7 @@ io.on("connection", (socket) => {
         await Grid.createGrid(socket.roomName);
         await Actions.newGame(socket.roomName);
         await Sim.newGame(socket.roomName);
+        await Rooms.newRoom(socket.roomName);
         console.log("Game starts in room", socket.roomName);
         io.sockets.in(socket.roomName).emit("start");
     });
@@ -127,6 +128,11 @@ io.on("connection", (socket) => {
         console.log("looking for room", socket.roomName);
         callback(await Players.getPlayersFromRoom(socket.roomName));
     });
+
+    socket.on("playersFromRoom", async (nRoom, callback) => {
+        console.log("looking for room", nRoom);
+        callback(await Players.getPlayersFromRoom(nRoom));
+    })
 
     socket.on("getCurrentGrid", async (callback) => {
         callback(await Grid.getCurrentGrid(socket.roomName));
@@ -171,6 +177,7 @@ io.on("connection", (socket) => {
         await Sim.calculate(cRoom.name, cRoom.turn);
 
         cRoom.turn++;
+        await Rooms.setTurn(cRoom.name, cRoom.turn);
 
         for (const aSock of cRoom.socketsAgr) {
             const stats = await Sim.getLastPlayerStats(cRoom.name, aSock.playerId);

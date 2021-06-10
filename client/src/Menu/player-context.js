@@ -8,7 +8,7 @@ const PlayerContext = createContext({
     updateName: (name) => { },
     updateList: (list) => { },
     updateRole: (role) => { },
-    updateRoom: (room) => { }
+    updateRoom: (room) => { },
 });
 
 export function PlayerContextProvider(props) {
@@ -34,6 +34,8 @@ export function PlayerContextProvider(props) {
         setPlayerRoom(newRoom);
     }
 
+
+
     const context = {
         name: playerName,
         playersList: playerList,
@@ -43,7 +45,7 @@ export function PlayerContextProvider(props) {
         updateName: updateNameHandler,
         updateList: updateListHandler,
         updateRole: updateRoleHandler,
-        updateRoom: updateRoomHandler
+        updateRoom: updateRoomHandler,
     };
 
     return <PlayerContext.Provider value={context}>

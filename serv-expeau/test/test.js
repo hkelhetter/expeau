@@ -201,7 +201,8 @@ describe('Game master :', function() {
         assert.strictEqual(parseInt(grid[4].mainCLC1), 1);
         assert.strictEqual(parseInt(grid[4].market), 1);
         //assert.strictEqual(parseInt(grid[4].mainCLC3), 1);
-    })
+    });
+
 })
 
 describe("Simaulator", function() {
