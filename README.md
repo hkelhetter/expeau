@@ -1,21 +1,23 @@
-# Dependencies
+# 1.  Dependencies
 
-Requires nodejs package   
+
+
+1.1  Requires nodejs package   
 ```
 sudo apt install nodejs
 ```
 
-Requires npm package   
+1.2 Requires npm package   
 ```
 sudo apt-get install npm
 ```   
    
-To download project dependencies execute in client and serv-expeau folders   
+1.3 To download project dependencies execute in client and serv-expeau folders   
 ```
 npm install
 ```
 
-# Start the app
+# 2. Start the app
 
 Only works if all players are on the same network
 
