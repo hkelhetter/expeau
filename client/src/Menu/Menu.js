@@ -41,7 +41,8 @@ function Menu() {
     };
 
     const handleRoomName = (event) => {
-        playerCtx.updateRoom(event.target.value);
+        const fRoom = event.target.value.toLowerCase();
+        playerCtx.updateRoom(fRoom);
     }
 
     const [loading, setLoading] = useState(false)
@@ -91,8 +92,13 @@ function Menu() {
                     resolve(response);
                 });
             });
-            playerCtx.updateRoom(room);
-            MenuCtx.updateLocation("lobbyJoined");
+            if(room === "Code de lobby incorrect"){
+                setWarningMessage(room);
+            }
+            else{
+                playerCtx.updateRoom(room);
+                MenuCtx.updateLocation("lobbyJoined");
+            }
         }
     }
 
@@ -107,7 +113,12 @@ function Menu() {
                 resolve(resp);
             })
         });
-        setPlayerList(newLst);
+        if (newLst === "Partie inexistante"){
+            setWarningMessage(newLst);
+        }
+        else{
+            setPlayerList(newLst);
+        }
     }
 
     async function handleReconnectChange(event){
@@ -235,7 +246,6 @@ function Menu() {
         )
     }
 
-    //TODO
     function RejoinGame() {
         return (
             <div>
@@ -262,6 +272,7 @@ function Menu() {
                 <p>
                     <Button variant="contained" color="primary" onClick={handleReconnect}>Rejoindre</Button>
                 </p>
+                {warningText(warningMessage)}
 
             </div>
         )

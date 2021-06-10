@@ -65,9 +65,14 @@ io.on("connection", (socket) => {
 
     socket.on("joinRoom", async (roomName, playerName, role, callback) => {
         const room = rooms[roomName];
-        await joinRoom(socket, room, playerName, role);
-        console.log(playerName + " joined room " + room.name);
-        callback(room.name);
+        if (typeof room === "undefined"){
+            callback("Code de lobby incorrect");
+        }
+        else{
+            await joinRoom(socket, room, playerName, role);
+            console.log(playerName + " joined room " + room.name);
+            callback(room.name);
+        }
 
     });
 
@@ -168,6 +173,10 @@ io.on("connection", (socket) => {
     socket.on("transformToForest", async (hex) => {
         await Grid.transformToForest(socket.roomName, hex);
     })
+
+    socket.on("mapReady", () => {
+        io.sockets.in(socket.roomName).emit("mapReady");
+    });
 
     //Called by the coach when everyone submitted their actions for the turn
     socket.on("nextTurn", async (callback) => {

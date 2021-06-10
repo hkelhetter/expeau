@@ -84,7 +84,13 @@ const removePlayer = (playerId, roomName) => {
 //                      for structure see Players database
 //
 const getPlayersFromRoom = async (roomname) => {
-    return await connectKnex(roomname).select("*");
+    var res;
+    try {
+        res = await connectKnex(roomname).select("*");
+    } catch (error) {
+        res = "Partie inexistante"
+    }
+    return res;
 }
 
 // Function: Return array of players with all their info
