@@ -10,7 +10,7 @@ import { socket } from "../../socket.js"
 import { getSubBassin } from "../map/MapUtil.js"
 import createCheckbox from "../controls/createCheckbox.js"
 import { Button } from '@material-ui/core'
-
+import warningText from "../controls/warningText.js"
 export default class ChangeTile extends React.Component {
     constructor(props) {
         super(props)
@@ -224,10 +224,7 @@ export default class ChangeTile extends React.Component {
                             </RadioGroup>
                 }
                 <Button type="submit" variant="contained" color="primary" data-testid="submit" onClick={this.handleSubmit}>Valider</Button>
-                <div id="helpSubmit" class="warning">
-
-                    {this.state.feedBack}
-                </div>
+                {warningText(this.state.feedBack)}
             </FormControl>
 
         );

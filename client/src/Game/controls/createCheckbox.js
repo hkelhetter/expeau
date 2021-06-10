@@ -6,7 +6,6 @@ function createCheckbox(name) {
         name={name}
         color="primary"
         checked={this.state[name]}
-        disabled={this.props.selectedTile[name]}
     />
 }
 export default createCheckbox

@@ -15,7 +15,7 @@ import PlayerContext from './player-context';
 import MenuContext from './menu-context';
 
 import Game from '../Game/Game.js'
-
+import warningText from '../Game/controls/warningText.js'
 
 
 
@@ -45,7 +45,7 @@ function Menu() {
     const [loading, setLoading] = useState(false)
 
     const [playerList, setPlayerList] = useState([]);
-
+    const [warningMessage, setWarningMessage] = useState("");
     socket.on("playersUpdate", (resp) => {
         setPlayerList(resp);
         console.log(resp)
@@ -61,34 +61,43 @@ function Menu() {
     });
 
     async function handleCreate() {
-        const room = await new Promise(resolve => {
-            socket.emit("createRoom", playerCtx.name, playerCtx.role, (response) => {
-                resolve(response);
+        if (playerCtx.name === "" || playerCtx.role === "") {
+            setWarningMessage("Veuillez remplir les champs")
+        }
+        else {
+            const room = await new Promise(resolve => {
+                socket.emit("createRoom", playerCtx.name, playerCtx.role, (response) => {
+                    resolve(response);
+                });
             });
-        });
-        playerCtx.updateRoom(room);
-        MenuCtx.updateLocation("lobbyCreated");
+            playerCtx.updateRoom(room);
+            MenuCtx.updateLocation("lobbyCreated");
+        }
+
 
     }
 
     async function handleJoin() {
-        const room = await new Promise(resolve => {
-            socket.emit("joinRoom", playerCtx.room, playerCtx.name, playerCtx.role, (response) => {
-                resolve(response);
+        if (playerCtx === "" || playerCtx.name === "" || playerCtx.role === "") {
+            setWarningMessage("Veuillez remplir les champs")
+        }
+        else {
+
+
+            const room = await new Promise(resolve => {
+                socket.emit("joinRoom", playerCtx.room, playerCtx.name, playerCtx.role, (response) => {
+                    resolve(response);
+                });
             });
-        });
-        playerCtx.updateRoom(room);
-        MenuCtx.updateLocation("lobbyJoined");
+            playerCtx.updateRoom(room);
+            MenuCtx.updateLocation("lobbyJoined");
+        }
     }
 
     function handleStart() {
         setLoading(true)
-
         socket.emit("startGame");
     }
-
-
-
     function CreateForm() {
         return (
             <div>
@@ -107,6 +116,7 @@ function Menu() {
                     </Select>
                 </FormControl>
                 <Button variant="contained" color="primary" onClick={handleCreate}>Créer</Button>
+                {warningText(warningMessage)}
                 <Button variant="contained" color="primary" style={marg} onClick={() => { MenuCtx.updateLocation("menu") }}>Menu</Button>
 
             </div>
@@ -132,6 +142,8 @@ function Menu() {
                     </Select>
                 </FormControl>
                 <Button variant="contained" color="primary" onClick={handleJoin}>Rejoindre la partie</Button>
+                {warningText(warningMessage)}
+
                 <Button variant="contained" color="primary" style={marg} onClick={() => { MenuCtx.updateLocation("menu") }}>Menu</Button>
 
             </div>
