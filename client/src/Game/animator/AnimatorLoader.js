@@ -20,7 +20,7 @@ export default class AnimatorLoader extends React.Component {
     */
     constructor(props) {
         super(props)
-        this.state = { lstPlayer: "", lstTile: "", map: { moreHexas: "", moreRivers: null } }
+        this.state = { lstPlayer: "", lstTile: "", map: { moreHexas: "", moreRivers: null }, mapReady: true }
         //this.addConvo = this.addConvo.bind(this)
         this.handleClickTile = handleClickTile.bind(this)
 
@@ -47,12 +47,12 @@ Output  : the success of the function
 
 Description : display the different components of the app
 
-Authore : Hugo KELHETTER
+Author : Hugo KELHETTER
     
 */
     addConvo = (data) => {
 
-        if (data.convoName.length == 0) {
+        if (data.convoName.length === 0) {
             alert("vous devez entrer un nom")
             return false
         }
@@ -77,6 +77,14 @@ Authore : Hugo KELHETTER
         alert("Vous devez selectionner des joueurs")
         return false
     }
+    /* 
+        Function : componentDidMount
+
+        Description : retrieve the map and players's data
+
+        Author : Hugo KELHETTER
+ 
+    */
     componentDidMount() {
 
         socket.emit("getCurrentGrid", (response) => {
@@ -91,58 +99,103 @@ Authore : Hugo KELHETTER
             //})
         })
     }
+    /* 
+        Function : updateObject
+
+        Syntax  : obj=updateObject(source,newData)
+
+        Input   : source : object : the object to update
+                  newData : object : the object containing new data
+
+        Output  : obj : object : an updated object
+
+        Description : update source with the subset of data contained in newData
+                        let source = {firstname:hugo,name:kelhetter} and newData={firstname:jhon}
+                        let newObject=updateObject(source,newData)
+                        newObject = {firstname:jhon,name:kelhetter}
+
+        Author : Hugo KELHETTER
+    
+    */
     updateObject(source, newData) {
         for (const key in newData) {
             source[key] = newData[key]
         }
-        console.log(source.eco)
         return source
     }
+    /* 
+        Function : updateMap
+
+        Syntax  : updateMap(tileChange)
+
+        Input   : tileChange : object : new set of data for a tile of the map
+
+        Description : update the map with new data
+
+        Author : Hugo KELHETTER
+    
+    */
+
     updateMap = (tileChange) => {
-        /* socket.emit("getCurrentGrid", (response) => {
-            const newHexas = generateHexes(response)
-            let lstTile = newHexas[1]
-            const newRivers = generateRivers(newHexas[0])
-            //const tampon = this.createTampon(newHexas, this.state.map.player)
-            this.setState({ map: { ...this.state.map, moreHexas: newHexas[0], moreRivers: newRivers, selectedTile: null }, lstTile })
-        }) */
         let tile = this.state.map.moreHexas[tileChange.selectedTile - 1]
-        console.log(tile)
         delete tileChange.selectedTile
         tile = this.updateObject(tile, tileChange)
         this.setState({ selectedTile: "" })
-
     }
+    /* 
+        Function : handleSubmit
 
-    handleSubmit() {
-        socket.emit("nextTurn", () => {
-        })
+        Syntax  : handleSubmit()
+
+        Description : if mapReady == false then it starts the game for other players
+                      else it ends the turn
+
+        Author : Hugo KELHETTER
+    
+    */
+    handleSubmit = () => {
+        if (this.state.mapReady) {
+            this.setState({ mapReady: false })
+            socket.emit("mapReady")
+        }
+        else {
+            socket.emit("nextTurn", () => {
+            })
+        }
     }
+    /* 
+    Function : render
+
+    Syntax  : render()
+
+    Description : display the UI of the animator : the map, and controls over the map and the game in general
+
+    Author : Hugo KELHETTER
+ 
+*/
     render() {
 
-        return (
+        return (<>
+            {this.state.mapReady && "Vous pouvez modifier la carte avant le début de la partie. "}
+            Cliquez sur une case pour apporter des modifications
             <div className="App">
                 {
-                    <Menu>
-                        {(this.state.lstPlayer != "" && this.state.lstTile != "" && this.state.selectedTile) &&
-                            <ChangeTile lstPlayer={this.state.lstPlayer} lstTile={this.state.map.moreHexas} updateMap={this.updateMap}
+                    < Menu >
+                        <Button variant="contained" color="primary" data-testid="submit" onClick={this.handleSubmit}>
+                            {this.state.mapReady ? "Commencer la partie" : "Terminer le tour"}
+                        </Button>
+                        {(this.state.lstPlayer !== "" && this.state.lstTile !== "" && this.state.selectedTile) &&
+                            <div id="changeTile"><ChangeTile lstPlayer={this.state.lstPlayer} lstTile={this.state.map.moreHexas} updateMap={this.updateMap}
                                 selectedTile={this.state.selectedTile} type={this.state.selectedTile.className} id={this.state.selectedTile.id} />
-
+                            </div>
                         }
-                        <Button variant="contained" color="primary" data-testid="submit" onClick={this.handleSubmit}>Terminer le tour</Button>
-
                     </Menu>
                 }
                 {
                     this.state.map.moreHexas !== "" && <Bassin handleClick={this.handleClickTile} selectedId={this.state.selectedTile?.id}
-                        map={this.state.map} role={this.props.role} id={this.state.id} handleClick={this.handleClickTile} />
+                        map={this.state.map} role={this.props.role} id={this.state.id} />
                 }
-
-
-            </div >);
+            </div >
+        </>);
     }
 }
-/*
-
-
-*/

@@ -19,20 +19,17 @@ class Ressources extends React.Component {
             
         Description : display the available ressources and an estimated cost of the actions
         
-        Authore : Hugo KELHETTER      
+        Author : Hugo KELHETTER      
     */
     render() {
         let ub = 0
         let ut = 0
-        Object.values(this.props.cost).map((entry) => {
+        Object.values(this.props.cost).forEach(entry => {
             ub += entry.ub
             ut += entry.ut
         })
         return (
-            <>
-                <p>UT : {this.props.ressources.ut}  (-{ut})</p>
-                <p>UB : {this.props.ressources.ub}  (-{ub})</p>
-            </>
+            <p>UT : {this.props.ressources.ut}  (-{ut}) | UB : {this.props.ressources.ub}  (-{ub})</p>
         );
     }
 }

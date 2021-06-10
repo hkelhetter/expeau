@@ -10,7 +10,7 @@
         if the current state's id is equal to h's id, the state is set to null
         else it is updated to h's data     
         
-    Authore : Hugo KELHETTER
+    Author : Hugo KELHETTER
 */
 function handleClickTile(h) {
     if (h.props.id === this.state.selectedTile?.id) {

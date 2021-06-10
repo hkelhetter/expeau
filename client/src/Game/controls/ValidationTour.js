@@ -30,7 +30,7 @@ class ValidationTour extends React.Component {
         Description : compare the objects origin and updated from the props and 
                         create a new object containing all the differences
         
-        Authore : Hugo KELHETTER
+        Author : Hugo KELHETTER
     */
     handleSubmit = () => {
         /*         const origin = this.props.origin
@@ -65,7 +65,7 @@ class ValidationTour extends React.Component {
     
         Description : convert an object to csv format
       
-        Authore : Hugo KELHETTER
+        Author : Hugo KELHETTER
     */
     generateCSV(data) {
         let str = ""
@@ -88,9 +88,10 @@ class ValidationTour extends React.Component {
         return (
             <>
                 {this.state.validated ? <p>Nombre de joueurs prêts : nb joueurs prêts/ nb joueurs totaux</p> :
-                    <Button onClick={this.handleSubmit} variant="contained" color="primary">Finir le tour</Button>}
+                    <Button onClick={this.handleSubmit} className="validation" variant="contained" color="primary">Finir le tour</Button>}
             </>
         )
     }
 }
+
 export default ValidationTour

@@ -1,3 +1,6 @@
+html{
+    background-color: #e1e1e1;
+}
 body {
 
   margin: 0;
@@ -23,14 +26,17 @@ form{
     background-color: bisque;
 }
 .App-header {
-  background-color: #282c34;
   min-height: 95vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+}
+.App-header div{
+    display: flex;
+    flex-direction: column;
+
 }
 #btnRecap{
     position: absolute;
@@ -47,7 +53,7 @@ form{
     border-width: 1px;
     height: 90vh;
     overflow-y: scroll;
-    padding: 20px;
+    padding: 10px;
     margin:2.5%
 }
 
@@ -219,4 +225,14 @@ div.convo{
 }
 #createConvo{
     width:50%
+}
+.MuiButtonBase-root{
+    margin-top: 5px!important;
+    margin-bottom: 5px!important;
+}
+.warning{
+    color: red;
+}
+#changeTile{
+    margin:auto
 }

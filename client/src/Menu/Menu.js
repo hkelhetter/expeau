@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, TextField } from '@material-ui/core';
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
@@ -17,7 +17,7 @@ import PlayerContext from './player-context';
 import MenuContext from './menu-context';
 
 import Game from '../Game/Game.js'
-
+import warningText from '../Game/controls/warningText.js'
 
 
 
@@ -44,40 +44,60 @@ function Menu() {
         playerCtx.updateRoom(event.target.value);
     }
 
-
+    const [loading, setLoading] = useState(false)
 
     const [playerList, setPlayerList] = useState([]);
-
+    const [warningMessage, setWarningMessage] = useState("");
     socket.on("playersUpdate", (resp) => {
         setPlayerList(resp);
+        console.log(resp)
     });
 
+    const [playerGameStarted, setPlayerGameStarted] = useState(true);
+
+    socket.on("mapReady", () => {
+        setPlayerGameStarted(true)
+    })
     socket.on("start", () => {
         MenuCtx.updateLocation("started");
     });
 
     async function handleCreate() {
-        const room = await new Promise(resolve => {
-            socket.emit("createRoom", playerCtx.name, playerCtx.role, (response) => {
-                resolve(response);
+        if (playerCtx.name === "" || playerCtx.role === "") {
+            setWarningMessage("Veuillez remplir les champs")
+        }
+        else {
+            const room = await new Promise(resolve => {
+                socket.emit("createRoom", playerCtx.name, playerCtx.role, (response) => {
+                    resolve(response);
+                });
             });
-        });
-        playerCtx.updateRoom(room);
-        MenuCtx.updateLocation("lobbyCreated");
+            playerCtx.updateRoom(room);
+            MenuCtx.updateLocation("lobbyCreated");
+        }
+
 
     }
 
     async function handleJoin() {
-        const room = await new Promise(resolve => {
-            socket.emit("joinRoom", playerCtx.room, playerCtx.name, playerCtx.role, (response) => {
-                resolve(response);
+        if (playerCtx === "" || playerCtx.name === "" || playerCtx.role === "") {
+            setWarningMessage("Veuillez remplir les champs")
+        }
+        else {
+
+
+            const room = await new Promise(resolve => {
+                socket.emit("joinRoom", playerCtx.room, playerCtx.name, playerCtx.role, (response) => {
+                    resolve(response);
+                });
             });
-        });
-        playerCtx.updateRoom(room);
-        MenuCtx.updateLocation("lobbyJoined");
+            playerCtx.updateRoom(room);
+            MenuCtx.updateLocation("lobbyJoined");
+        }
     }
 
     function handleStart() {
+        setLoading(true)
         socket.emit("startGame");
     }
 
@@ -108,28 +128,24 @@ function Menu() {
     function CreateForm() {
         return (
             <div>
-                <p>
-                    <TextField key="name" label="Pseudo" value={playerCtx.name} onChange={handleName}></TextField>
-                </p>
-                <p>
-                    <FormControl>
-                        <InputLabel id="role-label">Role</InputLabel>
-                        <Select
-                            labelId="role-label"
-                            id="role"
-                            value={playerCtx.role}
-                            onChange={handleChange}
-                        >
-                            <MenuItem value={1}>Agriculteur</MenuItem>
-                            <MenuItem value={2}>Elu</MenuItem>
-                            <MenuItem value={3}>Responsable</MenuItem>
-                        </Select>
-                    </FormControl>
-                </p>
-                <p>
-                    <Button variant="contained" color="primary" style={marg} onClick={() => { MenuCtx.updateLocation("menu") }}>Menu</Button>
-                    <Button variant="contained" color="primary" onClick={handleCreate}>Create</Button>
-                </p>
+                <TextField key="name" label="Pseudo" value={playerCtx.name} onChange={handleName}></TextField>
+                <FormControl>
+                    <InputLabel id="role-label">Role</InputLabel>
+                    <Select
+                        labelId="role-label"
+                        id="role"
+                        value={playerCtx.role}
+                        onChange={handleChange}
+                    >
+                        <MenuItem value={1}>Agriculteur</MenuItem>
+                        <MenuItem value={2}>Elu</MenuItem>
+                        <MenuItem value={3}>Animateur</MenuItem>
+                    </Select>
+                </FormControl>
+                <Button variant="contained" color="primary" onClick={handleCreate}>Créer</Button>
+                {warningText(warningMessage)}
+                <Button variant="contained" color="primary" style={marg} onClick={() => { MenuCtx.updateLocation("menu") }}>Menu</Button>
+
             </div>
         )
     }
@@ -137,31 +153,26 @@ function Menu() {
     function JoinForm() {
         return (
             <div>
-                <p>
-                    <TextField key="roomName" label="Code Partie" value={playerCtx.room} onChange={handleRoomName}></TextField>
-                </p>
-                <p>
-                    <TextField key="nameJoin" label="Pseudo" value={playerCtx.name} onChange={handleName}></TextField>
-                </p>
-                <p>
-                    <FormControl>
-                        <InputLabel id="role-label">Role</InputLabel>
-                        <Select
-                            labelId="role-label"
-                            id="role"
-                            value={playerCtx.role}
-                            onChange={handleChange}
-                        >
-                            <MenuItem value={1}>Agriculteur</MenuItem>
-                            <MenuItem value={2}>Elu</MenuItem>
-                            <MenuItem value={3}>Responsable</MenuItem>
-                        </Select>
-                    </FormControl>
-                </p>
-                <p>
-                    <Button variant="contained" color="primary" style={marg} onClick={() => { MenuCtx.updateLocation("menu") }}>Menu</Button>
-                    <Button variant="contained" color="primary" onClick={handleJoin}>Rejoindre la partie</Button>
-                </p>
+                <TextField key="roomName" label="Code Partie" value={playerCtx.room} onChange={handleRoomName}></TextField>
+                <TextField key="nameJoin" label="Pseudo" value={playerCtx.name} onChange={handleName}></TextField>
+                <FormControl>
+                    <InputLabel id="role-label">Role</InputLabel>
+                    <Select
+                        labelId="role-label"
+                        id="role"
+                        value={playerCtx.role}
+                        onChange={handleChange}
+                    >
+                        <MenuItem key={1} value={1}>Agriculteur</MenuItem>
+                        <MenuItem key={2} value={2}>Elu</MenuItem>
+                        <MenuItem key={3} value={3}>Responsable</MenuItem>
+                    </Select>
+                </FormControl>
+                <Button variant="contained" color="primary" onClick={handleJoin}>Rejoindre la partie</Button>
+                {warningText(warningMessage)}
+
+                <Button variant="contained" color="primary" style={marg} onClick={() => { MenuCtx.updateLocation("menu") }}>Menu</Button>
+
             </div>
         )
     }
@@ -182,10 +193,19 @@ function Menu() {
                     ))}
                 </List>
                 <Button variant="contained" color="primary" onClick={handleStart} >Commencer la partie</Button>
+                {loading && <Typography>Chargement...</Typography>}
             </div>
         );
     }
-
+    function PlayersWaitingLobby() {
+        return (
+            <div>
+                <Typography>
+                    L'animateur est en train de préparer la carte. Veuillez patienter
+                </Typography>
+            </div>
+        )
+    }
     function LobbyJoined() {
         return (
             <div>
@@ -208,7 +228,9 @@ function Menu() {
     function GameStarted() {
         return (
             <div>
-                {playerCtx.role >= 2 ? <AnimatorLoader name={playerCtx.name} /> : <Game name={playerCtx.name} role={playerCtx.role} />}
+                {playerCtx.role >= 2 ? <AnimatorLoader name={playerCtx.name} /> :
+                    playerGameStarted ? <Game name={playerCtx.name} role={playerCtx.role} /> :
+                        <div className="App-header">{PlayersWaitingLobby()}</div>}
             </div>
         )
     }
@@ -263,25 +285,34 @@ function Menu() {
         );
     }
 
-    return (<>
-        {MenuCtx.loc === "started" ? GameStarted() :
-            <div class="App-header">
-                {MenuCtx.loc === "menu" && MainMenu()}
+    return (
+        <>
 
-                {MenuCtx.loc === "create" && CreateForm()}
+            {
+                MenuCtx.loc === "started" ? GameStarted() :
+                    <div className="App-header">
+                        {MenuCtx.loc === "menu" && MainMenu()}
 
-                {MenuCtx.loc === "join" && JoinForm()}
+                        {MenuCtx.loc === "create" && CreateForm()}
 
-                {MenuCtx.loc === "lobbyCreated" && LobbyCreated()}
+                        {MenuCtx.loc === "join" && JoinForm()}
 
-                {MenuCtx.loc === "lobbyJoined" && LobbyJoined()}
+                        {MenuCtx.loc === "lobbyCreated" && LobbyCreated()}
 
-                {MenuCtx.loc === "reconnect" && RejoinGame()}
+                        {MenuCtx.loc === "reconnect" && RejoinGame()}
+                        
+                        {MenuCtx.loc === "lobbyJoined" && LobbyJoined()}
 
-            </div>}
-    </>
+
+                    </div>
+            }
+        </>
     )
 
 }
 
 export default Menu;
+
+/* réseau zone atelier employeur
+eredejeu prestataire des zone atelier
+ozcar tereno strasbourg */
