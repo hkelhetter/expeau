@@ -7,9 +7,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 export default class ScrollDialog extends React.Component {
-    constructor(props) {
-        super(props)
-    }
+
     render() {
         return (
             <div>
@@ -26,9 +24,7 @@ export default class ScrollDialog extends React.Component {
                             id="scroll-dialog-description"
                             tabIndex={-1}
                         >
-                            <img src={this.props.data} width="100%" />
-                            <img src={this.props.data} width="100%" />
-
+                            <img src={this.props.data} width="100%" alt="" />
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

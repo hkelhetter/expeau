@@ -23,7 +23,7 @@ export const layout = {
 
     Description : return an object containing all the data needed to generate the map in class Bassin
         
-    Authore : Hugo KELHETTER
+    Author : Hugo KELHETTER
 */
 export function generateHexes(data) {
     let hexas = {};
@@ -88,7 +88,7 @@ export function generateHexes(data) {
                     containing the hexagon where the river starts and and where it ends
                     by reading the downStreamCell property
     
-    Authore : Hugo KELHETTER
+    Author : Hugo KELHETTER
 */
 export function generateRivers(moreHexas) {
     let rivers = [];
@@ -119,7 +119,7 @@ export function generateRivers(moreHexas) {
     Description
         Compute player's id on their subBasin based on their global id
 
-    Authore : Hugo KELHETTER
+    Author : Hugo KELHETTER
 */
 export function setPlayerClass(player) {
     if (player === 0) return "" //attributé à aucun joueur
@@ -146,7 +146,7 @@ export function setPlayerClass(player) {
         returns a string based on the input
         this is meant to set className to components and apply css style
     
-    Authore : Hugo KELHETTER
+    Author : Hugo KELHETTER
 */
 export function activityToString(activity) {
     switch (activity) {
@@ -172,7 +172,7 @@ export function activityToString(activity) {
     Description
         Calculate player's subBassin based on their id
 
-    Authore : Hugo KELHETTER
+    Author : Hugo KELHETTER
 */
 export function getSubBassin(id) {
     if (id < 4) return 1

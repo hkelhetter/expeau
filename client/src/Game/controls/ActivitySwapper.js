@@ -1,12 +1,10 @@
 import React from 'react'
-import { socket } from "../../socket.js"
 import PropTypes from 'prop-types';
 import Select from '@material-ui/core/Select';
 import FormLabel from '@material-ui/core/FormLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import createCheckbox from "./createCheckbox.js"
 import { Button } from '@material-ui/core'
+import MenuItem from '@material-ui/core/MenuItem';
 
 class ActivitySwapper extends React.Component {
     /*    
@@ -18,7 +16,7 @@ class ActivitySwapper extends React.Component {
         Syntax : <ActivitySwapper changeTileActivity={this.changeTileActivity} 
             selectedTile={the selected tile} actions={the list of actions} />
 
-        Authore : Hugo KELHETTER            
+        Author : Hugo KELHETTER            
     */
     constructor(props) {
         super(props);
@@ -44,7 +42,7 @@ class ActivitySwapper extends React.Component {
             if the target is a checkBox, change its validation
             update the state value for the corresponding event target
     
-        Authore : Hugo KELHETTER
+        Author : Hugo KELHETTER
     */
     handleChange = (event) => {
         const target = event.target;
@@ -61,7 +59,7 @@ class ActivitySwapper extends React.Component {
         Description : 
             call the function changeTileActivity from parent with in parameters the values of the fieldset 
            
-        Authore : Hugo KELHETTER
+        Author : Hugo KELHETTER
     */
     handleSubmit = (event) => {
         event.preventDefault();
@@ -76,7 +74,7 @@ class ActivitySwapper extends React.Component {
             
         Description : display the form to change tile/subBasin's activityy
            
-        Authore : Hugo KELHETTER
+        Author : Hugo KELHETTER
     */
     render() {
         console.log(this.props)
@@ -90,7 +88,7 @@ class ActivitySwapper extends React.Component {
                 <Select name="selectActivity" onChange={this.handleChange} value={this.state.selectActivity}>
                     {/* display all possible action for selected tile */}
                     {this.props.actions.map((action, i) =>
-                        <option key={i} value={i}>{action.Pratique}</option>,
+                        <MenuItem key={i} value={i}>{action.Pratique}</MenuItem>,
 
                     )}
                     {/*  {this.props.selectedTile.activity === "1" ? "" : <option value="1">vigne</option>}

@@ -1,5 +1,4 @@
 import Slider from '@material-ui/core/Slider';
-import Typography from '@material-ui/core/Typography';
 import React from "react"
 import { socket } from "../../socket.js"
 import DialogTitle from '@material-ui/core/DialogTitle';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, TextField } from '@material-ui/core';
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
@@ -7,7 +7,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { socket } from '../socket.js';
 import Typography from '@material-ui/core/Typography';
 import AnimatorLoader from '../Game/animator/AnimatorLoader.js'
@@ -43,12 +42,13 @@ function Menu() {
         playerCtx.updateRoom(event.target.value);
     }
 
-
+    const [loading, setLoading] = useState(false)
 
     const [playerList, setPlayerList] = useState([]);
 
     socket.on("playersUpdate", (resp) => {
         setPlayerList(resp);
+        console.log(resp)
     });
 
     const [playerGameStarted, setPlayerGameStarted] = useState(true);
@@ -82,6 +82,8 @@ function Menu() {
     }
 
     function handleStart() {
+        setLoading(true)
+
         socket.emit("startGame");
     }
 
@@ -101,11 +103,11 @@ function Menu() {
                     >
                         <MenuItem value={1}>Agriculteur</MenuItem>
                         <MenuItem value={2}>Elu</MenuItem>
-                        <MenuItem value={3}>Responsable</MenuItem>
+                        <MenuItem value={3}>Animateur</MenuItem>
                     </Select>
                 </FormControl>
+                <Button variant="contained" color="primary" onClick={handleCreate}>Créer</Button>
                 <Button variant="contained" color="primary" style={marg} onClick={() => { MenuCtx.updateLocation("menu") }}>Menu</Button>
-                <Button variant="contained" color="primary" onClick={handleCreate}>Create</Button>
 
             </div>
         )
@@ -124,9 +126,9 @@ function Menu() {
                         value={playerCtx.role}
                         onChange={handleChange}
                     >
-                        <MenuItem value={1}>Agriculteur</MenuItem>
-                        <MenuItem value={2}>Elu</MenuItem>
-                        <MenuItem value={3}>Responsable</MenuItem>
+                        <MenuItem key={1} value={1}>Agriculteur</MenuItem>
+                        <MenuItem key={2} value={2}>Elu</MenuItem>
+                        <MenuItem key={3} value={3}>Responsable</MenuItem>
                     </Select>
                 </FormControl>
                 <Button variant="contained" color="primary" onClick={handleJoin}>Rejoindre la partie</Button>
@@ -152,6 +154,7 @@ function Menu() {
                     ))}
                 </List>
                 <Button variant="contained" color="primary" onClick={handleStart} >Commencer la partie</Button>
+                {loading && <Typography>Chargement...</Typography>}
             </div>
         );
     }
@@ -217,30 +220,38 @@ function Menu() {
 
         return (
             <div>
-                <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("join") }}>Rejoindre la partie</Button>
                 <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("create") }}>Creer la partie</Button>
+                <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("join") }}>Rejoindre la partie</Button>
             </div>
         );
     }
 
-    return (<>
-        {MenuCtx.loc === "started" ? GameStarted() :
-            <div className="App-header">
-                {MenuCtx.loc === "menu" && MainMenu()}
+    return (
+        <>
 
-                {MenuCtx.loc === "create" && CreateForm()}
+            {
+                MenuCtx.loc === "started" ? GameStarted() :
+                    <div className="App-header">
+                        {MenuCtx.loc === "menu" && MainMenu()}
 
-                {MenuCtx.loc === "join" && JoinForm()}
+                        {MenuCtx.loc === "create" && CreateForm()}
 
-                {MenuCtx.loc === "lobbyCreated" && LobbyCreated()}
+                        {MenuCtx.loc === "join" && JoinForm()}
 
-                {MenuCtx.loc === "lobbyJoined" && LobbyJoined()}
+                        {MenuCtx.loc === "lobbyCreated" && LobbyCreated()}
+
+                        {MenuCtx.loc === "lobbyJoined" && LobbyJoined()}
 
 
-            </div>}
-    </>
+                    </div>
+            }
+        </>
     )
 
 }
 
 export default Menu;
+
+/* réseau zone atelier employeur
+eredejeu prestataire des zone atelier
+ozcar tereno strasbourg */

@@ -11,7 +11,7 @@ export default class Chat extends React.Component {
 
         Syntax : <Chat lstPlayer={lstPlayer} lstConvo={lstConvo} authore={authore} />
             
-        Authore : Hugo KELHETTER
+        Author : Hugo KELHETTER
     */
     constructor(props) {
         super(props)
@@ -34,7 +34,7 @@ export default class Chat extends React.Component {
     
         Description : the component only updates if the state changes
             
-        Authore : Hugo KELHETTER
+        Author : Hugo KELHETTER
     */
     shouldComponentUpdate(nextProps, nextState) {
         return this.state !== nextState || this.props.lstConvo !== nextProps.lstConvo
@@ -51,13 +51,12 @@ export default class Chat extends React.Component {
                 containing conversation room's name a string and author's id
             this.state.textValue is set to ""
         
-        Authore : Hugo KELHETTER
+        Author : Hugo KELHETTER
     */
     handleSubmit = (e) => {
         e.preventDefault();
         if (!this.state.textValue) return
         const newMessage = { msg: this.state.textValue, authore: this.props.authore, convo: this.state.convo }
-        let convo = this.state.convo
         this.setState({
             messages: this.addMessage(newMessage),
             textValue: ""
@@ -84,7 +83,7 @@ export default class Chat extends React.Component {
             
         Description : update this.state.textValue based on the pressed key
 
-        Authore : Hugo KELHETTER
+        Author : Hugo KELHETTER
             
     */
     updateText(e) {
@@ -122,7 +121,7 @@ export default class Chat extends React.Component {
             
         Description : set the active conversation
 
-        Authore : Hugo KELHETTER
+        Author : Hugo KELHETTER
             
     */
     handleConvoChange = (event) => {
@@ -135,7 +134,7 @@ export default class Chat extends React.Component {
             
         Description : display a chat + available conversations
         
-        Authore : Hugo KELHETTER
+        Author : Hugo KELHETTER
     */
     render() {
         return (

@@ -20,7 +20,7 @@ export default class AnimatorLoader extends React.Component {
     */
     constructor(props) {
         super(props)
-        this.state = { lstPlayer: "", lstTile: "", map: { moreHexas: "", moreRivers: null } }
+        this.state = { lstPlayer: "", lstTile: "", map: { moreHexas: "", moreRivers: null }, mapReady: true }
         //this.addConvo = this.addConvo.bind(this)
         this.handleClickTile = handleClickTile.bind(this)
 
@@ -47,12 +47,12 @@ Output  : the success of the function
 
 Description : display the different components of the app
 
-Authore : Hugo KELHETTER
+Author : Hugo KELHETTER
     
 */
     addConvo = (data) => {
 
-        if (data.convoName.length == 0) {
+        if (data.convoName.length === 0) {
             alert("vous devez entrer un nom")
             return false
         }
@@ -114,35 +114,42 @@ Authore : Hugo KELHETTER
 
     }
 
-    handleSubmit() {
-        socket.emit("nextTurn", () => {
-        })
+    handleSubmit = () => {
+        if (this.state.mapReady) {
+            this.setState({ mapReady: false })
+            socket.emit("mapReady")
+        }
+        else {
+            socket.emit("nextTurn", () => {
+            })
+        }
     }
     render() {
 
-        return (
+        return (<>
+            {this.state.mapReady && "Vous pouvez modifier la carte avant le début de la partie. "}
+            Cliquez sur une case pour apporter des modifications
             <div className="App">
                 {
-                    <Menu>
-                        {(this.state.lstPlayer != "" && this.state.lstTile != "" && this.state.selectedTile) &&
+                    < Menu >
+                        {(this.state.lstPlayer !== "" && this.state.lstTile !== "" && this.state.selectedTile) &&
                             <ChangeTile lstPlayer={this.state.lstPlayer} lstTile={this.state.map.moreHexas} updateMap={this.updateMap}
                                 selectedTile={this.state.selectedTile} type={this.state.selectedTile.className} id={this.state.selectedTile.id} />
 
                         }
-                        <Button variant="contained" color="primary" data-testid="submit" onClick={this.handleSubmit}>Terminer le tour</Button>
+                        <Button variant="contained" color="primary" data-testid="submit" onClick={this.handleSubmit}>
+                            {this.state.mapReady ? "Commencer la partie" : "Terminer le tour"}
+                        </Button>
 
                     </Menu>
                 }
                 {
                     this.state.map.moreHexas !== "" && <Bassin handleClick={this.handleClickTile} selectedId={this.state.selectedTile?.id}
-                        map={this.state.map} role={this.props.role} id={this.state.id} handleClick={this.handleClickTile} />
+                        map={this.state.map} role={this.props.role} id={this.state.id} />
                 }
 
 
-            </div >);
+            </div >
+        </>);
     }
 }
-/*
-
-
-*/

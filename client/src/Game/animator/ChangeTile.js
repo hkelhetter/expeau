@@ -4,7 +4,6 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Radio from '@material-ui/core/Radio';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import Checkbox from '@material-ui/core/Checkbox';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { socket } from "../../socket.js"
@@ -21,8 +20,8 @@ export default class ChangeTile extends React.Component {
         this.createCheckbox = createCheckbox.bind(this)
         this.state = {
             agriAction: "", action: "", selectedReceiver: "", feedBack: "",
-            checkboxEco: this.props.selectedTile.eco, checkboxIrrig: this.props.selectedTile.irrig,
-            checkboxMarket: this.props.selectedTile.market
+            checkboxEco: !!this.props.selectedTile.eco, checkboxIrrig: !!this.props.selectedTile.irrig,
+            checkboxMarket: !!this.props.selectedTile.market
         }
     }
     handleChange = (event) => {
@@ -33,10 +32,11 @@ export default class ChangeTile extends React.Component {
     checkReceiver(res) {
         res.selectedReceiver = this.state.selectedReceiver
         if (this.state.selectedReceiver === "") return "selectionnez le joueur qui reçoit la case"
-        if (this.state.selectedReceiver == this.props.selectedTile.player) return "le donneur et le receveur ne peuvent pas être la même personne"
+        if (this.state.selectedReceiver === this.props.selectedTile.player) return "le donneur et le receveur ne peuvent pas être la même personne"
 
         return ""
     }
+
     modifyTile = () => {
         const [problem] = "quelque chose s'est mal passé"
         let res = { selectedTile: this.props.selectedTile.id }
@@ -54,19 +54,18 @@ export default class ChangeTile extends React.Component {
                         const ok = this.checkReceiver(res)
                         if (ok === "") socket.emit("changeOwner", res)
                         res.cellPlayer = res.selectedReceiver
-                        console.log(res.selectedReceiver)
                         res.player = res.selectedReceiver
                         delete res.selectedReceiver
                         return [ok, res]
                     case "addInfra":
-                        if (this.state.checkboxEco == this.props.selectedTile.eco && this.state.checkboxIrrig == this.props.selectedTile.irrig) {
+                        if (this.state.checkboxEco === this.props.selectedTile.eco && this.state.checkboxIrrig === this.props.selectedTile.irrig) {
                             return ["rien n'a changé"]
                         }
                         res = { ...res, eco: this.state.checkboxEco, irrig: this.state.checkboxIrrig }
                         socket.emit("addInfra", res)
                         return ["", res]
                     case "transformToForest":
-                        socket.emit("transformToForest", res)
+                        socket.emit("transformToForest", res.selectedTile)
                         res.mainCLC1 = 3
                         return ["", res]
                     default:
@@ -75,6 +74,7 @@ export default class ChangeTile extends React.Component {
 
             case "3":
                 switch (this.state.agriAction) {
+
                     case "":
                         return ["selectionnez l'action à effectuer"]
                     case "transformToCity":
@@ -83,7 +83,10 @@ export default class ChangeTile extends React.Component {
                         res.mainCLC1 = 1
                         return ["", res]
                     case "transformToFarm":
-                        res = { ...res, selectedReceiver: this.state.selectedReceiver }
+                        res = {
+                            ...res, selectedReceiver: this.state.selectedReceiver,
+                            eco: this.state.checkboxEco, irrig: this.state.checkboxIrrig
+                        }
                         const ok = this.checkReceiver(res)
                         if (ok === "") socket.emit("transformToFarm", res)
                         res.mainCLC1 = 2
@@ -96,14 +99,17 @@ export default class ChangeTile extends React.Component {
                     case "":
                         return ["selectionnez l'action à effectuer"]
                     case "transformToFarm":
-                        res = { ...res, selectedReceiver: this.state.selectedReceiver }
+                        res = {
+                            ...res, selectedReceiver: this.state.selectedReceiver,
+                            eco: this.state.checkboxEco, irrig: this.state.checkboxIrrig
+                        }
                         const ok = this.checkReceiver(res)
                         if (ok === "") socket.emit("transformToFarm", res)
                         res.mainCLC1 = 2
                         return [ok, res]
                     case "transformToForest":
                         console.log("a")
-                        socket.emit("transformToForest", res)
+                        socket.emit("transformToForest", res.selectedTile)
                         res.mainCLC1 = 3
                         return ["", res]
                     default:
@@ -133,7 +139,7 @@ export default class ChangeTile extends React.Component {
     selectedPlayer() {
         const tile = this.props.selectedTile
 
-        let playerArray = this.props.lstPlayer.filter(player => (player.Role < 9 && getSubBassin(player.Id) === tile.bassin && player.Id != tile.player))
+        let playerArray = this.props.lstPlayer.filter(player => (player.Role < 9 && getSubBassin(player.Id) === tile.bassin && player.Id !== tile.player))
         return (this.state.agriAction === "changeOwner" || this.state.agriAction === "transformToFarm") && <>
             <FormLabel component="legend">Qui reçoit cette case ?</FormLabel>
             <Select name="selectedReceiver" labelId="selectedReceiver"
@@ -145,7 +151,7 @@ export default class ChangeTile extends React.Component {
         </>
     }
     addInfra() {
-        return this.state.agriAction === 'addInfra' && <>
+        return (this.state.agriAction === 'addInfra' || this.state.agriAction === 'transformToFarm') && <>
             < FormControlLabel
                 control={
                     this.createCheckbox("checkboxEco")
@@ -169,7 +175,7 @@ export default class ChangeTile extends React.Component {
         />
     }
     componentDidUpdate(prevProps) {
-        if (prevProps.selectedTile.id != this.props.selectedTile.id) {
+        if (prevProps.selectedTile.id !== this.props.selectedTile.id) {
             this.setState({
                 checkboxEco: this.props.selectedTile.eco,
                 checkboxIrrig: this.props.selectedTile.irrig,
@@ -204,17 +210,21 @@ export default class ChangeTile extends React.Component {
                                     {this.transformToCity()}
                                     <FormControlLabel key="2" value="transformToFarm" control={<Radio />} label="transformer en zone agricole" />
                                     {this.selectedPlayer()}
+                                    {this.addInfra()}
+
                                 </RadioGroup>
 
                             </> : /* water */
                             <RadioGroup aria-label="type" name="agriAction" value={this.state.agriAction} onChange={this.handleChange}>
                                 <FormControlLabel key="1" value="transformToFarm" control={<Radio />} label="tranformer en zone agricole" />
                                 {this.selectedPlayer()}
+                                {this.addInfra()}
+
                                 <FormControlLabel key="2" value="transformToForest" control={<Radio />} label="transformer en forêt" />
                             </RadioGroup>
                 }
                 <Button type="submit" variant="contained" color="primary" data-testid="submit" onClick={this.handleSubmit}>Valider</Button>
-                <div id="helpSubmit" class="invalid-feedback d-block">
+                <div id="helpSubmit" class="warning">
 
                     {this.state.feedBack}
                 </div>

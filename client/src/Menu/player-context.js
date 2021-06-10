@@ -3,7 +3,7 @@ import { createContext, useState } from 'react';
 const PlayerContext = createContext({
     name: '',
     playersList: [],
-    role: -1,
+    role: "",
     room: '',
     updateName: (name) => { },
     updateList: (list) => { },
@@ -15,7 +15,7 @@ export function PlayerContextProvider(props) {
 
     const [playerName, setPlayerName] = useState('');
     const [playerList, setPlayerList] = useState([]);
-    const [playerRole, setPlayerRole] = useState(-1);
+    const [playerRole, setPlayerRole] = useState("");
     const [playerRoom, setPlayerRoom] = useState('');
 
     function updateNameHandler(name) {

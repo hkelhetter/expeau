@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { HexGrid, Layout, Path, Hexagon, Text } from 'react-hexgrid'
 import layoutProps from './layoutProps.js'
-import { setPlayerClass, activityToString, getSubBassin, setMapSize, setBaseClasses } from './MapUtil.js'
+import { setPlayerClass, getSubBassin, setMapSize, setBaseClasses } from './MapUtil.js'
 import PropTypes from 'prop-types';
 export default class Bassin extends Component {
     constructor(props) {
         super(props)
         this.update = this.update.bind(this)
     }
+
     /* 
         Input : props={map:{moreHexas,moreRivers,player},handleClick,role,selectedId}
                 map.moreHexas : object : contains all data to create the map
@@ -68,7 +69,7 @@ export default class Bassin extends Component {
         
         see /src/map/MapUtil.js for more information about hex'properties
     
-        Authore : Hugo KELHETTER
+        Author : Hugo KELHETTER
     */
     createHexeFarmer(hex, i, player) {
 
@@ -86,8 +87,10 @@ export default class Bassin extends Component {
             subId={hex.cellPlayer}
             key={hex.Id} id={hex.Id} q={hex.q} r={hex.r} s={hex.s}
         >
-            {(hex.basin === bassin && hex.cellPlayer != null) && this.displayTileId(hex.cellPlayer)}
-            {(hex.basin === bassin && mainCLC1 == 1) && this.displayMarket(hex.market)}
+            {(hex.basin === bassin && hex.cellPlayer != null && hex.cellPlayer > 0) && this.displayTextTop(hex.cellPlayer)}
+            {(hex.basin === bassin && mainCLC1 == 1 && hex.market == 1) && this.displayTextBottom("M")}
+            {(hex.basin === bassin && hex.irrig == 1) && this.displayTextBottom("💧")}
+
         </Hexagon>
     }
 
@@ -107,7 +110,7 @@ export default class Bassin extends Component {
 
         </Hexagon >
     }
-    createHexeManager(hex, i) {
+    createHexeAnimator(hex, i) {
         let classname = setBaseClasses(hex)
         if (hex.Id == this.props.selectedId) classname += " selected"
         const mainCLC1 = hex.mainCLC1.toString()
@@ -121,7 +124,8 @@ export default class Bassin extends Component {
         >
             {hex.cellPlayer != null && this.displayTileId(hex.cellPlayer)}
             {mainCLC1 == 1 && this.displayMarket(hex.market)}
-            <Text key="ileId" y={2}>{hex.Id}</Text>
+            {(hex.irrig == 1) && this.displayTextBottom("💧")}
+
         </Hexagon>
     }
     /* 
@@ -133,13 +137,19 @@ export default class Bassin extends Component {
             
         Description : return an object <Text> containing the input text
             
-        Authore : Hugo KELHETTER
+        Author : Hugo KELHETTER
     */
     displayTileId(id) {
-        return id !== "-1" && <Text key="tileId" y={-2}>{id.toString()}</Text>
+        return id > 0 && <Text key="tileId" y={-2}>{id.toString()}</Text>
     }
     displayMarket(market) {
         return market == 1 && <Text key="market" y={2}>M</Text>
+    }
+    displayTextBottom(text) {
+        return <Text key={text} y={2}>{text}</Text>
+    }
+    displayTextTop(text) {
+        return <Text key={text} y={-2}>{text}</Text>
     }
 
     /* 
@@ -147,7 +157,7 @@ export default class Bassin extends Component {
         
         Description : display an hexagonal grid and rivers
         
-        Authore : Hugo KELHETTER
+        Author : Hugo KELHETTER
     */
     render() {
         return (<>
@@ -158,10 +168,10 @@ export default class Bassin extends Component {
                     {Object.values(this.props.map.moreHexas).map((hex, i) =>
                         this.props.role == 1 ? this.createHexeFarmer(hex, i, this.props.id) :
                             this.props.role == 2 ? this.createHexeElected(hex, i) :
-                                this.createHexeManager(hex, i)
+                                this.createHexeAnimator(hex, i)
                     )}
                     {this.props.map.moreRivers.map((river, i) =>
-                        <g key={i} className={river.start.outletFlowAcc == 1 && "small"} >
+                        <g key={i} className={river.start.outletFlowAcc == 1 ? "small" : ""} >
                             <Path
                                 key={i} start={river.start} end={river.end}
                             />
