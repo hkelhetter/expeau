@@ -132,14 +132,15 @@ Author : Hugo KELHETTER
             <div className="App">
                 {
                     < Menu >
-                        {(this.state.lstPlayer !== "" && this.state.lstTile !== "" && this.state.selectedTile) &&
-                            <ChangeTile lstPlayer={this.state.lstPlayer} lstTile={this.state.map.moreHexas} updateMap={this.updateMap}
-                                selectedTile={this.state.selectedTile} type={this.state.selectedTile.className} id={this.state.selectedTile.id} />
-
-                        }
                         <Button variant="contained" color="primary" data-testid="submit" onClick={this.handleSubmit}>
                             {this.state.mapReady ? "Commencer la partie" : "Terminer le tour"}
                         </Button>
+                        {(this.state.lstPlayer !== "" && this.state.lstTile !== "" && this.state.selectedTile) &&
+                            <div id="changeTile"><ChangeTile lstPlayer={this.state.lstPlayer} lstTile={this.state.map.moreHexas} updateMap={this.updateMap}
+                                selectedTile={this.state.selectedTile} type={this.state.selectedTile.className} id={this.state.selectedTile.id} />
+                            </div>
+                        }
+
 
                     </Menu>
                 }
