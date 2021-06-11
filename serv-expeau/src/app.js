@@ -208,6 +208,10 @@ io.on("connection", (socket) => {
 
     });
 
+    socket.on("getTurn", (callback) => {
+        callback(cRoom.turn);
+    })
+
     // socket.on("testImage", async (callback) => {
     //     const res = await Sim.testImage();
     //     callback(res);
