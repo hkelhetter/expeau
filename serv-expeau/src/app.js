@@ -54,7 +54,7 @@ io.on("connection", (socket) => {
             name: Math.random().toString(36).substr(2, 5),
             sockets: [],
             socketsAgr: [],
-            turn: 0
+            turn: -1
         };
         rooms[room.name] = room;
 
@@ -175,6 +175,8 @@ io.on("connection", (socket) => {
     })
 
     socket.on("mapReady", () => {
+        const cRoom = rooms[socket.roomName];
+        cRoom.turn = 0;
         io.sockets.in(socket.roomName).emit("mapReady");
     });
 

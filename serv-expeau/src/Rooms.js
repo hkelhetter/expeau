@@ -8,7 +8,7 @@ const connectKnex = knex({
 });
 
 async function newRoom(roomname){
-    await connectKnex("rooms").insert({Name: roomname, Turn: 0});
+    await connectKnex("rooms").insert({Name: roomname, Turn: -1});
 }
 
 async function endGame(roomName){
