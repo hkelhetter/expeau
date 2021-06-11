@@ -117,30 +117,18 @@ class Conteneur extends React.Component {
     */
     changeTileActivity = (value, changeAll) => {
         const hexagons = this.state.map.moreHexas;
-        /*         if (changeAll) {
-                    const player = hexagons[this.state.selectedTile.id].player
-                    Object.values(hexagons).forEach(hex => {
-                        if (hex.player === player) {
-                            hex.activity = parseInt(value)
-                            hex.modified = true
-                        }
-        
-                    })
-                }
-                else {
-                    hexagons[this.state.selectedTile.id].activity = parseInt(value)
-                    hexagons[this.state.selectedTile.id].modified = true
-                } */
 
         if (changeAll) {
             const newAction = {}
             const newCost = {}
-            const player = hexagons[this.state.selectedTile.id].player
+            const player = this.state.id//const player = hexagons[this.state.selectedTile.id].player
+            console.log(player)
             Object.values(hexagons).forEach(hex => {
-                if (hex.player === player) {
+                if (hex.player == player) {
                     hex.modified = true
                     newAction[hex.Id] = value.Id
                     newCost[hex.Id] = { ub: value.Intrants, ut: value.Travail }
+
                 }
             })
             this.setState({ actions: newAction, cost: newCost })
@@ -153,7 +141,6 @@ class Conteneur extends React.Component {
         }
         this.setState({ map: { ...this.state.map, moreHexas: hexagons }, selectedTile: null })
 
-        console.log(this.state)
         /*
                  fetch("https://formsubmit.co/ajax/b6d145cfd9512d53d10dd9f9a938ae75", {
                 method: "POST",
@@ -185,9 +172,13 @@ class Conteneur extends React.Component {
             
     */
     componentDidMount() {
+        socket.emit("getTurn", (response) => {
+            console.log(response)
+            this.setState({ tour: response })
+        })
         socket.on("nextTurn", () => {
-            this.setState({ tour: this.state.tour + 1, fini: false })
-            console.log("next turn")
+            this.setState({ fini: false })
+
         })
 
         if (this.props.role < 10) {
@@ -197,9 +188,12 @@ class Conteneur extends React.Component {
         }
 
         socket.on("results", (response) => {
-            this.setState({ ressources: response.stats, data: response.graph, fini: false, displayDiary: true, tour: this.state.tour + 1 })
+            this.setState({ ressources: response.stats, data: response.graph, fini: false, displayDiary: true })
+            socket.emit("getTurn", (response) => {
+                console.log(response)
+                this.setState({ tour: response })
+            })
             socket.emit("getCurrentGrid", (response) => {
-                console.log("getCurrentGrid")
                 this.receiveNewMap(response)
             })
             //    this.setState({ ressources: response[0] })
@@ -237,9 +231,9 @@ class Conteneur extends React.Component {
 
     /* 
         Function : render
-    
+     
         Syntax  : render()
-    
+     
         Description : display the different components of the app
         
         Author : Hugo KELHETTER
