@@ -65,10 +65,10 @@ io.on("connection", (socket) => {
 
     socket.on("joinRoom", async (roomName, playerName, role, callback) => {
         const room = rooms[roomName];
-        if (typeof room === "undefined"){
+        if (typeof room === "undefined") {
             callback("Code de lobby incorrect");
         }
-        else{
+        else {
             await joinRoom(socket, room, playerName, role);
             console.log(playerName + " joined room " + room.name);
             callback(room.name);
@@ -78,7 +78,7 @@ io.on("connection", (socket) => {
 
     socket.on("reconnect", async (roomName, playerName, callback) => {
         var room = rooms[roomName];
-        if(typeof room === "undefined"){
+        if (typeof room === "undefined") {
             const cTurn = await Rooms.getTurn(roomName);
             room = {
                 name: roomName,
@@ -94,7 +94,7 @@ io.on("connection", (socket) => {
         socket.playerId = info['Id'];
         room.sockets.push(socket);
 
-        if(parseInt(info['Role']) === 1){
+        if (parseInt(info['Role']) === 1) {
             room.socketsAgr.push(socket);
         }
         callback();
@@ -209,7 +209,9 @@ io.on("connection", (socket) => {
     });
 
     socket.on("getTurn", (callback) => {
-        callback(cRoom.turn);
+        const cRoom = rooms[socket.roomName];
+        console.log(cRoom.turn)
+        if (typeof cRoom !== "undefined") callback(cRoom.turn);
     })
 
     // socket.on("testImage", async (callback) => {

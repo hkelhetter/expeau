@@ -20,7 +20,7 @@ export default class AnimatorLoader extends React.Component {
     */
     constructor(props) {
         super(props)
-        this.state = { lstPlayer: "", lstTile: "", map: { moreHexas: "", moreRivers: null }, mapReady: true }
+        this.state = { lstPlayer: "", lstTile: "", map: { moreHexas: "", moreRivers: null }, mapReady: true, tour: 0 }
         //this.addConvo = this.addConvo.bind(this)
         this.handleClickTile = handleClickTile.bind(this)
 
@@ -92,7 +92,10 @@ Author : Hugo KELHETTER
             let lstTile = newHexas[1]
             const newRivers = generateRivers(newHexas[0])
             //const tampon = this.createTampon(newHexas, this.state.map.player)
+            console.log(response)
+
             this.setState({ map: { ...this.state.map, moreHexas: newHexas[0], moreRivers: newRivers, selectedTile: null }, lstTile })
+
         })
         socket.emit("playersInRoom", (response) => {
             this.setState({ lstPlayer: response })
@@ -154,12 +157,17 @@ Author : Hugo KELHETTER
     
     */
     handleSubmit = () => {
+
         if (this.state.mapReady) {
             this.setState({ mapReady: false })
             socket.emit("mapReady")
         }
         else {
             socket.emit("nextTurn", () => {
+                socket.emit("getTurn", (response) => {
+                    console.log(response)
+                    this.setState({ tour: response })
+                })
             })
         }
     }
@@ -182,7 +190,7 @@ Author : Hugo KELHETTER
                 {
                     < Menu >
                         <Button variant="contained" color="primary" data-testid="submit" onClick={this.handleSubmit}>
-                            {this.state.mapReady ? "Commencer la partie" : "Terminer le tour"}
+                            {this.state.mapReady ? "Commencer la partie" : `Terminer le tour ${this.state.tour}`}
                         </Button>
                         {(this.state.lstPlayer !== "" && this.state.lstTile !== "" && this.state.selectedTile) &&
                             <div id="changeTile"><ChangeTile lstPlayer={this.state.lstPlayer} lstTile={this.state.map.moreHexas} updateMap={this.updateMap}

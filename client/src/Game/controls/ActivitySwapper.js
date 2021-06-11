@@ -77,7 +77,6 @@ class ActivitySwapper extends React.Component {
         Author : Hugo KELHETTER
     */
     render() {
-        console.log(this.props)
         return (
             < form onSubmit={this.handleSubmit} >
                 <FormLabel>
@@ -111,3 +110,11 @@ class ActivitySwapper extends React.Component {
 }
 
 export default ActivitySwapper
+/*
+ecran de fin de partie
+selection activité de derniere partie
+validation prochain tour
+recuperation du tour depuis le serveur
+changer style des boutons radios
+
+*/

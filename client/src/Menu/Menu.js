@@ -54,7 +54,7 @@ function Menu() {
         console.log(resp)
     });
 
-    const [playerGameStarted, setPlayerGameStarted] = useState(true);
+    const [playerGameStarted, setPlayerGameStarted] = useState(false);
 
     socket.on("mapReady", () => {
         setPlayerGameStarted(true)
@@ -92,10 +92,10 @@ function Menu() {
                     resolve(response);
                 });
             });
-            if(room === "Code de lobby incorrect"){
+            if (room === "Code de lobby incorrect") {
                 setWarningMessage(room);
             }
-            else{
+            else {
                 playerCtx.updateRoom(room);
                 MenuCtx.updateLocation("lobbyJoined");
             }
@@ -113,25 +113,25 @@ function Menu() {
                 resolve(resp);
             })
         });
-        if (newLst === "Partie inexistante"){
+        if (newLst === "Partie inexistante") {
             setWarningMessage(newLst);
         }
-        else{
+        else {
             setPlayerList(newLst);
         }
     }
 
-    async function handleReconnectChange(event){
+    async function handleReconnectChange(event) {
         const lngth = event.target.value.length;
         const pName = event.target.value.substring(0, lngth - 1);
         const pRole = event.target.value.substring(lngth - 1);
         playerCtx.updateName(pName);
         playerCtx.updateRole(pRole);
-        
+
     }
 
     async function handleReconnect() {
-        socket.emit("reconnect", playerCtx.room, playerCtx.name, () => {MenuCtx.updateLocation("started")});
+        socket.emit("reconnect", playerCtx.room, playerCtx.name, () => { MenuCtx.updateLocation("started") });
     }
 
 
@@ -257,17 +257,17 @@ function Menu() {
                 </p>
                 <InputLabel id="nameLabel">Votre nom dans la partie</InputLabel>
                 <FormControl>
-                
-                <Select
-                    labelId="nameLabel"
-                    id="playerSelect"
-                    value={playerCtx.name + playerCtx.role}
-                    onChange={handleReconnectChange}
-                >
-                    {playerList.map(item => (
-                        <MenuItem value={item.Name + item.Role}>{item.Name + ` (role : ` + item.Role + `)`}</MenuItem>
-                    ))}
-                </Select>
+
+                    <Select
+                        labelId="nameLabel"
+                        id="playerSelect"
+                        value={playerCtx.name + playerCtx.role}
+                        onChange={handleReconnectChange}
+                    >
+                        {playerList.map(item => (
+                            <MenuItem value={item.Name + item.Role}>{item.Name + ` (role : ` + item.Role + `)`}</MenuItem>
+                        ))}
+                    </Select>
                 </FormControl>
                 <p>
                     <Button variant="contained" color="primary" onClick={handleReconnect}>Rejoindre</Button>
@@ -283,9 +283,9 @@ function Menu() {
 
         return (
             <div>
-                    <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("create") }}>Creer la partie</Button>
-                    <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("join") }}>Rejoindre la partie</Button>
-                    <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("reconnect") }}>Reconnexion a la partie en cours</Button>
+                <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("create") }}>Creer la partie</Button>
+                <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("join") }}>Rejoindre la partie</Button>
+                <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("reconnect") }}>Reconnexion a la partie en cours</Button>
             </div>
         );
     }
@@ -320,4 +320,5 @@ export default Menu;
 
 /* réseau zone atelier employeur
 eredejeu prestataire des zone atelier
-ozcar tereno strasbourg */
+ozcar tereno strasbourg
+*/
