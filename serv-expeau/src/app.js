@@ -210,6 +210,10 @@ io.on("connection", (socket) => {
 
     });
 
+    socket.on("endGame", () => {
+        io.sockets.in(socket.roomName).emit("endGame");
+    })
+
     socket.on("getTurn", (callback) => {
         const cRoom = rooms[socket.roomName];
         console.log(cRoom.turn)
