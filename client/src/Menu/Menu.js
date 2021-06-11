@@ -8,7 +8,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-
+import roleToString from '../Game/controls/roleToString.js';
 import { socket } from '../socket.js';
 import Typography from '@material-ui/core/Typography';
 import AnimatorLoader from '../Game/animator/AnimatorLoader.js'
@@ -131,7 +131,18 @@ function Menu() {
     }
 
     async function handleReconnect() {
-        socket.emit("reconnect", playerCtx.room, playerCtx.name, () => { MenuCtx.updateLocation("started") });
+        if (playerCtx.room === "" || playerCtx.name === "") {
+            setWarningMessage("Veuillez remplir les champs")
+        } else {
+            socket.emit("reconnect", playerCtx.room, playerCtx.name, () => {
+                MenuCtx.updateLocation("started")
+                socket.emit("getTurn", (response) => {
+                    console.log(response)
+                    if (response > -1) setPlayerGameStarted(true)
+
+                })
+            });
+        }
     }
 
 
@@ -239,7 +250,7 @@ function Menu() {
     function GameStarted() {
         return (
             <div>
-                {playerCtx.role >= 2 ? <AnimatorLoader name={playerCtx.name} /> :
+                {playerCtx.role >= 2 ? <AnimatorLoader name={playerCtx.name} room={playerCtx.room} /> :
                     playerGameStarted ? <Game name={playerCtx.name} role={playerCtx.role} /> :
                         <div className="App-header">{PlayersWaitingLobby()}</div>}
             </div>
@@ -286,6 +297,8 @@ function Menu() {
                 <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("create") }}>Creer la partie</Button>
                 <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("join") }}>Rejoindre la partie</Button>
                 <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("reconnect") }}>Reconnexion a la partie en cours</Button>
+                <Button variant="contained" color="primary" onClick={() => { window.location = "/tutorial" }}>Tutoriels</Button>
+
             </div>
         );
     }

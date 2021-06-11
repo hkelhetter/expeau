@@ -201,7 +201,7 @@ export default class ChangeTile extends React.Component {
             <Select name="selectedReceiver" labelId="selectedReceiver"
                 value={this.state.selectedReceiver} onChange={this.handleChange}>
                 {playerArray.map((player, i) =>
-                    <MenuItem value={player.Id} key={player.Id}>{player.Name} : joueur {i} </MenuItem>
+                    <MenuItem value={player.Id} key={player.Id}>{player.Name} : joueur {player.Id} </MenuItem>
                 )}
             </Select>
         </>

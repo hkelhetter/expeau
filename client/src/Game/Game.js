@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import SlideField from "./controls/SlideField.js"
 import Menu from "./controls/Menu.js"
 import Diary from "./Diary.js"
+import roleToString from './controls/roleToString.js'
 class Conteneur extends React.Component {
     /* 
         Input : props={name,role}
@@ -222,11 +223,7 @@ class Conteneur extends React.Component {
         socket.removeAllListeners()
     }
 
-    roleToString(role) {
-        if (role < 10) return "agriculteur"
-        if (role < 14) return "élu"
-        return "gestionnaire"
-    }
+
     endRound = () => { this.setState({ fini: true }) }
 
     /* 
@@ -251,7 +248,7 @@ class Conteneur extends React.Component {
                 <Menu >
                     <div id="menu">
                         <p></p>Nous sommes au tour : {this.state.tour}
-                        <p>Bonjour {this.props.name}. Vous êtes {this.roleToString(this.props.role)}, votre identifiant est {this.state.id}</p>
+                        <p>Bonjour {this.props.name}. Vous êtes {roleToString(this.props.role)}, votre identifiant est {this.state.id}</p>
                         {this.state.ressources !== undefined && <Ressources ressources={this.state.ressources} cost={this.state.cost} />}
                         {!this.state.fini ?
                             <>

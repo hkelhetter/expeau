@@ -6,10 +6,10 @@ import Bassin from "../map/Bassin.js"
 import handleClickTile from '../controls/handleClickTileFarmer.js'
 import ChangeTile from './ChangeTile.js'
 import Menu from '../controls/Menu.js'
-import { Button } from '@material-ui/core'
+import { Button, Typography } from '@material-ui/core'
 //import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 //import CheckBoxIcon from '@material-ui/icons/CheckBox';
-
+import ConfirmDialog from "../controls/ConfirmDialog.js"
 
 export default class AnimatorLoader extends React.Component {
     /* 
@@ -20,7 +20,7 @@ export default class AnimatorLoader extends React.Component {
     */
     constructor(props) {
         super(props)
-        this.state = { lstPlayer: "", lstTile: "", map: { moreHexas: "", moreRivers: null }, mapReady: true, tour: 0 }
+        this.state = { lstPlayer: "", lstTile: "", map: { moreHexas: "", moreRivers: null }, mapReady: true, tour: 0, action: "" }
         //this.addConvo = this.addConvo.bind(this)
         this.handleClickTile = handleClickTile.bind(this)
 
@@ -157,20 +157,32 @@ Author : Hugo KELHETTER
     
     */
     handleSubmit = () => {
-
-        if (this.state.mapReady) {
-            this.setState({ mapReady: false })
-            socket.emit("mapReady")
-        }
-        else {
-            socket.emit("nextTurn", () => {
-                socket.emit("getTurn", (response) => {
-                    console.log(response)
-                    this.setState({ tour: response })
+        console.log(this.state.action)
+        switch (this.state.action) {
+            case "Commencer la partie":
+                this.setState({ mapReady: false })
+                socket.emit("mapReady")
+                break;
+            case "Terminer la partie":
+                socket.emit("endGame")
+                break;
+            default:
+                socket.emit("nextTurn", () => {
+                    socket.emit("getTurn", (response) => {
+                        this.setState({ tour: response })
+                    })
                 })
-            })
         }
+        this.setState({ displayConfirmDialog: false })
     }
+    cancel = () => {
+        this.setState({ displayConfirmDialog: false })
+    }
+    handleContinue = (event) => {
+        console.log(event.currentTarget, event.currentTarget.name)
+        this.setState({ action: event.currentTarget.name, displayConfirmDialog: true })
+    }
+
     /* 
     Function : render
 
@@ -182,16 +194,24 @@ Author : Hugo KELHETTER
  
 */
     render() {
-
+        const buttonValue = this.state.mapReady ? "Commencer la partie" : `Terminer le tour ${this.state.tour}`
         return (<>
-            {this.state.mapReady && "Vous pouvez modifier la carte avant le début de la partie. "}
-            Cliquez sur une case pour apporter des modifications
+            {this.state.displayConfirmDialog && <ConfirmDialog cancel={this.cancel} confirm={this.handleSubmit} action={this.state.action} />}
+
             <div className="App">
                 {
                     < Menu >
-                        <Button variant="contained" color="primary" data-testid="submit" onClick={this.handleSubmit}>
-                            {this.state.mapReady ? "Commencer la partie" : `Terminer le tour ${this.state.tour}`}
-                        </Button>
+                        <div id="menu">
+                            <Typography> {this.state.mapReady && "Vous pouvez modifier la carte avant le début de la partie. "}</Typography>
+                            <Typography> Cliquez sur une case pour apporter des modifications</Typography>
+                            <Typography> L'identifiant de la partie est : {this.props.room}</Typography>
+                            <Button variant="contained" color="primary" data-testid="submit" name={buttonValue} value={buttonValue} onClick={this.handleContinue}>
+                                {buttonValue}
+                            </Button>
+                            <Button variant="contained" color="primary" data-testid="submit" name="Terminer la partie" onClick={this.handleContinue}>
+                                Terminer la partie
+                            </Button>
+                        </div>
                         {(this.state.lstPlayer !== "" && this.state.lstTile !== "" && this.state.selectedTile) &&
                             <div id="changeTile"><ChangeTile lstPlayer={this.state.lstPlayer} lstTile={this.state.map.moreHexas} updateMap={this.updateMap}
                                 selectedTile={this.state.selectedTile} type={this.state.selectedTile.className} id={this.state.selectedTile.id} />
