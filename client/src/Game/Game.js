@@ -252,12 +252,11 @@ class Conteneur extends React.Component {
                         {this.state.ressources !== undefined && <Ressources ressources={this.state.ressources} cost={this.state.cost} />}
                         {!this.state.fini ?
                             <>
-                                <ValidationTour key="validation" endRound={this.endRound} tour={this.state.tour} actions={this.state.actions} />
-
                                 {this.state.selectedTile === null ? "" :
                                     <ActivitySwapper key="changeActivity" changeTileActivity={this.changeTileActivity}
                                         selectedTile={this.state.selectedTile} actions={this.state.lstActions} />
                                 }
+                                <ValidationTour key="validation" endRound={this.endRound} tour={this.state.tour} actions={this.state.actions} />
                             </>
                             : " En attente des autres joueurs..."}
                     </div>
