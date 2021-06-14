@@ -325,6 +325,11 @@ io.on("connection", (socket) => {
 
     });
 
+    socket.on("inputPhase", () => {
+        io.sockets.in(socket.roomName).emit("inputPhase");
+
+    })
+
     /* 
     Called by host to end the game
     */
