@@ -5,6 +5,7 @@ const Actions = require("./Actions.js");
 const Grid = require("./Grid.js");
 const Sim = require("./Sumulator");
 const Rooms = require("./Rooms");
+const Satisfaction = require("./Satisfaction");
 
 
 const httpServer = require("http").createServer();
@@ -97,6 +98,7 @@ io.on("connection", (socket) => {
         if (parseInt(info['Role']) === 1) {
             room.socketsAgr.push(socket);
         }
+        console.log("Reconnected");
         callback();
 
     });
@@ -108,6 +110,7 @@ io.on("connection", (socket) => {
         await Actions.newGame(socket.roomName);
         await Sim.newGame(socket.roomName);
         await Rooms.newRoom(socket.roomName);
+        await Satisfaction.newGame(socket.roomName);
         console.log("Game starts in room", socket.roomName);
         io.sockets.in(socket.roomName).emit("start");
     });
@@ -216,8 +219,17 @@ io.on("connection", (socket) => {
 
     socket.on("getTurn", (callback) => {
         const cRoom = rooms[socket.roomName];
-        console.log(cRoom.turn)
+        //console.log(cRoom.turn)
         if (typeof cRoom !== "undefined") callback(cRoom.turn);
+    })
+
+    socket.on("remoteCons", (message) => {
+        console.log("RemoteConsole: " ,message);
+    })
+
+    socket.on("satisfaction", async (score) => {
+        const cRoom = rooms[socket.roomName];
+        await Satisfaction.addScore(socket.roomName, socket.playerId, cRoom.turn, score);
     })
 
     // socket.on("testImage", async (callback) => {

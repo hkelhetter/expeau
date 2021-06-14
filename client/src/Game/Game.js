@@ -36,7 +36,8 @@ class Conteneur extends React.Component {
             fini: false,
             actions: {},
             lstConvo: {},
-            displayDiary: false
+            displayDiary: false,
+            disconnected: false
         }
     }
     static propTypes = {
@@ -180,6 +181,19 @@ class Conteneur extends React.Component {
         socket.on("nextTurn", () => {
             this.setState({ fini: false })
 
+        })
+
+        socket.on("disconnect", () => {
+            this.setState( {disconnected: true} );
+        })
+
+        socket.on("connect", () => {
+            //console.log("Connected : ", this.props.name, this.props.role);
+            if(this.state.disconnected){
+                socket.emit('reconnect', this.props.room, this.props.name, () => {
+                    this.setState( {disconnected: false})
+                });
+            }   
         })
 
         if (this.props.role < 10) {

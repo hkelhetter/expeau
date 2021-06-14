@@ -20,7 +20,7 @@ export default class AnimatorLoader extends React.Component {
     */
     constructor(props) {
         super(props)
-        this.state = { lstPlayer: "", lstTile: "", map: { moreHexas: "", moreRivers: null }, mapReady: true, tour: 0, action: "" }
+        this.state = { lstPlayer: "", lstTile: "", map: { moreHexas: "", moreRivers: null }, mapReady: true, tour: 0, action: "", disconnected: false }
         //this.addConvo = this.addConvo.bind(this)
         this.handleClickTile = handleClickTile.bind(this)
 
@@ -86,6 +86,18 @@ Author : Hugo KELHETTER
  
     */
     componentDidMount() {
+        socket.on("disconnect", () => {
+            this.setState( {disconnected: true} );
+        })
+
+        socket.on("connect", () => {
+            //console.log("Connected : ", this.props.name, this.props.role);
+            if(this.state.disconnected){
+                socket.emit('reconnect', this.props.room, this.props.name, () => {
+                    this.setState( {disconnected: false})
+                });
+            }   
+        })
 
         socket.emit("getCurrentGrid", (response) => {
             const newHexas = generateHexes(response)

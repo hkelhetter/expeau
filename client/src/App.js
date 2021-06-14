@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useContext} from "react"
 import Tutoriel from './tutoriel.js'
 import Menu from './Menu/Menu.js';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
@@ -9,6 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { socket } from "./socket.js";
+import PlayerContext from './Menu/player-context';
 export default class App extends React.Component {
     constructor(props) {
         super(props)
@@ -29,6 +30,8 @@ export default class App extends React.Component {
         socket.on("endGame", () => {
             window.location = "/gameOver"
         })
+
+        
     }
     render() {
         console.log(this.state.tuto)
