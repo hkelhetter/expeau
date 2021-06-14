@@ -251,7 +251,7 @@ function Menu() {
         return (
             <div>
                 {playerCtx.role >= 2 ? <AnimatorLoader name={playerCtx.name} room={playerCtx.room} /> :
-                    playerGameStarted ? <Game name={playerCtx.name} role={playerCtx.role} /> :
+                    playerGameStarted ? <Game name={playerCtx.name} role={playerCtx.role} room={playerCtx.room} /> :
                         <div className="App-header">{PlayersWaitingLobby()}</div>}
             </div>
         )

@@ -6,6 +6,7 @@ import GameOver from './GameOver.js'
 import CreateAndJoinGame from "./tutorials/CreateAndJoinGame.js";
 import PlayAsAnimator from "./tutorials/PlayAsAnimator.js";
 import PlayAsFarmer from "./tutorials/PlayAsFarmer.js";
+import NotExistingTuto from "./tutorials/NotExistingTuto.js";
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -21,7 +22,7 @@ export default class App extends React.Component {
             case "1": return <CreateAndJoinGame />
             case "2": return <PlayAsAnimator />
             case "3": return <PlayAsFarmer />
-            default: return
+            default: return <NotExistingTuto />
         }
     }
     handleClick = (value, newValue) => {
@@ -31,6 +32,8 @@ export default class App extends React.Component {
         socket.on("endGame", () => {
             window.location = "/gameOver"
         })
+        const tuto = new URLSearchParams(window.location.search).get('tuto') || ""
+        if (tuto != "") this.setState({ tuto })
     }
     render() {
         console.log(this.state.tuto)
