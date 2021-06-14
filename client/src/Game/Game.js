@@ -242,7 +242,6 @@ class Conteneur extends React.Component {
     render() {
         return (<>
             < div className="App" >
-                <SlideField />
                 {this.state.displayDiary &&
                     <Diary data={this.state.data} closeDiary={this.closeDiary} />}
                 <Menu >

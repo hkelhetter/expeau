@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import GameOver from './GameOver.js'
 import CreateAndJoinGame from "./tutorials/CreateAndJoinGame.js";
 import PlayAsAnimator from "./tutorials/PlayAsAnimator.js";
+import PlayAsFarmer from "./tutorials/PlayAsFarmer.js";
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -19,6 +20,7 @@ export default class App extends React.Component {
             case "0": window.location = "/"; break
             case "1": return <CreateAndJoinGame />
             case "2": return <PlayAsAnimator />
+            case "3": return <PlayAsFarmer />
             default: return
         }
     }
