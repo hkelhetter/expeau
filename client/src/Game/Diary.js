@@ -5,9 +5,21 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
+import SlideField from './controls/SlideField';
+import { socket } from '../socket';
 export default class ScrollDialog extends React.Component {
-
+    constructor(props) {
+        super(props);
+        this.state = { slider: 0 }
+    }
+    handleChange = (event, value) => {
+        this.setState({ slider: value })
+    }
+    handleClose = () => {
+        socket.emit("satisfaction", this.state.slider);
+        this.setState({ slider: 0 })
+        this.props.closeDiary()
+    }
     render() {
         return (
             <div>
@@ -27,9 +39,11 @@ export default class ScrollDialog extends React.Component {
                             <img src={this.props.data} width="100%" alt="" />
                         </DialogContentText>
                     </DialogContent>
+                    <DialogTitle>Quel est votre recenti ?</DialogTitle>
+                    <SlideField value={this.state.slider} handleChange={this.handleChange} />
                     <DialogActions>
                         <Button onClick={this.props.closeDiary} color="primary">
-                            Fermer
+                            Valider
                         </Button>
                     </DialogActions>
                 </Dialog>

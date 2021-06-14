@@ -195,6 +195,9 @@ Author : Hugo KELHETTER
         this.setState({ action: event.currentTarget.name, displayConfirmDialog: true })
     }
 
+    openTuto() {
+        window.open(`${window.location.href}tutorial?tuto=2`)
+    }
     /* 
     Function : render
 
@@ -214,6 +217,9 @@ Author : Hugo KELHETTER
                 {
                     < Menu >
                         <div id="menu">
+                            <Button variant="contained" color="primary" onClick={this.openTuto}>
+                                Aide
+                            </Button>
                             <Typography> {this.state.mapReady && "Vous pouvez modifier la carte avant le début de la partie. "}</Typography>
                             <Typography> Cliquez sur une case pour apporter des modifications</Typography>
                             <Typography> L'identifiant de la partie est : {this.props.room}</Typography>

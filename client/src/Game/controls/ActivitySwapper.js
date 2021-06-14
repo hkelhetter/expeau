@@ -99,11 +99,11 @@ class ActivitySwapper extends React.Component {
                 <br />
 
                 <FormLabel>modifer toutes les cases
-                        {this.createCheckbox("checkbox")}
+                    {this.createCheckbox("checkbox")}
                 </FormLabel>
 
 
-                <Button variant="contained" onClick={this.handleSubmit} color="primary">Envoyer</Button>
+                <Button variant="contained" color="primary" onClick={this.handleSubmit}>Envoyer</Button>
             </form >
         );
     }

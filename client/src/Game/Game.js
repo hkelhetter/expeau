@@ -13,6 +13,7 @@ import SlideField from "./controls/SlideField.js"
 import Menu from "./controls/Menu.js"
 import Diary from "./Diary.js"
 import roleToString from './controls/roleToString.js'
+import { Button } from '@material-ui/core'
 class Conteneur extends React.Component {
     /* 
         Input : props={name,role}
@@ -252,15 +253,17 @@ class Conteneur extends React.Component {
     closeDiary = () => {
         this.setState({ displayDiary: false })
     }
-
+    openTuto() {
+        window.open(`${window.location.href}tutorial?tuto=3`)
+    }
     render() {
         return (<>
             < div className="App" >
-                <SlideField />
                 {this.state.displayDiary &&
                     <Diary data={this.state.data} closeDiary={this.closeDiary} />}
                 <Menu >
                     <div id="menu">
+                        <Button variant="contained" color="primary" onClick={this.openTuto}>Aide</Button>
                         <p></p>Nous sommes au tour : {this.state.tour}
                         <p>Bonjour {this.props.name}. Vous êtes {roleToString(this.props.role)}, votre identifiant est {this.state.id}</p>
                         {this.state.ressources !== undefined && <Ressources ressources={this.state.ressources} cost={this.state.cost} />}
