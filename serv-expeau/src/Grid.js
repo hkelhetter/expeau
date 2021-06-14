@@ -25,14 +25,19 @@ const getCurrentGrid = async (room) => {
     try {
         res = await connectKnex(room).select("*");
     } catch (error) {
-        
+        res = "Partie inexistant"
     }
-    return await connectKnex(room).select("*");
+    return res;
 }
 
 const getPlayersHexes = async (room, playerId) => {
     var res;
-    res = await connectKnex(room).select(Id).where({ playerId: playerId });
+    try {
+        res = await connectKnex(room).select(Id).where({ playerId: playerId });
+    } catch (error) {
+        res = "Partie inextante";
+    }
+    return res;
 }
 
 const changeOwner = async (room, newOwner, hex) => {
