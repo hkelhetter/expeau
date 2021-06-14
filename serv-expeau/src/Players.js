@@ -101,7 +101,13 @@ const getPlayersFromRoom = async (roomname) => {
 //     stats:      return array of objects {ut: (int), ub: (int)}
 //
 const getPlayersStats = async (playerId, roomName) => {
-    return await connectKnex(roomName).select("ut", "ub").where({ID : playerId});
+    var res;
+    try {
+        res = await connectKnex(roomName).select("ut", "ub").where({ID : playerId});
+    } catch (error) {
+        res = error;
+    }
+    return res;
 }
 
 const cleanUp = async (callback) => {

@@ -21,6 +21,12 @@ const createGrid = async (room) => {
 }
 
 const getCurrentGrid = async (room) => {
+    var res;
+    try {
+        res = await connectKnex(room).select("*");
+    } catch (error) {
+        
+    }
     return await connectKnex(room).select("*");
 }
 
