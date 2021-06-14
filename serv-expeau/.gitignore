@@ -17,6 +17,9 @@ lib-cov
 #Simulator executable
 Simulator/xsimul.out
 
+# Data bases
+db/*
+
 # Coverage directory used by tools like istanbul
 coverage
 
