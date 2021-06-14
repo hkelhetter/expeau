@@ -78,7 +78,7 @@ const transformToForest = async (room, hex) => {
 const genFile = async (room, tour) => {
     const actions = await connectKnex(room).where('practice', '>', 0).orWhere(function () {
         this.where({eco: 1}).orWhere({irrig: 1}).orWhere({market: 1})
-    }).select('Id', 'player', 'practice', 'irrig', 'market');
+    }).select('Id', 'player', 'practice', 'eco', 'irrig', 'market');
 
     const file = `./Simulator/Games/${room}/round${tour}.txt`;
     await new Promise(resolve => {
