@@ -11,8 +11,8 @@ Par contre plus tard je suis revenu pour créer le menu principal. Son but est d
 - [x] Joindre le lobby
 - [x] List dynamique des joueurs
 - [x] Dubut de partie
-- [ ] Design
-- [ ] Rejoindre le lobby en cours en cas deconnection
+- [x] Design
+- [x] Rejoindre le lobby en cours en cas deconnection
 
 ## Partie serveur
 Le but de serveur et de récupérer l’information des clients, la regrouper, lancer le simulateur et renvoyer au joueurs l’information mise a jour. En plus il gère donc la création des lobbies et le déroulement des parties. Le serveur sauvegarde également les logs des actions des joueurs. 
@@ -51,10 +51,10 @@ Le serveur a pas mal de responsabilités, donc je les regroupe par leurs rôles 
 **Simulateur**
 
 Le but de cette partie et de créer une interface permettant l’échange d’informations entre le serveur et un simulateur quelconque, qui respecte le format des donnes d’entrée et de sortie. L’idée est de mettre toutes les actions d’un tour dans le fichier, appeler le simulateur a la fin de tour ; le simulateur va mettre à jour la grille et les stats des joueurs dans l’autre fichier, le serveur va attendre dès qu’il finit à travailler à envoyer la nouvelle information aux joueurs.
-- [ ] Mettre les action sous un bon format dans le fichier
-- [ ] Appeler le simulateur
-- [ ] Attendre les modifications
-- [ ] Les envoyer aux joueurs
+- [x] Mettre les action sous un bon format dans le fichier
+- [x] Appeler le simulateur
+- [x] Attendre les modifications
+- [x] Les envoyer aux joueurs
 
 Il faudra trouver une bon moyen de regrouper les  fichiers des actions et de grille, vu qu'il peuvent vite creer le disordre sur le serveur.
 

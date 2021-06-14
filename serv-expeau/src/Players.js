@@ -103,11 +103,20 @@ const getPlayersFromRoom = async (roomname) => {
 const getPlayersStats = async (playerId, roomName) => {
     var res;
     try {
-        res = await connectKnex(roomName).select("ut", "ub").where({ID : playerId});
+        res = await connectKnex(roomName).select("ut", "ub").where({Id : playerId});
     } catch (error) {
         res = error;
     }
     return res;
+}
+
+const setPlayerStats = async (roomName, playerId, stats) => {
+    try {
+    await connectKnex(roomName).where({Id : playerId}).update({ut: stats.ut, ub: stats.ub});
+    }
+    catch (error) {
+
+    }
 }
 
 const cleanUp = async (callback) => {
@@ -132,6 +141,7 @@ module.exports = {
     getPlayersFromRoom,
     getPlayersStats,
     getPlayerInfo,
-    cleanUp
+    cleanUp,
+    setPlayerStats
 }
 

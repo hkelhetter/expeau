@@ -47,11 +47,6 @@ const addActions = async (roomName, playerId, actions, tour) => {
     for (const [key, value] of Object.entries(actions)) {
         await connectKnex(roomName).insert({playerId: playerId, hexID: key, actionID: value, tour: tour});
     }
-    // for(const action of actions){
-    //     await connectKnex(roomName).insert({playerId: playerId, hexID: action.hexID, actionID: action.action, tour: tour});
-    // }
-    
-    
 }
 
 // Function: return array of player's actions
@@ -81,22 +76,8 @@ const getAllActions = async () => {
 const applyActions = async (room, tour) => {
     //console.log("looking for actions in room", room);
     const actions = await connectKnex(room).select("*").where({tour: tour}).orderBy("hexID", "asc");
-    // const file = `./Simulator/Games/${room}/round${tour}.txt`;
-    // await new Promise(resolve => {
-    //         fs.writeFile(file, "Id   player   practice   infra   localMarket\n", err => {
-    //         if (err) {
-    //         console.error(err)
-    //         }
-    //         resolve();
-    //     })
-    // });
     for(const action of actions){
         await setPractice(room, action.hexID, action.actionID);
-        // fs.writeFile(file, `${action.hexID}   ${action.playerId}   ${action.actionID}   0   0   0\n`, {flag: 'a+'}, err => {
-        //     if(err){  
-        //         console.log(err);
-        //     }
-        // })
     };
 }
 
