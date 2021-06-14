@@ -14,6 +14,9 @@ const connectKnex = knex({
     }
 });
 
+const rempl = async () => {
+    await connectKnex("Grid").where({mainCLC1: 2}).update({practice: 201});
+}
 
 const createGrid = async (room) => {
     const req = 'CREATE TABLE "' + room + '" as SELECT * FROM Grid';
@@ -130,5 +133,6 @@ module.exports = {
     transformToFarm,
     transformToForest,
     genFile,
-    cleanUp
+    cleanUp,
+    rempl
 }
