@@ -161,9 +161,9 @@ io.on("connection", (socket) => {
     callback : any function
     */
     socket.on("addActions", async (actions, callback) => {
-
+        //console.log(actions);
         await Actions.addActions(socket.roomName, socket.playerId, actions, rooms[socket.roomName].turn);
-        callback();
+        //callback();
     });
 
     /* 

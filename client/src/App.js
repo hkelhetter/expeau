@@ -37,7 +37,7 @@ export default class App extends React.Component {
         if (tuto != "") this.setState({ tuto })
     }
     render() {
-        console.log(this.state.tuto)
+        console.log(this.state.actions)
         return (
 
             <Router>

@@ -82,7 +82,7 @@ const genFile = async (room, tour) => {
 
     const file = `./Simulator/Games/${room}/round${tour}.txt`;
     await new Promise(resolve => {
-            fs.writeFile(file, "Id   player   practice   infra   localMarket\n", err => {
+            fs.writeFile(file, "Id   player   practice   infraEco   infraIrri   localMarket\n", err => {
             if (err) {
             console.error(err)
             }
@@ -90,7 +90,7 @@ const genFile = async (room, tour) => {
         })
     });
     for(const action of actions){
-        fs.writeFile(file, `${action.Id}   ${action.player}   ${action.practice}   ${action.irrig}   ${action.market}\n`, {flag: 'a+'}, err => {
+        fs.writeFile(file, `${action.Id}   ${action.player}   ${action.practice}   ${action.eco}   ${action.irrig}   ${action.market}\n`, {flag: 'a+'}, err => {
             if(err){  
                 console.log(err);
             }
