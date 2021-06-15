@@ -20,7 +20,27 @@ const addScore = async (roomName, playerId, tour, score) => {
     await connectKnex(roomName).insert({playerId: playerId, tour: tour, score: score});
 }
 
+const cleanUp = async (callback) => {
+    const tables = await connectKnex.schema.raw("SELECT name FROM sqlite_master WHERE type='table';");
+    var found = 0;
+    for (var i = 0; i < tables.length; i++) {
+
+        if (tables[i].name === 'sqlite_sequence') {
+            tables.splice(i, 1);
+            found++;
+        }
+        if (found === 1) {
+            break;
+        }
+    }
+    for (table of tables) {
+        await connectKnex.schema.dropTable(table.name);
+    }
+    callback();
+}
+
 module.exports = {
     newGame,
-    addScore
+    addScore,
+    cleanUp
 }

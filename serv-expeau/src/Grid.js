@@ -14,6 +14,9 @@ const connectKnex = knex({
     }
 });
 
+const rempl = async () => {
+    await connectKnex("Grid").where({mainCLC1: 2}).update({practice: 201});
+}
 
 const createGrid = async (room) => {
     const req = 'CREATE TABLE "' + room + '" as SELECT * FROM Grid';
@@ -75,11 +78,11 @@ const transformToForest = async (room, hex) => {
 const genFile = async (room, tour) => {
     const actions = await connectKnex(room).where('practice', '>', 0).orWhere(function () {
         this.where({eco: 1}).orWhere({irrig: 1}).orWhere({market: 1})
-    }).select('Id', 'player', 'practice', 'irrig', 'market');
+    }).select('Id', 'player', 'practice', 'eco', 'irrig', 'market');
 
     const file = `./Simulator/Games/${room}/round${tour}.txt`;
     await new Promise(resolve => {
-            fs.writeFile(file, "Id   player   practice   infra   localMarket\n", err => {
+            fs.writeFile(file, "Id   player   practice   infraEco   infraIrri   localMarket\n", err => {
             if (err) {
             console.error(err)
             }
@@ -87,7 +90,7 @@ const genFile = async (room, tour) => {
         })
     });
     for(const action of actions){
-        fs.writeFile(file, `${action.Id}   ${action.player}   ${action.practice}   ${action.irrig}   ${action.market}\n`, {flag: 'a+'}, err => {
+        fs.writeFile(file, `${action.Id}   ${action.player}   ${action.practice}   ${action.eco}   ${action.irrig}   ${action.market}\n`, {flag: 'a+'}, err => {
             if(err){  
                 console.log(err);
             }
@@ -130,5 +133,6 @@ module.exports = {
     transformToFarm,
     transformToForest,
     genFile,
-    cleanUp
+    cleanUp,
+    rempl
 }
