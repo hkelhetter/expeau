@@ -204,6 +204,7 @@ class Conteneur extends React.Component {
             socket.emit("getTurn", (response) => {
                 this.setState({ tour: response })
             })
+            this.setState({actions:{}})
             socket.emit("getCurrentGrid", (response) => {
                 this.receiveNewMap(response)
             })
@@ -244,7 +245,7 @@ class Conteneur extends React.Component {
     }
 
 
-    endRound = () => { this.setState({ fini: true }) }
+    endRound = () => { this.setState({ fini: true,action:{} }) }
 
     /* 
         Function : render

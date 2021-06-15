@@ -77,6 +77,7 @@ const applyActions = async (room, tour) => {
     //console.log("looking for actions in room", room);
     const actions = await connectKnex(room).select("*").where({tour: tour}).orderBy("hexID", "asc");
     for(const action of actions){
+        //console.log("Set hex :", action.hexID, "action :", action.actionID);
         await setPractice(room, action.hexID, action.actionID);
     };
 }
