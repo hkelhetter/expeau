@@ -86,6 +86,7 @@ export default class Bassin extends Component {
             /* data can be found in h.props in handleClick */
             subId={hex.cellPlayer}
             key={hex.Id} id={hex.Id} q={hex.q} r={hex.r} s={hex.s}
+            practice={hex.practice}
         >
             {(hex.basin === bassin && hex.cellPlayer != null && hex.cellPlayer > 0) && this.displayTextTop(hex.cellPlayer)}
             {(hex.basin === bassin && mainCLC1 == 1 && hex.market == 1) && this.displayTextBottom("M")}
@@ -122,6 +123,7 @@ export default class Bassin extends Component {
             onClick={(e, h) => this.props.handleClick(h)}
             key={hex.Id} id={hex.Id} q={hex.q} r={hex.r} s={hex.s}
             mainCLC1={mainCLC1} irrig={hex.irrig} eco={hex.eco} market={hex.market}
+            practice={hex.practice}
         >
             {hex.cellPlayer != null && this.displayTileId(hex.cellPlayer)}
             {mainCLC1 == 1 && this.displayMarket(hex.market)}
@@ -195,7 +197,7 @@ export default class Bassin extends Component {
                     )}
                     {this.props.map.moreRivers.map((river, i) =>
                         <g key={i} className={river.start.outletFlowAcc == 1 ? "small" : ""} >
-                            {(this.props.role == 1 && river.end !== undefined) && river.start.basin != this.props.id ? "" :
+                            {(this.props.role == 1 && river.end !== undefined) && river.start.basin != getSubBassin(this.props.id) ? "" :
                                 <Path
                                     key={i} start={river.start} end={river.end}
                                 />}
