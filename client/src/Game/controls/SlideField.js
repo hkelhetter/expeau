@@ -20,6 +20,7 @@ export default class SlideField extends React.Component {
         
     */
     handleSubmit = () => {
+        console.log("Sat", this.state.value);
         socket.emit("satisfaction", this.state.value)
         console.log(this.state.value)
         this.props.displayDiary()
@@ -29,7 +30,7 @@ export default class SlideField extends React.Component {
         socket.on("form", () => { this.setState({ open: true }) })
     }
     handleChange = (value, newValue) => {
-        this.setState({ slider: newValue })
+        this.setState({ value: newValue });
     }
     marks = [
         {
