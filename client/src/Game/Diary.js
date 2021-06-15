@@ -39,8 +39,6 @@ export default class ScrollDialog extends React.Component {
                             <img src={this.props.data} width="100%" alt="" />
                         </DialogContentText>
                     </DialogContent>
-                    <DialogTitle>Quel est votre recenti ?</DialogTitle>
-                    <SlideField value={this.state.slider} handleChange={this.handleChange} />
                     <DialogActions>
                         <Button onClick={this.props.closeDiary} color="primary">
                             Valider

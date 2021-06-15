@@ -195,9 +195,11 @@ export default class Bassin extends Component {
                     )}
                     {this.props.map.moreRivers.map((river, i) =>
                         <g key={i} className={river.start.outletFlowAcc == 1 ? "small" : ""} >
-                            <Path
-                                key={i} start={river.start} end={river.end}
-                            />
+                            {(this.props.role == 1 && river.end !== undefined) && river.start.basin != this.props.id ? "" :
+                                <Path
+                                    key={i} start={river.start} end={river.end}
+                                />}
+
                         </g>)}
                 </Layout>
             </HexGrid >

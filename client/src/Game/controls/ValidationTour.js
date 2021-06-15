@@ -49,7 +49,7 @@ class ValidationTour extends React.Component {
         //let actions = [{ hexID: 13, action: "swapActivity", typeAction: 0 }]
         let lstActions = this.props.actions
         delete lstActions.cost
-        socket.emit("addActions", lstActions, this.props.tour)
+        socket.emit("addActions", lstActions, () => { })
         console.log(lstActions)
         this.props.endRound()
         //const csv = this.generateCSV(this.props.actions)

@@ -3,7 +3,7 @@ import React from "react"
 import { socket } from "../../socket.js"
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-
+import { Button, DialogActions, DialogContent } from '@material-ui/core';
 export default class SlideField extends React.Component {
     constructor(props) {
         super(props)
@@ -19,14 +19,18 @@ export default class SlideField extends React.Component {
         Author : Hugo KELHETTER
         
     */
-    /*     handleSubmit = () => {
-            socket.emit("satisfaction", this.state.value)
-            this.setState({ slider: 0 })
-        }
-        componentDidMount() {
-            socket.on("form", () => { this.setState({ open: true }) })
-        } */
-
+    handleSubmit = () => {
+        socket.emit("satisfaction", this.state.value)
+        console.log(this.state.value)
+        this.props.displayDiary()
+        this.setState({ slider: 0 })
+    }
+    componentDidMount() {
+        socket.on("form", () => { this.setState({ open: true }) })
+    }
+    handleChange = (value, newValue) => {
+        this.setState({ slider: newValue })
+    }
     marks = [
         {
             value: -2,
@@ -62,22 +66,39 @@ export default class SlideField extends React.Component {
         
     */
     render() {
-        console.log(this.props)
         return (
             <div id="slider">
-                <Slider
-                    //getAriaValueText={valuetext}
-                    name="slider"
-                    aria-labelledby="discrete-slider-custom"
-                    step={1}
-                    value={this.props.value}
-                    marks={this.marks}
-                    min={-2}
-                    max={2}
-                    valueLabelDisplay="off"
-                    onChange={this.props.handleChange}
-                />
+
+                <Dialog
+                    open={true}
+                    aria-labelledby="scroll-dialog-title"
+                    aria-describedby="scroll-dialog-description"
+                >
+                    <DialogTitle>Quel est votre recenti ?</DialogTitle>
+                    <DialogContent>
+                        <Slider
+                            //getAriaValueText={valuetext}
+                            name="slider"
+                            aria-labelledby="discrete-slider-custom"
+                            step={1}
+                            value={this.props.value}
+                            marks={this.marks}
+                            min={-2}
+                            max={2}
+                            valueLabelDisplay="off"
+                            onChange={this.handleChange}
+
+                        />
+                    </DialogContent>
+                    <DialogActions>
+
+                        <Button onClick={this.handleSubmit}>Valider</Button>
+
+                    </DialogActions>
+                </Dialog>
             </div>
+
         );
     }
 }
+
