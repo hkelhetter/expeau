@@ -5,7 +5,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 import createCheckbox from "./createCheckbox.js"
 import { Button } from '@material-ui/core'
 import MenuItem from '@material-ui/core/MenuItem';
-
+import { Typography } from '@material-ui/core';
 class ActivitySwapper extends React.Component {
     /*    
         Input : props={changeTileActivity,selectedTile,actions}
@@ -67,6 +67,14 @@ class ActivitySwapper extends React.Component {
             this.props.changeTileActivity(this.props.actions[this.state.selectActivity], this.state.checkbox)
         }
     }
+    actionToString(action, id) {
+        let i = 0;
+        while (action[i].Id != id) {
+            console.log(action[i], id)
+            i++
+        }
+        return action[i].Pratique
+    }
     /* 
         Function : render
     
@@ -84,6 +92,7 @@ class ActivitySwapper extends React.Component {
                     {this.state.checkbox ? ' le sous bassin'
                         : ` la case ${this.props.selectedTile.subId}`}
                 </FormLabel >
+                <Typography>Activité en cours : {this.actionToString(this.props.actions, this.props.selectedTile.practice)}</Typography>
                 <Select name="selectActivity" onChange={this.handleChange} value={this.state.selectActivity}>
                     {/* display all possible action for selected tile */}
                     {this.props.actions.map((action, i) =>

@@ -8,12 +8,11 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import roleToString from '../Game/controls/roleToString.js';
 import { socket } from '../socket.js';
 import Typography from '@material-ui/core/Typography';
 import AnimatorLoader from '../Game/animator/AnimatorLoader.js'
 import PlayerContext from './player-context';
-
+import { setPlayerClass } from '../Game/map/MapUtil.js';
 import MenuContext from './menu-context';
 
 import Game from '../Game/Game.js'
@@ -51,7 +50,6 @@ function Menu() {
     const [warningMessage, setWarningMessage] = useState("");
     socket.on("playersUpdate", (resp) => {
         setPlayerList(resp);
-        console.log(resp)
     });
 
     const [playerGameStarted, setPlayerGameStarted] = useState(false);
@@ -137,7 +135,6 @@ function Menu() {
             socket.emit("reconnect", playerCtx.room, playerCtx.name, () => {
                 MenuCtx.updateLocation("started")
                 socket.emit("getTurn", (response) => {
-                    console.log(response)
                     if (response > -1) setPlayerGameStarted(true)
 
                 })
@@ -199,6 +196,11 @@ function Menu() {
         )
     }
 
+    function roleToString(role) {
+        if (role === 1) return "agriculteur"
+        if (role === 3) return "animateur"
+        return ""
+    }
     function LobbyCreated() {
         return (
             <div>
@@ -210,7 +212,8 @@ function Menu() {
                         <ListItem
                             key={item.Id}
                         >
-                            <ListItemText primary={item.Name} />
+                            {console.log(item)}
+                            <ListItemText primary={`${item.Name} ${roleToString(item.Role)} ${item.Id} ${setPlayerClass(item.Id)} bassin`} />
                         </ListItem>
                     ))}
                 </List>
@@ -239,6 +242,7 @@ function Menu() {
                         <ListItem
                             key={item.Id}
                         >
+                            {console.log(item)}
                             <ListItemText primary={item.Name} />
                         </ListItem>
                     ))}
