@@ -204,7 +204,7 @@ class Conteneur extends React.Component {
             socket.emit("getTurn", (response) => {
                 this.setState({ tour: response })
             })
-            this.setState({actions:{}})
+            this.setState({ actions: {} })
             socket.emit("getCurrentGrid", (response) => {
                 this.receiveNewMap(response)
             })
@@ -214,7 +214,7 @@ class Conteneur extends React.Component {
         /*  socket.emit("createRoom", "player1", 0, (responseCreateRoom) => {
              this.setState({ room: responseCreateRoom })
              socket.emit("startGame")*/
-        socket.on("mapReady", () => {
+        socket.on("inputPhase", () => {
             console.log("aaaaaaaa")
             socket.emit("getCurrentGrid", (response) => {
                 this.receiveNewMap(response)
@@ -245,7 +245,7 @@ class Conteneur extends React.Component {
     }
 
 
-    endRound = () => { this.setState({ fini: true,action:{} }) }
+    endRound = () => { this.setState({ fini: true, action: {} }) }
 
     /* 
         Function : render

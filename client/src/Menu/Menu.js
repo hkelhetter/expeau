@@ -12,7 +12,7 @@ import { socket } from '../socket.js';
 import Typography from '@material-ui/core/Typography';
 import AnimatorLoader from '../Game/animator/AnimatorLoader.js'
 import PlayerContext from './player-context';
-import { setPlayerClass } from '../Game/map/MapUtil.js';
+import { setPlayerClass, getSubBassin } from '../Game/map/MapUtil.js';
 import MenuContext from './menu-context';
 
 import Game from '../Game/Game.js'
@@ -201,7 +201,12 @@ function Menu() {
         if (role === 3) return "animateur"
         return ""
     }
+    function displayNumBassin(id) {
+        if (id === 0 || id > 9) return ""
+        return `${getSubBassin(id)} bassin`
+    }
     function LobbyCreated() {
+        let bassin = ""
         return (
             <div>
                 <Typography variant="h3">
@@ -212,8 +217,7 @@ function Menu() {
                         <ListItem
                             key={item.Id}
                         >
-                            {console.log(item)}
-                            <ListItemText primary={`${item.Name} ${roleToString(item.Role)} ${item.Id} ${setPlayerClass(item.Id)} bassin`} />
+                            <ListItemText primary={`${item.Name} ${roleToString(item.Role)} ${item.Id} ${displayNumBassin(item.Id)}`} />
                         </ListItem>
                     ))}
                 </List>

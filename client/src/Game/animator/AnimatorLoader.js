@@ -21,7 +21,7 @@ export default class AnimatorLoader extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            lstPlayer: "", lstTile: "", map: { moreHexas: "", moreRivers: null }, mapReady: true, tour: 0, action: "",
+            lstPlayer: "", lstTile: "", map: { moreHexas: "", moreRivers: null }, mapReady: true, tour: -1, action: "",
             disconnected: false, farmersPlaying: false
 
         }
@@ -187,10 +187,21 @@ Author : Hugo KELHETTER
                         })
                 } */
         const action = this.actionToString()
-        if (action === "Finir les modifications") socket.emit("mapReady")
+        if (action === "Finir les modifications") {
+            if (this.state.tour == -1) {
+                socket.emit("mapReady")
+                console.log("mapReady")
+                this.setState({ tour: 0 })
+            }
+            else {
+                socket.emit("inputPhase")
+                console.log("inputphase")
+            }
+        }
         else socket.emit("nextTurn", () => {
-            console.log("a")
             socket.emit("getTurn", (response) => {
+                console.log(response)
+
                 this.setState({ tour: response })
             })
         })
@@ -227,6 +238,7 @@ Author : Hugo KELHETTER
  
 */
     render() {
+        console.log(this.state.tour)
         const buttonValue = this.actionToString()
         //const buttonValue = this.state.mapReady ? "Commencer la partie" : `Terminer le tour ${this.state.tour}`
         return (<>
@@ -250,7 +262,7 @@ Author : Hugo KELHETTER
                                 Terminer la partie
                             </Button>
                         </div>
-                        {(this.state.lstPlayer !== "" && this.state.lstTile !== "" && this.state.selectedTile && this.state.farmersPlaying) &&
+                        {(this.state.lstPlayer !== "" && this.state.lstTile !== "" && this.state.selectedTile && !this.state.farmersPlaying) &&
                             <div id="changeTile">
                                 <ChangeTile lstPlayer={this.state.lstPlayer} lstTile={this.state.map.moreHexas} updateMap={this.updateMap}
                                     selectedTile={this.state.selectedTile} type={this.state.selectedTile.className} id={this.state.selectedTile.id} />
