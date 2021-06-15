@@ -14,15 +14,19 @@ const connectKnex = knex({
     }
 });
 
-const rempl = async () => {
-    await connectKnex("Grid").where({mainCLC1: 2}).update({practice: 201});
-}
 
+/* 
+Copy the initial grid to be used by new lobby
+*/
 const createGrid = async (room) => {
     const req = 'CREATE TABLE "' + room + '" as SELECT * FROM Grid';
     await connectKnex.schema.raw(req);
 }
 
+/* 
+Gets current grid of the lobby.
+For more information on returned object check Grid data table structure
+*/
 const getCurrentGrid = async (room) => {
     var res;
     try {
@@ -33,6 +37,9 @@ const getCurrentGrid = async (room) => {
     return res;
 }
 
+/* 
+Gets id's of the player's tiles.
+*/
 const getPlayersHexes = async (room, playerId) => {
     var res;
     try {
@@ -43,20 +50,33 @@ const getPlayersHexes = async (room, playerId) => {
     return res;
 }
 
+/* 
+Assign new owner to the selected tile
+*/
 const changeOwner = async (room, newOwner, hex) => {
     var pHexId = await connectKnex(room).where({ player: newOwner }).max('cellPlayer');
     pHexId = parseInt(pHexId[0]["max(`cellPlayer`)"]) + 1;
     await connectKnex(room).where({ Id: hex }).update({ player: newOwner, cellPlayer: pHexId });
 }
 
+
+/* 
+Sets an action for the selected tile
+*/
 const setPractice = async (room, hex, practice) => {
     await connectKnex(room).where({ Id: hex }).update({ practice: practice });
 }
 
+/* 
+Sets the presence of eco or irrig infrastructure for selected tile
+*/
 const addInfra = async (room, hex, eco, irrig) => {
     await connectKnex(room).where({ Id: hex }).update({ eco: eco, irrig: irrig });
 }
 
+/* 
+Sets the presence of a market for selected tile
+*/
 const setMarket = async (room, hex, market) => {
     await connectKnex(room).where({ Id: hex }).update({ market: market });
 }
@@ -75,6 +95,9 @@ const transformToForest = async (room, hex) => {
     await connectKnex(room).where({Id: hex}).update({ player: 0, cellPlayer: 0, mainCLC1: 3});
 }
 
+/* 
+Generates roundX.txt file with current round actions that is used by the simulator later
+*/
 const genFile = async (room, tour) => {
     const actions = await connectKnex(room).where('practice', '>', 0).orWhere(function () {
         this.where({eco: 1}).orWhere({irrig: 1}).orWhere({market: 1})
@@ -98,6 +121,10 @@ const genFile = async (room, tour) => {
     };
 }
 
+/* 
+Function is used by the cleanUp util
+Deletes all the tables generated during gaming sessions
+*/
 const cleanUp = async (callback) => {
     const tables = await connectKnex.schema.raw("SELECT name FROM sqlite_master WHERE type='table';");
     var found = 0;
@@ -133,6 +160,5 @@ module.exports = {
     transformToFarm,
     transformToForest,
     genFile,
-    cleanUp,
-    rempl
+    cleanUp
 }
