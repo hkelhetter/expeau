@@ -186,7 +186,7 @@ polboard(:,:)=0;
 iut(:,:)=0; iub(:,:)=0;
 yieldplayer(:,:)=0
 ! Simulator
-DO r=0,nbrounds-1				    !loop on the rounds
+DO r=0,nbrounds				    !loop on the rounds
 		
 	DO y=3*r+1,3*(r+1)				!loop on the years
 		WRITE(*,*)'==============================================='
