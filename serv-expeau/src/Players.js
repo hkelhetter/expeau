@@ -13,6 +13,11 @@ const connectKnex = knex({
     }
 });
 
+
+/* 
+Function is called during the start of a new game
+Creates table to stock information about the players that is needed to reconnect them in case of a crash
+*/
 const newGame = async (roomName) => {
     await connectKnex.schema.createTable(roomName, table => {
         table.integer('Id');
@@ -55,6 +60,10 @@ const addPlayer = async (name, role, roomName) => {
     return playerId;
 }
 
+/* 
+Gets all available information for the player requested
+For more information about returned object check Players data base structure
+*/
 const getPlayerInfo = async (roomName, playerName) => {
     const playerId = await connectKnex(roomName).where({Name: playerName}).select(`*`);
     return playerId[0];
@@ -62,10 +71,6 @@ const getPlayerInfo = async (roomName, playerName) => {
 
 // Function: remove existing player
 // 
-//  Inputs
-//     
-//     
-//
 const removePlayer = (playerId, roomName) => {
     try {
         connectKnex(roomName).where({ Id : playerId }).del();
@@ -110,6 +115,9 @@ const getPlayersStats = async (playerId, roomName) => {
     return res;
 }
 
+/* 
+Sets player's ut and ub
+*/
 const setPlayerStats = async (roomName, playerId, stats) => {
     try {
     await connectKnex(roomName).where({Id : playerId}).update({ut: stats.ut, ub: stats.ub});
@@ -119,6 +127,10 @@ const setPlayerStats = async (roomName, playerId, stats) => {
     }
 }
 
+/* 
+Function is used by the cleanUp util
+Deletes all the tables generated during gaming sessions
+*/
 const cleanUp = async (callback) => {
     const tables = await connectKnex.schema.raw("SELECT name FROM sqlite_master WHERE type='table';");
     for(var i = 0; i < tables.length; i++){

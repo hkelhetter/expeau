@@ -66,3 +66,53 @@ Par contre, en cours de développement j’ai décidé d’utiliser une pratique
 J’ai décidé d’utiliser le Framework Mocha qui supporte node.js et a une documentation riche sur internet. En plus, j’ai eu déjà un peu d’expérience avec ce Framework.
 
 
+## Base de donnes
+Les bases de données sont stockées dans la répertoire serv-expeau/db/
+
+Ils sont stockés en format .sqlite3 . Le logiciel **DB Browser for SQLite** permet d’ouvrir et de modifier ces bdd.
+
+Chaque fichier bdd peut contenir plusieurs tables.
+Les bases suivants sont présents: 
+
+### grid
+stock la grille initiale dans table **Grid**. Une grille courant pour chaque partie est stockée dans table **code partie**. Cette dernière table est utilisée pour produire les fichiers roundX.txt pour le simulateur.
+
+### actions
+stock les cartes d’actions dans table **ActionCards**. Les actions des joueurs sont stockés dans la table **code partie**. Les données de cette table sont appliquées à la fin de tour à Grille courant de partie pour modifier les actions en place.
+
+### players
+stock l’information sur les joueurs pour une partie en cours dans table **code partie**
+
+
+### rooms
+stock les information nécessaire pour la reconnection a la partie en cas de crash de serveur. Ces données se trouve dans la table **Rooms**
+
+### satisfaction
+stock la satisfaction des joueurs pour chaque partie dans la table **code partie**
+
+
+### Modification des scénario à partir des fichiers csv
+
+Exemple de modification pour les cartes d’actions:
+
+1. Ouvrir la bdd des actions avec sqlitebrowser
+
+2. Comparer le format des données dans le fichier csv et dans l’ancien table : noms de colonnes, leur ordre, etc
+
+3. Importer le fichier csv en tant qu’une table
+![Screenshot](Screens/1.png)
+
+4. Choisir le bon séparateur et cocher **Columns name in the first line**
+![Screenshot](Screens/2.png)
+
+5. Supprimer ou renommer l’ancien table **ActionCards**
+![Screenshot](Screens/3.png)
+
+6. Renommer la nouvel table généré à partir de csv en **ActionCards** (Choisir la table et appuyer sur la bouton **Modify table**)
+
+
+
+
+
+
+

@@ -68,11 +68,19 @@ const getPlayerActions = async (roomName, playerId, tour) => {
     return resp;
 }
 
+/* 
+Get all action cards from action cards table
+For more information on returned object check "ActionCards" data table structure
+ */
 const getAllActions = async () => {
     const resp = await connectKnex('ActionCards').select().where('Id', '>', 100);
     return resp;
 }
 
+/* 
+Applies actions of all the players in the room for one round.
+So, they are applied to the current grid
+*/
 const applyActions = async (room, tour) => {
     //console.log("looking for actions in room", room);
     const actions = await connectKnex(room).select("*").where({tour: tour}).orderBy("hexID", "asc");
@@ -82,6 +90,11 @@ const applyActions = async (room, tour) => {
     };
 }
 
+
+/* 
+Function is used by the cleanUp util
+Deletes all the tables generated during gaming sessions
+*/
 const cleanUp = async (callback) => {
     const tables = await connectKnex.schema.raw("SELECT name FROM sqlite_master WHERE type='table';");
     var found = 0;
