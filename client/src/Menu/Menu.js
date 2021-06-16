@@ -66,6 +66,8 @@ function Menu() {
             setWarningMessage("Veuillez remplir les champs")
         }
         else {
+            console.log(playerCtx.role)
+
             const room = await new Promise(resolve => {
                 socket.emit("createRoom", playerCtx.name, playerCtx.role, (response) => {
                     resolve(response);
@@ -145,10 +147,11 @@ function Menu() {
 
 
     function CreateForm() {
+        playerCtx.updateRole(3)
         return (
             <div>
                 <TextField key="name" label="Pseudo" value={playerCtx.name} onChange={handleName}></TextField>
-                <FormControl>
+                {/*                 <FormControl>
                     <InputLabel id="role-label">Role</InputLabel>
                     <Select
                         labelId="role-label"
@@ -160,7 +163,7 @@ function Menu() {
                         <MenuItem value={2}>Elu</MenuItem>
                         <MenuItem value={3}>Animateur</MenuItem>
                     </Select>
-                </FormControl>
+                </FormControl> */}
                 <Button variant="contained" color="primary" onClick={handleCreate}>Créer</Button>
                 {warningText(warningMessage)}
                 <Button variant="contained" color="primary" style={marg} onClick={() => { MenuCtx.updateLocation("menu") }}>Menu</Button>
@@ -184,7 +187,6 @@ function Menu() {
                     >
                         <MenuItem key={1} value={1}>Agriculteur</MenuItem>
                         <MenuItem key={2} value={2}>Elu</MenuItem>
-                        <MenuItem key={3} value={3}>Responsable</MenuItem>
                     </Select>
                 </FormControl>
                 <Button variant="contained" color="primary" onClick={handleJoin}>Rejoindre la partie</Button>
@@ -299,7 +301,7 @@ function Menu() {
 
 
     function MainMenu() {
-
+        playerCtx.updateRole("")
         return (
             <div>
                 <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("create") }}>Creer la partie</Button>
