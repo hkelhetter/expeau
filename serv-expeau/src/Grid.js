@@ -99,6 +99,9 @@ const transformToForest = async (room, hex) => {
 Generates roundX.txt file with current round actions that is used by the simulator later
 */
 const genFile = async (room, tour) => {
+    if(tour === -1){
+        tour = 0;
+    }
     const actions = await connectKnex(room).where('practice', '>', 0).orWhere(function () {
         this.where({eco: 1}).orWhere({irrig: 1}).orWhere({market: 1})
     }).select('Id', 'player', 'practice', 'eco', 'irrig', 'market');

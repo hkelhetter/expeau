@@ -12,6 +12,9 @@ const httpServer = require("http").createServer();
 const path = require('path');
 const app = express();
 
+console.log("Starting simulator compilation...")
+Sim.compile(() => console.log("Simulator compiled successfully"));
+
 //Path to the client build
 const root = path.join(__dirname, "../../client")
 console.log(root)

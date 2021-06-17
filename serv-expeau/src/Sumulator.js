@@ -131,6 +131,30 @@ async function getPlayerGraph(room, playerId){
     return res;
 }
 
+async function compile(callback){
+    const comm = "gfortran ./Simulator/Orig/xsimul.f90 -o ./Simulator/xsimul.out";
+    await new Promise((resolve) => {
+        exec(comm, (error, stdout, stderr) => {
+            if(error){
+                console.log("Simulator compilation error:");
+                console.log(error);
+                process.exit(1);
+            }
+            if(stderr){
+                console.log("Simulator compilation error:");
+                console.log(stderr);
+                process.exit(1);
+            }
+            if(stdout){
+                console.log("Simulator compilation...")
+                console.log(stdout);
+            }
+            resolve()
+        });
+    });
+    callback();
+}
+
 
 /* 
 Function is used by the cleanUp util
@@ -158,4 +182,5 @@ module.exports = {
     getLastPlayerStats,
     getPlayerGraph,
     cleanUp,
+    compile
 }
