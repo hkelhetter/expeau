@@ -72,27 +72,28 @@ export default class Bassin extends Component {
         Author : Hugo KELHETTER
     */
     createHexeFarmer(hex, i, player) {
-
-        const bassin = getSubBassin(player)
-        let classname = "";
-        const mainCLC1 = hex.mainCLC1.toString()
-        classname += hex.basin === bassin ? `${hex.modified} ${setBaseClasses(hex)} 
+        if (hex.basin === getSubBassin(player)) {
+            const bassin = getSubBassin(player)
+            let classname = "";
+            const mainCLC1 = hex.mainCLC1.toString()
+            classname += hex.basin === bassin ? `${hex.modified} ${setBaseClasses(hex)} 
         ${setPlayerClass(hex.player)} ${hex.player % 3} ${hex.Id}` : "notInBassin"
-        if (hex.Id == this.props.selectedId) classname += " selected"
-        return <Hexagon
-            onClick={(e, h) => hex.player == player && this.props.handleClick(h)}
-            mainCLC1={mainCLC1} irrig={hex.irrig} eco={hex.eco} market={hex.market}
-            className={classname}
-            /* data can be found in h.props in handleClick */
-            subId={hex.cellPlayer}
-            key={hex.Id} id={hex.Id} q={hex.q} r={hex.r} s={hex.s}
-            practice={hex.practice}
-        >
-            {(hex.basin === bassin && hex.cellPlayer != null && hex.cellPlayer > 0) && this.displayTextTop(hex.cellPlayer)}
-            {(hex.basin === bassin && mainCLC1 == 1 && hex.market == 1) && this.displayTextBottom("M")}
-            {(hex.basin === bassin && hex.irrig == 1) && this.displayTextBottom("💧")}
+            if (hex.Id == this.props.selectedId) classname += " selected"
+            return <Hexagon
+                onClick={(e, h) => hex.player == player && this.props.handleClick(h)}
+                mainCLC1={mainCLC1} irrig={hex.irrig} eco={hex.eco} market={hex.market}
+                className={classname}
+                /* data can be found in h.props in handleClick */
+                subId={hex.cellPlayer}
+                key={hex.Id} id={hex.Id} q={hex.q} r={hex.r} s={hex.s}
+                practice={hex.practice}
+            >
+                {(hex.basin === bassin && hex.cellPlayer != null && hex.cellPlayer > 0) && this.displayTextTop(hex.cellPlayer)}
+                {(hex.basin === bassin && mainCLC1 == 1 && hex.market == 1) && this.displayTextBottom("M")}
+                {(hex.basin === bassin && hex.irrig == 1) && this.displayTextBottom("💧")}
 
-        </Hexagon>
+            </Hexagon>
+        }
     }
     /* same thing as createHexeFarm but for elected players */
     createHexeElected(hex, i) {

@@ -7,7 +7,7 @@ import { Button, DialogActions, DialogContent } from '@material-ui/core';
 export default class SlideField extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { slider: 0 }
+        this.state = { value: 0 }
     }
     /* 
         Function : handleSubmit
@@ -75,14 +75,14 @@ export default class SlideField extends React.Component {
                     aria-labelledby="scroll-dialog-title"
                     aria-describedby="scroll-dialog-description"
                 >
-                    <DialogTitle>Quel est votre recenti ?</DialogTitle>
+                    <DialogTitle>Quel est votre recenti {this.props.name} ?</DialogTitle>
                     <DialogContent>
                         <Slider
                             //getAriaValueText={valuetext}
                             name="slider"
                             aria-labelledby="discrete-slider-custom"
                             step={1}
-                            value={this.props.value}
+                            value={this.state.value}
                             marks={this.marks}
                             min={-2}
                             max={2}

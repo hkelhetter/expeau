@@ -268,6 +268,8 @@ class Conteneur extends React.Component {
     render() {
         console.log(this.state.inputPhase)
         return (<>
+            {this.state.displaySlider && <SlideField name={this.props.name} displayDiary={this.displayDiary} />}
+
             < div className="App" >
                 {this.state.displayDiary &&
                     <Diary nom={this.props.name} data={this.state.data} closeDiary={this.closeDiary} />}
@@ -289,7 +291,6 @@ class Conteneur extends React.Component {
                                 : " En attente des autres joueurs..."}
                         </div> : "L'animateur est en train de modifier la carte"}
                 </Menu>
-                {this.state.displaySlider && <SlideField nom={this.props.name} displayDiary={this.displayDiary} />}
                 {Object.keys(this.state.lstConvo).length > 0 ? <Chat lstConvo={this.state.lstConvo} /> : ""}
                 {
                     this.state.map.moreHexas !== "" && <Bassin handleClick={this.handleClickTile}
