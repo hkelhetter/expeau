@@ -205,7 +205,7 @@ function Menu() {
     }
     function displayNumBassin(id) {
         if (id === 0 || id > 9) return ""
-        return `${getSubBassin(id)} bassin`
+        return `bassin ${getSubBassin(id)} `
     }
     function LobbyCreated() {
         let bassin = ""
