@@ -122,7 +122,7 @@ export function generateRivers(moreHexas) {
     Author : Hugo KELHETTER
 */
 export function setPlayerClass(player) {
-    if (player === 0) return "" //attributé à aucun joueur
+    if (player === 0 || player > 9) return "" //attributé à aucun joueur
     switch (player % 3) {
         case 0: return "troisieme" //attribué aux joueurs 3, 6 ou 9
         case 1: return "premier" //attribué aux joueurs 1, 4 ou en 7

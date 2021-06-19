@@ -8,12 +8,11 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import roleToString from '../Game/controls/roleToString.js';
 import { socket } from '../socket.js';
 import Typography from '@material-ui/core/Typography';
 import AnimatorLoader from '../Game/animator/AnimatorLoader.js'
 import PlayerContext from './player-context';
-
+import { setPlayerClass, getSubBassin } from '../Game/map/MapUtil.js';
 import MenuContext from './menu-context';
 
 import Game from '../Game/Game.js'
@@ -51,7 +50,6 @@ function Menu() {
     const [warningMessage, setWarningMessage] = useState("");
     socket.on("playersUpdate", (resp) => {
         setPlayerList(resp);
-        console.log(resp)
     });
 
     const [playerGameStarted, setPlayerGameStarted] = useState(false);
@@ -68,6 +66,8 @@ function Menu() {
             setWarningMessage("Veuillez remplir les champs")
         }
         else {
+            console.log(playerCtx.role)
+
             const room = await new Promise(resolve => {
                 socket.emit("createRoom", playerCtx.name, playerCtx.role, (response) => {
                     resolve(response);
@@ -137,7 +137,6 @@ function Menu() {
             socket.emit("reconnect", playerCtx.room, playerCtx.name, () => {
                 MenuCtx.updateLocation("started")
                 socket.emit("getTurn", (response) => {
-                    console.log(response)
                     if (response > -1) setPlayerGameStarted(true)
 
                 })
@@ -148,10 +147,11 @@ function Menu() {
 
 
     function CreateForm() {
+        playerCtx.updateRole(3)
         return (
             <div>
                 <TextField key="name" label="Pseudo" value={playerCtx.name} onChange={handleName}></TextField>
-                <FormControl>
+                {/*                 <FormControl>
                     <InputLabel id="role-label">Role</InputLabel>
                     <Select
                         labelId="role-label"
@@ -163,7 +163,7 @@ function Menu() {
                         <MenuItem value={2}>Elu</MenuItem>
                         <MenuItem value={3}>Animateur</MenuItem>
                     </Select>
-                </FormControl>
+                </FormControl> */}
                 <Button variant="contained" color="primary" onClick={handleCreate}>Créer</Button>
                 {warningText(warningMessage)}
                 <Button variant="contained" color="primary" style={marg} onClick={() => { MenuCtx.updateLocation("menu") }}>Menu</Button>
@@ -187,7 +187,6 @@ function Menu() {
                     >
                         <MenuItem key={1} value={1}>Agriculteur</MenuItem>
                         <MenuItem key={2} value={2}>Elu</MenuItem>
-                        <MenuItem key={3} value={3}>Responsable</MenuItem>
                     </Select>
                 </FormControl>
                 <Button variant="contained" color="primary" onClick={handleJoin}>Rejoindre la partie</Button>
@@ -199,7 +198,17 @@ function Menu() {
         )
     }
 
+    function roleToString(role) {
+        if (role === 1) return "agriculteur"
+        if (role === 3) return "animateur"
+        return ""
+    }
+    function displayNumBassin(id) {
+        if (id === 0 || id > 9) return ""
+        return `bassin ${getSubBassin(id)} `
+    }
     function LobbyCreated() {
+        let bassin = ""
         return (
             <div>
                 <Typography variant="h3">
@@ -210,7 +219,7 @@ function Menu() {
                         <ListItem
                             key={item.Id}
                         >
-                            <ListItemText primary={item.Name} />
+                            <ListItemText primary={`${item.Name} ${roleToString(item.Role)} ${item.Id} ${displayNumBassin(item.Id)}`} />
                         </ListItem>
                     ))}
                 </List>
@@ -239,6 +248,7 @@ function Menu() {
                         <ListItem
                             key={item.Id}
                         >
+                            {console.log(item)}
                             <ListItemText primary={item.Name} />
                         </ListItem>
                     ))}
@@ -251,7 +261,7 @@ function Menu() {
         return (
             <div>
                 {playerCtx.role >= 2 ? <AnimatorLoader name={playerCtx.name} room={playerCtx.room} /> :
-                    playerGameStarted ? <Game name={playerCtx.name} role={playerCtx.role} /> :
+                    playerGameStarted ? <Game name={playerCtx.name} role={playerCtx.role} room={playerCtx.room} /> :
                         <div className="App-header">{PlayersWaitingLobby()}</div>}
             </div>
         )
@@ -291,7 +301,7 @@ function Menu() {
 
 
     function MainMenu() {
-
+        playerCtx.updateRole("")
         return (
             <div>
                 <Button variant="contained" color="primary" onClick={() => { MenuCtx.updateLocation("create") }}>Creer la partie</Button>

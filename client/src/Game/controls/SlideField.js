@@ -3,11 +3,11 @@ import React from "react"
 import { socket } from "../../socket.js"
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-
+import { Button, DialogActions, DialogContent } from '@material-ui/core';
 export default class SlideField extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { slider: 0, open: false }
+        this.state = { value: 0 }
     }
     /* 
         Function : handleSubmit
@@ -20,11 +20,17 @@ export default class SlideField extends React.Component {
         
     */
     handleSubmit = () => {
+        console.log("Sat", this.state.value);
         socket.emit("satisfaction", this.state.value)
-        this.setState({ open: false, slider: 0 })
+        console.log(this.state.value)
+        this.props.displayDiary()
+        this.setState({ slider: 0 })
     }
     componentDidMount() {
         socket.on("form", () => { this.setState({ open: true }) })
+    }
+    handleChange = (value, newValue) => {
+        this.setState({ value: newValue });
     }
     marks = [
         {
@@ -49,7 +55,7 @@ export default class SlideField extends React.Component {
         }
     ];
     /* updates the slider's value on change */
-    handleChange = (event, value) => { this.setState({ slider: value }) }
+    //handleChange = (event, value) => { this.setState({ slider: value }) }
     /* 
         Function : render
 
@@ -62,28 +68,38 @@ export default class SlideField extends React.Component {
     */
     render() {
         return (
-            <Dialog open={this.state.open} disableBackdropClick
-                disableEscapeKeyDown fullWidth={true}>
-                <DialogTitle>Votre ressenti</DialogTitle>
-                <div id="slider">
-                    <Slider
-                        //getAriaValueText={valuetext}
-                        name="slider"
-                        aria-labelledby="discrete-slider-custom"
-                        step={1}
-                        value={this.state.slider}
-                        marks={this.marks}
-                        min={-2}
-                        max={2}
-                        valueLabelDisplay="off"
-                        onChange={this.handleChange}
-                    />
-                </div>
-                <button type="submit" class="btn btn-primary" data-testid="submit"
-                    onClick={this.handleSubmit}>Valider
-                </button>
+            <div id="slider">
 
-            </Dialog>
+                <Dialog
+                    open={true}
+                    aria-labelledby="scroll-dialog-title"
+                    aria-describedby="scroll-dialog-description"
+                >
+                    <DialogTitle>Quel est votre recenti {this.props.name} ?</DialogTitle>
+                    <DialogContent>
+                        <Slider
+                            //getAriaValueText={valuetext}
+                            name="slider"
+                            aria-labelledby="discrete-slider-custom"
+                            step={1}
+                            value={this.state.value}
+                            marks={this.marks}
+                            min={-2}
+                            max={2}
+                            valueLabelDisplay="off"
+                            onChange={this.handleChange}
+
+                        />
+                    </DialogContent>
+                    <DialogActions>
+
+                        <Button onClick={this.handleSubmit}>Valider</Button>
+
+                    </DialogActions>
+                </Dialog>
+            </div>
+
         );
     }
 }
+

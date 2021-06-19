@@ -9,7 +9,6 @@ export default class ConfirmDialog extends React.Component {
         super(props)
     }
 
-    handleConfirmer
     render() {
         return (
             <Dialog

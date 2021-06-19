@@ -13,6 +13,7 @@ import SlideField from "./controls/SlideField.js"
 import Menu from "./controls/Menu.js"
 import Diary from "./Diary.js"
 import roleToString from './controls/roleToString.js'
+import { Button } from '@material-ui/core'
 class Conteneur extends React.Component {
     /* 
         Input : props={name,role}
@@ -36,7 +37,10 @@ class Conteneur extends React.Component {
             fini: false,
             actions: {},
             lstConvo: {},
-            displayDiary: false
+            displayDiary: false,
+            disconnected: false,
+            displaySlider: false,
+            inputPhase: true
         }
     }
     static propTypes = {
@@ -123,7 +127,6 @@ class Conteneur extends React.Component {
             const newAction = {}
             const newCost = {}
             const player = this.state.id//const player = hexagons[this.state.selectedTile.id].player
-            console.log(player)
             Object.values(hexagons).forEach(hex => {
                 if (hex.player == player) {
                     hex.modified = true
@@ -174,12 +177,20 @@ class Conteneur extends React.Component {
     */
     componentDidMount() {
         socket.emit("getTurn", (response) => {
-            console.log(response)
             this.setState({ tour: response })
         })
-        socket.on("nextTurn", () => {
-            this.setState({ fini: false })
 
+
+        socket.on("disconnect", () => {
+            this.setState({ disconnected: true });
+        })
+
+        socket.on("connect", () => {
+            if (this.state.disconnected) {
+                socket.emit('reconnect', this.props.room, this.props.name, () => {
+                    this.setState({ disconnected: false })
+                });
+            }
         })
 
         if (this.props.role < 10) {
@@ -189,11 +200,11 @@ class Conteneur extends React.Component {
         }
 
         socket.on("results", (response) => {
-            this.setState({ ressources: response.stats, data: response.graph, fini: false, displayDiary: true })
+            this.setState({ ressources: response.stats, data: response.graph, fini: false, displaySlider: true, inputPhase: false })
             socket.emit("getTurn", (response) => {
-                console.log(response)
                 this.setState({ tour: response })
             })
+            this.setState({ actions: {} })
             socket.emit("getCurrentGrid", (response) => {
                 this.receiveNewMap(response)
             })
@@ -203,7 +214,17 @@ class Conteneur extends React.Component {
         /*  socket.emit("createRoom", "player1", 0, (responseCreateRoom) => {
              this.setState({ room: responseCreateRoom })
              socket.emit("startGame")*/
+        socket.on("inputPhase", () => {
+            console.log("aaaaaaaa")
+            socket.emit("getCurrentGrid", (response) => {
+                this.receiveNewMap(response)
+    /*             const [newHexas, lstTile] = generateHexes(response)
+                const newRivers = generateRivers(newHexas)
+                this.setState({ map: { ...this.state.map, moreHexas: newHexas, moreRivers: newRivers }, lstTile })
+     */        })
+            this.setState({ inputPhase: true })
 
+        })
         socket.emit("getCurrentGrid", (response) => {
             this.receiveNewMap(response)
 /*             const [newHexas, lstTile] = generateHexes(response)
@@ -224,7 +245,7 @@ class Conteneur extends React.Component {
     }
 
 
-    endRound = () => { this.setState({ fini: true }) }
+    endRound = () => { this.setState({ fini: true, action: {} }) }
 
     /* 
         Function : render
@@ -238,28 +259,37 @@ class Conteneur extends React.Component {
     closeDiary = () => {
         this.setState({ displayDiary: false })
     }
-
+    openTuto() {
+        window.open(`${window.location.href}tutorial?tuto=3`)
+    }
+    displayDiary = () => {
+        this.setState({ displaySlider: false, displayDiary: true })
+    }
     render() {
+        console.log(this.state.inputPhase)
         return (<>
+            {this.state.displaySlider && <SlideField name={this.props.name} displayDiary={this.displayDiary} />}
+
             < div className="App" >
-                <SlideField />
                 {this.state.displayDiary &&
-                    <Diary data={this.state.data} closeDiary={this.closeDiary} />}
+                    <Diary nom={this.props.name} data={this.state.data} closeDiary={this.closeDiary} />}
                 <Menu >
-                    <div id="menu">
-                        <p></p>Nous sommes au tour : {this.state.tour}
-                        <p>Bonjour {this.props.name}. Vous êtes {roleToString(this.props.role)}, votre identifiant est {this.state.id}</p>
-                        {this.state.ressources !== undefined && <Ressources ressources={this.state.ressources} cost={this.state.cost} />}
-                        {!this.state.fini ?
-                            <>
-                                {this.state.selectedTile === null ? "" :
-                                    <ActivitySwapper key="changeActivity" changeTileActivity={this.changeTileActivity}
-                                        selectedTile={this.state.selectedTile} actions={this.state.lstActions} />
-                                }
-                                <ValidationTour key="validation" endRound={this.endRound} tour={this.state.tour} actions={this.state.actions} />
-                            </>
-                            : " En attente des autres joueurs..."}
-                    </div>
+                    {this.state.inputPhase ?
+                        <div id="menu">
+                            <Button variant="contained" color="primary" onClick={this.openTuto}>Aide</Button>
+                            <p></p>Nous sommes au tour : {this.state.tour}
+                            <p>Bonjour {this.props.name}. Vous êtes {roleToString(this.props.role)}, votre identifiant est {this.state.id}</p>
+                            {this.state.ressources !== undefined && <Ressources ressources={this.state.ressources} cost={this.state.cost} />}
+                            {!this.state.fini ?
+                                <>
+                                    {this.state.selectedTile === null ? "" :
+                                        <ActivitySwapper key="changeActivity" changeTileActivity={this.changeTileActivity}
+                                            selectedTile={this.state.selectedTile} actions={this.state.lstActions} />
+                                    }
+                                    <ValidationTour key="validation" endRound={this.endRound} tour={this.state.tour} actions={this.state.actions} />
+                                </>
+                                : " En attente des autres joueurs..."}
+                        </div> : "L'animateur est en train de modifier la carte"}
                 </Menu>
                 {Object.keys(this.state.lstConvo).length > 0 ? <Chat lstConvo={this.state.lstConvo} /> : ""}
                 {
@@ -272,3 +302,9 @@ class Conteneur extends React.Component {
     }
 }
 export default Conteneur
+/*
+
+garder activités des derniers tours
+conserver les noms durant les formulaires
+
+*/
