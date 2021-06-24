@@ -75,7 +75,7 @@ export default class SlideField extends React.Component {
                     aria-labelledby="scroll-dialog-title"
                     aria-describedby="scroll-dialog-description"
                 >
-                    <DialogTitle>Quel est votre recenti {this.props.name} ?</DialogTitle>
+                    <DialogTitle>Quel est votre ressenti {this.props.name} ?</DialogTitle>
                     <DialogContent>
                         <Slider
                             //getAriaValueText={valuetext}
